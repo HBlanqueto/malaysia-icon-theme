@@ -64,7 +64,6 @@ EXTRA = {
     "chart": "M2.5 13.5h11M4.5 13.5v-4M8 13.5v-9M11.5 13.5v-6",
     "pencil": "M3 13l.8-3.3 7-7 2.5 2.5-7 7zM9.3 4.2l2.5 2.5",
     "brush": "M13.5 2.5 8 8M8 8l-1.5-1.5M6.5 9.5a2 2 0 0 0-2.8 0C2.5 10.7 3.2 12.4 2.5 13.5c1.6 0 3.5.2 4.6-.9a2 2 0 0 0 0-2.8z",
-    "wrench": "M10 2.5a3 3 0 0 0-2.8 4l-4.4 4.4a1.5 1.5 0 0 0 2.1 2.1l4.4-4.4a3 3 0 0 0 4-2.8l-1.8 1.8-2-.4-.4-2z",
     "mic": "M8 2.5a2 2 0 0 0-2 2V8a2 2 0 0 0 4 0V4.5a2 2 0 0 0-2-2zM4.5 8a3.5 3.5 0 0 0 7 0M8 11.5v2",
     "calculator": "M4 2.5h8v11H4zM5.5 4.5h5V7h-5zM6 9.5h.01M8 9.5h.01M10 9.5h.01M6 11.5h.01M8 11.5h.01M10 11.5h.01",
     "exclaim": "M8 3v6.5M8 12.5v.01",
@@ -91,7 +90,7 @@ FOLDERS = {
     "folder-notes": "pencil", "folder-important": "exclaim", "folder-book": "book", "folder-library": "book",
     "folder-games": "gamepad", "folder-print": "printer", "folder-presentation": "easel", "folder-table": "sheet",
     "folder-chart": "chart", "folder-script": "terminal", "folder-temp": "clock", "folder-trash": "trash",
-    "folder-root": "emblem-system", "folder-log": "lines", "folder-build": "wrench", "folder-design": "shapes",
+    "folder-root": "emblem-system", "folder-log": "lines", "folder-build": "preferences-system", "folder-design": "shapes",
     "folder-drawing": "pencil", "folder-paint": "palette", "folder-language": "network-workgroup",
     "folder-podcast": "mic", "folder-extension": "puzzle", "folder-calculate": "calculator", "folder-tar": "box",
 }
