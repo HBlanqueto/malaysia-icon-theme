@@ -24,6 +24,7 @@ Malaysia/                the Malaysia theme
 Malaysia-Dark/           child theme with the dark folders and app icons (generated)
 src/
 ├── malaysia-symbolic/   stroke sources of the desktop symbols
+├── apps/               app icons copied from the Malaysia desktop
 └── symbolic/            Adwaita's symbolic sheets (core.svg)
 docs/                    symbols.md, icon map and the Malaysia Icons 2 proposal
 tools/                   importers and generators
@@ -137,7 +138,9 @@ Phase 4 redrew the icon of the desktop's Screenshot app
 (`io.github.hblanqueto.malaysia.screenshot`). It lives in `scalable/apps`, which is
 searched before `hicolor`, so it replaces the copy the desktop installs in `hicolor`
 whenever the Malaysia theme is active. Settings (`io.github.hblanqueto.malaysia.settings`)
-keeps the icon the desktop installs in `hicolor`: the silver tile with the detailed gear. `tools/color/build.py` generates them too; add a
+keeps the desktop's own icon, the silver tile with the detailed gear: `src/apps/` holds a
+copy of malaysia's `share/icons/hicolor/scalable/apps` file, and `tools/color/build.py`
+installs it unchanged in `scalable/apps`. To update it, copy the file again from malaysia. `tools/color/build.py` generates them too; add a
 row to `APPS` for a new app.
 
 Each icon has three layers that change with the variant:
@@ -196,5 +199,5 @@ stroke on the assumption that it is invisible. To keep part of an icon in color,
 
 Same as Adwaita: GNU LGPL v3 or Creative Commons Attribution-Share Alike 3.0 (see
 `COPYING`). The artwork inherited from Adwaita is by the GNOME Project (see `AUTHORS`).
-The desktop symbols in `src/malaysia-symbolic` also come under the MIT License of
-malaysia and barrierkit (`COPYING_MIT`).
+The desktop symbols in `src/malaysia-symbolic` and the app icons in `src/apps` also come
+under the MIT License of malaysia and barrierkit (`COPYING_MIT`).

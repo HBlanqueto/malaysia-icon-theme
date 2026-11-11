@@ -17,6 +17,7 @@ import devices
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SYM = os.path.join(ROOT, "src", "malaysia-symbolic")
+APP_ART = os.path.join(ROOT, "src", "apps")  # app icons drawn by the desktop, installed as they are
 
 
 def glyph(name):
@@ -467,6 +468,8 @@ def files(variant, tint=None):
         for name, svg_ in devices.trash_icons(dark=True).items():
             out[f"scalable/places/{name}.svg"] = svg_
     if variant == "light":
+        for f in sorted(os.listdir(APP_ART)):
+            out[f"scalable/apps/{f}"] = open(os.path.join(APP_ART, f), encoding="utf-8").read()
         for name, svg_ in devices.icons(G, label).items():
             out[f"scalable/devices/{name}.svg"] = svg_
         for name, (fig, color, text, style) in MIMETYPES.items():
