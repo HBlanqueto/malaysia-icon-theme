@@ -115,10 +115,10 @@ def main(mal, bk):
                 rows.append((label, prefix + key, "—", "—", SKIP[key]))
                 continue
             if key not in table:
-                sys.exit(f"{prefix}{key} no tiene nombre asignado en import_desktop.py")
+                sys.exit(f"{prefix}{key} has no name in import_desktop.py")
             name, ctx, replaces = target(table[key])
             if name in seen:
-                sys.exit(f"{name} asignado dos veces: {seen[name]} y {prefix}{key}")
+                sys.exit(f"{name} is assigned twice: {seen[name]} and {prefix}{key}")
             seen[name] = prefix + key
             if prefix == "Symbol::":
                 svg = svg.replace('stroke-width="1.4"', f'stroke-width="{stroke}"')
@@ -142,8 +142,8 @@ def main(mal, bk):
                 f.write(f'            Self::{r[1].removeprefix("Symbol::")} => "{r[2]}",\n')
         f.write("        }\n    }\n}\n```\n")
     new = sum(1 for r in rows if r[4] == "new")
-    print(f"{len(seen)} fuentes en src/malaysia-symbolic ({new} nuevas, {len(seen) - new} reemplazan a Adwaita); "
-          f"{len(SKIP)} omitidas")
+    print(f"{len(seen)} sources in src/malaysia-symbolic ({new} new, {len(seen) - new} replace Adwaita's); "
+          f"{len(SKIP)} skipped")
 
 
 if __name__ == "__main__":

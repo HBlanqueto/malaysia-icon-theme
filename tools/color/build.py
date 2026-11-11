@@ -24,9 +24,9 @@ def glyph(name):
         if os.path.exists(p):
             ds = re.findall(r' d="([^"]+)"', open(p, encoding="utf-8").read())
             if len(ds) != 1:
-                sys.exit(f"{name}-symbolic tiene {len(ds)} paths; usa un trazo propio en EXTRA")
+                sys.exit(f"{name}-symbolic has {len(ds)} paths; add a single stroke to EXTRA instead")
             return ds[0]
-    sys.exit(f"no existe src/malaysia-symbolic/*/{name}-symbolic.svg")
+    sys.exit(f"src/malaysia-symbolic/*/{name}-symbolic.svg does not exist")
 
 
 # Strokes on the 16 px grid that are not theme symbols yet.
@@ -253,7 +253,7 @@ def app_icon(fig, colors, variant, tint=None, name=""):
     L = app_layers(colors, variant, tint)
     worst = min(contrast(f, b) for f in L["fig"] for b in L["bg"])
     if worst < MIN_CONTRAST:
-        sys.exit(f"{name} ({variant}): contraste figura/fondo {worst:.2f}:1, mínimo {MIN_CONTRAST}:1")
+        sys.exit(f"{name} ({variant}): figure/background contrast {worst:.2f}:1, minimum {MIN_CONTRAST}:1")
     sq = squircle()
     defs = (grad("bg", *L["bg"]) + grad("fig", *L["fig"])
             + f'<linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" '
@@ -319,7 +319,7 @@ def main():
     a = ap.parse_args()
     if a.tint:
         if not (a.out and re.fullmatch(r"#[0-9a-fA-F]{6}", a.tint)):
-            sys.exit("--tint necesita un color #rrggbb y --out")
+            sys.exit("--tint needs a #rrggbb color and --out")
         out = os.path.expanduser(a.out)
         sync(out, files("tinted", a.tint.lower()), False,
              theme_index(os.path.basename(out.rstrip("/")), f"Malaysia folders tinted {a.tint}", "Malaysia",
@@ -328,16 +328,16 @@ def main():
         link = os.path.join(out, "scalable", "status", "folder-open.svg")
         if not os.path.lexists(link):
             os.symlink("../places/folder.svg", link)
-        print(f"tema tintado escrito en {out}")
+        print(f"tinted theme written to {out}")
         return
     stale = sync(os.path.join(ROOT, "Malaysia"), files("light"), a.check)
     stale += sync(os.path.join(ROOT, "Malaysia-Dark"), files("dark"), a.check,
                   theme_index("Malaysia-Dark", "Malaysia with dark folders and app icons", "Malaysia",
                               VARIANT_DIRS))
     if a.check:
-        sys.exit("desactualizados:\n  " + "\n  ".join(stale)) if stale else print("todo al día")
+        sys.exit("out of date:\n  " + "\n  ".join(stale)) if stale else print("up to date")
     else:
-        print(f"{len(stale)} archivos escritos")
+        print(f"{len(stale)} files written")
 
 
 if __name__ == "__main__":

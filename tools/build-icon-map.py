@@ -58,4 +58,4 @@ tpl = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "icon-map.te
 html = tpl.replace("/*__DATA__*/null", json.dumps(data, separators=(",", ":")).replace("</", "<\\/"))
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 open(OUT, "w", encoding="utf-8").write(html)
-print(f"{len(icons)} íconos -> {OUT} ({os.path.getsize(OUT)/1e6:.1f} MB)")
+print(f"{len(icons)} icons -> {OUT} ({os.path.getsize(OUT)/1e6:.1f} MB)")

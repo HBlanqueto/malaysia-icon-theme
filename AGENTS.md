@@ -56,10 +56,11 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 | `Malaysia/scalable/{apps,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
 | `Malaysia-Dark/` | tema hijo con carpetas e íconos de app oscuros | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
-| `src/fullcolor/`, `src/symbolic/` | fuentes de Adwaita; ya no se usan para lo generado | no |
+| `src/fullcolor/`, `src/symbolic/` | fuentes de Adwaita de los íconos que aún no se redibujan; se borra la fuente al redibujar su ícono | solo para borrar |
 | `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
 | `tools/color/build.py` | carpetas, tipos de archivo e íconos de app (`FOLDERS`, `MIMETYPES`, `APPS`) | sí |
 | `docs/` | `symbols.md`, mapa de íconos y propuesta (generados) | no: se regeneran |
+| `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
 
 ## Flujo de trabajo
 
@@ -74,7 +75,7 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
    meson setup /tmp/mit-build --prefix=/tmp/mit-prefix && meson install -C /tmp/mit-build
    python3 tools/build-icon-map.py
    ```
-   Los dos `--check` deben decir «todo al día». La instalación debe crear
+   Los dos `--check` deben decir «up to date». La instalación debe crear
    `icon-theme.cache` en `Malaysia/` y `Malaysia-Dark/`.
 5. Sube el SVG generado en el mismo commit que su fuente.
 

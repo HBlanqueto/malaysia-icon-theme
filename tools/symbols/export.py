@@ -85,10 +85,10 @@ def main(check):
                     written += 1
     if check:
         if stale:
-            sys.exit("desactualizados:\n  " + "\n  ".join(stale))
-        print("todo al día")
+            sys.exit("out of date:\n  " + "\n  ".join(stale))
+        print("up to date")
     else:
-        print(f"{written} archivos escritos en Malaysia/symbolic")
+        print(f"{written} files written to Malaysia/symbolic")
 
 
 if __name__ == "__main__":

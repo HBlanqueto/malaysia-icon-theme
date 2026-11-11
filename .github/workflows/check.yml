@@ -1,0 +1,46 @@
+name: check
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgtk-3-bin ninja-build
+          pip install meson -r tools/requirements.txt
+
+      - name: Symbols are exported
+        run: python3 tools/symbols/export.py --check
+
+      - name: Folders, file types and app icons are generated
+        run: python3 tools/color/build.py --check
+
+      - name: Icon map is current
+        run: |
+          python3 tools/build-icon-map.py
+          git diff --exit-code -- docs/icon-map.html
+
+      - name: Install both themes
+        run: |
+          meson setup _build --prefix="$RUNNER_TEMP/prefix"
+          meson install -C _build
+          for theme in Malaysia Malaysia-Dark; do
+            test -s "$RUNNER_TEMP/prefix/share/icons/$theme/icon-theme.cache"
+            test -L "$RUNNER_TEMP/prefix/share/icons/$theme/scalable/status/folder-open.svg"
+          done
