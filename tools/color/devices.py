@@ -43,6 +43,10 @@ DEFS = (
     '<linearGradient id="lip" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#a6a8ac"/><stop offset=".12" stop-color="#8b8d92"/><stop offset=".6" stop-color="#7c7e83"/>'
     '<stop offset="1" stop-color="#606267"/></linearGradient>'
+    '<linearGradient id="lip-dark" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#45474d"/><stop offset=".2" stop-color="#26282c"/><stop offset="1" stop-color="#0c0d0f"/></linearGradient>'
+    '<linearGradient id="blue-alu" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#6c9de3"/><stop offset=".5" stop-color="#3a6ec4"/><stop offset="1" stop-color="#22498f"/></linearGradient>'
     '<linearGradient id="lip-white" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#e6e8eb"/><stop offset="1" stop-color="#bfc2c8"/></linearGradient>'
     # plastic, steel, glass
@@ -141,10 +145,15 @@ def badge(fig):
             f'stroke-linecap="round" stroke-linejoin="round" d="{fig}"/></g>')
 
 
-def drive(x, y, w, h, fill="alu"):
+def drive(x, y, w, h, fill="alu", base="lip"):
     """A body whose bottom face shows as a thin, darker band the full width of the body."""
     band = round(max(7, h * .14), 1)
-    return body(x, y, w, h, round(max(3.6, w * .12), 1), fill) + lip(x, y + h - band, w, band)
+    return body(x, y, w, h, round(max(3.6, w * .12), 1), fill) + lip(x, y + h - band, w, band, base)
+
+
+def led(cx, cy, color="#30d158"):
+    return (f'<circle cx="{cx}" cy="{cy}" r="1.8" fill="{color}" fill-opacity=".3" filter="url(#soft)"/>'
+            f'<circle cx="{cx}" cy="{cy}" r=".9" fill="{color}"/>')
 
 
 def screw(cx, cy):
@@ -183,7 +192,9 @@ def removable_drive():
              '<path d="M48 41h4.5a4 4 0 0 1 4 4v5" fill="none" stroke="#eceef1" stroke-width="2.2" stroke-linecap="round"/>'
              '<path d="M48 40.6h4.5a4.4 4.4 0 0 1 4.4 4.4" fill="none" stroke="#ffffff" stroke-width=".6" stroke-linecap="round"/>'
              + body(53.6, 48.6, 5.8, 7, 1.4, "steel"))
-    return cable + drive(8, 17, 42, 36) + deboss(ring(29, 31, 5.8, 2))
+    light = ('<rect x="16" y="43.2" width="26" height="1.2" rx=".6" fill="#5ac8fa"/>'
+             '<rect x="15" y="42.2" width="28" height="3.2" rx="1.6" fill="#5ac8fa" fill-opacity=".35" filter="url(#soft)"/>')
+    return cable + drive(8, 17, 42, 36, "graphite", "lip-dark") + deboss(ring(29, 29, 5.8, 2), "#1d1e21") + light
 
 
 def optical_drive():
@@ -208,7 +219,8 @@ def optical_disc():
 def usb_stick():
     return (body(25.5, 3.5, 13, 13, 1.4, "steel") + '<rect x="28" y="6.6" width="8" height="3.4" rx="1" fill="#1f2125"/>'
             + '<rect x="28.8" y="7.4" width="2" height="1.6" fill="#d6ae55"/><rect x="33.2" y="7.4" width="2" height="1.6" fill="#d6ae55"/>'
-            + drive(21, 14, 22, 44) + deboss(ring(32, 45.5, 2.6, 1.6)))
+            + drive(21, 14, 22, 44, "blue-alu", "lip-dark") + deboss(ring(32, 44, 2.8, 1.7), "#1d3f7c")
+            + led(32, 22, "#ffffff"))
 
 
 def sd_card():
@@ -216,7 +228,7 @@ def sd_card():
     contacts = "".join(f'<rect x="{19.2 + i * 3.6:.1f}" y="8.4" width="2.4" height="8.4" rx=".7" fill="url(#gold)"/>'
                        for i in range(6))
     label = rr(19, 26, 26, 25, 2.8)
-    return (solid(d, "plastic") + contacts + deboss(rr(13.4, 29, 2.2, 9, .9), "#d3d5da")
+    return (solid(d, "graphite") + contacts + deboss(rr(13.4, 29, 2.2, 9, .9), "#8e9096")
             + f'<path d="{label}" fill="url(#label)"/><path d="{label}" fill="url(#bevel)"/>'
             + '<path d="M19 30c8 0 17-1.6 26-4.2V28.8a2.8 2.8 0 0 0-2.8-2.8H21.8A2.8 2.8 0 0 0 19 28.8z" fill="#ffffff" fill-opacity=".2"/>')
 
@@ -232,23 +244,26 @@ def laptop():
 def display():
     neck = "M26.6 42h10.8l2.8 11H23.8z"
     return (solid(neck, "alu-dark") + '<path d="M26.6 42h10.8l.6 2.4H26z" fill="#000000" fill-opacity=".22"/>'
-            + body(17, 51.6, 30, 4.8, 2.4) + body(4, 5, 56, 39, 3) + glass(5, 6, 54, 37, 2.4)
+            + body(17, 51.6, 30, 4.8, 2.4) + body(4, 5, 56, 39, 3, "graphite") + glass(5, 6, 54, 37, 2.4)
             + screen(7.6, 8.6, 48.8, 31.8, .8) + reflection(5, 6, 54, 37, 2.4))
 
 
 def phone():
-    return (body(18.5, 3, 27, 55, 7.6, "steel") + glass(20, 4.5, 24, 52, 6.3) + screen(21.4, 5.9, 21.2, 49.2, 5.1)
+    return (body(18.5, 3, 27, 55, 7.6, "graphite") + glass(20, 4.5, 24, 52, 6.3) + screen(21.4, 5.9, 21.2, 49.2, 5.1)
             + '<rect x="28.2" y="8.6" width="7.6" height="2.6" rx="1.3" fill="#000000"/>' + reflection(20, 4.5, 24, 52, 6.3)
-            + '<rect x="17.6" y="17" width="1.2" height="6" rx=".6" fill="#9a9ca2"/><rect x="45.2" y="20" width="1.2" height="9" rx=".6" fill="#9a9ca2"/>')
+            + '<rect x="17.6" y="17" width="1.2" height="6" rx=".6" fill="#3a3c41"/><rect x="45.2" y="20" width="1.2" height="9" rx=".6" fill="#3a3c41"/>')
 
 
 def ebook():
     lines = "".join(f'<path d="M21.6 {14.2 + i * 4}h{20.8 - (8 if i == 6 else 0)}" stroke="#8f8c82" stroke-opacity=".75" '
                     f'stroke-width="1.2" stroke-linecap="round"/>' for i in range(7))
     paper = rr(18.5, 8, 27, 39, 1.2)
-    return (body(14.5, 3.5, 35, 54, 5.2, "plastic")
+    return (body(14.5, 3.5, 35, 54, 5.2, "graphite")
             + f'<path d="{paper}" fill="#e9e7e0" filter="url(#inset)"/>' + lines
-            + deboss(rr(28, 50.5, 8, 1.8, .9), "#dcdee2"))
+            + '<path d="M21.6 10.6h4M38.4 10.6h4" stroke="#8f8c82" stroke-width=".7" stroke-linecap="round"/>'
+            + '<path d="M21.6 44h20.8" stroke="#c9c6bc" stroke-width=".9" stroke-linecap="round"/>'
+            + '<path d="M21.6 44h7.6" stroke="#5c5a54" stroke-width=".9" stroke-linecap="round"/>'
+            + reflection(18.5, 8, 27, 39, 1.2) + deboss(rr(28, 50.5, 8, 1.8, .9), "#3a3c41"))
 
 
 def drawing_tablet():
@@ -256,9 +271,13 @@ def drawing_tablet():
            '<path d="M22 46 48 18" stroke="#c9cbd0" stroke-width="3.6" stroke-linecap="round"/>'
            '<path d="M22 46 48 18" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>'
            '<path d="M22 46l2.4-2.6" stroke="#4a4d53" stroke-width="3.2" stroke-linecap="round"/>')
-    area = rr(9, 17.5, 46, 24.5, 2)
-    return (body(3, 13, 58, 33, 5) + lip(3, 40.5, 58, 5.5) + f'<path d="{area}" fill="url(#glass)" filter="url(#inset)"/>'
-            + reflection(9, 17.5, 46, 24.5, 2) + pen)
+    area = rr(13, 17.5, 43, 22.5, 2)
+    keys = "".join(deboss(rr(6, 18 + i * 5.4, 3.6, 4.2, 1), "#3a3c41") for i in range(4))
+    return (body(3, 13, 58, 33, 5, "graphite") + lip(3, 40.5, 58, 5.5, "lip-dark") + keys
+            + f'<path d="{area}" fill="#111214" filter="url(#inset)"/>'
+            + "".join(f'<path d="M{x} {y}h{dx}M{x} {y}v{dy}" stroke="#5c5f66" stroke-width=".6" stroke-linecap="round"/>'
+                      for x, y, dx, dy in ((15, 19.5, 2, 2), (54, 19.5, -2, 2), (15, 38, 2, -2), (54, 38, -2, -2)))
+            + reflection(13, 17.5, 43, 22.5, 2) + led(57.6, 17.6, "#5ac8fa") + pen)
 
 
 def keyboard():
@@ -331,12 +350,12 @@ def speaker():
               '<circle cx="32" cy="35" r="3.8" fill="#2a2c31"/><circle cx="31" cy="34" r="1.6" fill="#ffffff" fill-opacity=".14"/>')
     tweeter = ('<circle cx="32" cy="15.4" r="4.6" fill="url(#cone)" filter="url(#inset)"/>'
                '<circle cx="31.2" cy="14.6" r="1.4" fill="#ffffff" fill-opacity=".2"/>')
-    return drive(13.5, 4, 37, 54) + woofer + tweeter
+    return drive(13.5, 4, 37, 54, "graphite", "lip-dark") + woofer + tweeter
 
 
 def webcam():
     clip = "M26 36h12v4h7a2 2 0 0 1 2 2v3H17v-3a2 2 0 0 1 2-2h7z"
-    return (solid(clip, "alu-dark") + body(12, 16, 40, 21, 10.5)
+    return (solid(clip, "alu-dark") + body(12, 16, 40, 21, 10.5, "graphite")
             + '<circle cx="32" cy="26.5" r="8.4" fill="url(#steel)"/><circle cx="32" cy="26.5" r="7" fill="#08090b"/>'
             + '<circle cx="32" cy="26.5" r="4.4" fill="url(#lens)"/><circle cx="32" cy="26.5" r="2" fill="#0a1022"/>'
             + '<ellipse cx="30.4" cy="24.8" rx="1.3" ry=".9" fill="#ffffff" fill-opacity=".75"/>'
@@ -365,10 +384,11 @@ def printer():
 def scanner():
     lid = "M10 18h44a3 3 0 0 1 2.8 1.9L60 28H4l3.2-8.1A3 3 0 0 1 10 18z"
     return (solid(lid, "plastic") + deboss(rr(16, 22, 32, 2.2, 1.1), "#e0e2e6")
-            + body(4, 28, 56, 17, 3.6, "plastic") + lip(4, 39.6, 56, 5.4, "lip-white")
+            + body(4, 28, 56, 17, 3.6, "graphite") + lip(4, 39.6, 56, 5.4, "lip-dark")
             + '<rect x="7" y="28.6" width="50" height="1.6" rx=".8" fill="#7fe3ff"/>'
             + '<rect x="7" y="27.6" width="50" height="3.6" rx="1.8" fill="#7fe3ff" fill-opacity=".35" filter="url(#soft)"/>'
-            + deboss(ring(53, 36, 1.6, .01), "#d0d3d8") + '<circle cx="48.6" cy="36" r=".9" fill="#30d158"/>')
+            + "".join(deboss(rr(9 + i * 6, 34.2, 4.4, 2.4, 1.2), "#3a3c41") for i in range(3))
+            + deboss(ring(53, 35.4, 1.6, .01), "#3a3c41") + led(48.4, 35.4))
 
 
 DEVICES = {
