@@ -8,21 +8,26 @@ with its own volume, and marks pressed into the metal with a soft inner shadow.
 """
 import math
 
-DEFS = (
-    # one drop shadow for every device: a soft cast shadow plus a tight contact shadow
+# one drop shadow for every device, folder and document: a soft cast shadow plus a tight contact shadow
+DROP = (
     '<filter id="drop" x="-25%" y="-25%" width="150%" height="160%">'
     '<feGaussianBlur in="SourceAlpha" stdDeviation="1.6"/><feOffset dy="1.8" result="far"/>'
     '<feFlood flood-color="#000000" flood-opacity=".26"/><feComposite in2="far" operator="in" result="cast"/>'
     '<feGaussianBlur in="SourceAlpha" stdDeviation=".35"/><feOffset dy=".45" result="near"/>'
     '<feFlood flood-color="#000000" flood-opacity=".3"/><feComposite in2="near" operator="in" result="contact"/>'
     '<feMerge><feMergeNode in="cast"/><feMergeNode in="contact"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
-    # a mark pressed into the surface: shadow inside its upper edge
+)
+# a mark pressed into the surface: shadow inside its upper edge
+INSET = (
     '<filter id="inset" x="-30%" y="-30%" width="160%" height="160%">'
     '<feComponentTransfer in="SourceAlpha"><feFuncA type="table" tableValues="1 0"/></feComponentTransfer>'
     '<feGaussianBlur stdDeviation=".55"/><feOffset dy=".7" result="edge"/>'
     '<feFlood flood-color="#000000" flood-opacity=".5"/><feComposite in2="edge" operator="in"/>'
     '<feComposite in2="SourceAlpha" operator="in" result="shade"/>'
     '<feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="shade"/></feMerge></filter>'
+)
+DEFS = (
+    DROP + INSET +
     '<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation=".45"/></filter>'
     # aluminum
     '<linearGradient id="alu" x1="0" y1="0" x2="0" y2="1">'
@@ -52,6 +57,10 @@ DEFS = (
     '<stop offset="0" stop-color="#7be08a"/><stop offset=".5" stop-color="#34b552"/><stop offset="1" stop-color="#1d8a35"/></linearGradient>'
     '<linearGradient id="pcb" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#3fa95c"/><stop offset=".5" stop-color="#23803f"/><stop offset="1" stop-color="#15582b"/></linearGradient>'
+    '<linearGradient id="bin" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#f4f5f7" stop-opacity=".95"/><stop offset="1" stop-color="#c9ccd2" stop-opacity=".95"/></linearGradient>'
+    '<radialGradient id="globe" cx=".36" cy=".3" r=".8">'
+    '<stop offset="0" stop-color="#8fdcff"/><stop offset=".5" stop-color="#1e8cf0"/><stop offset="1" stop-color="#0b3e9c"/></radialGradient>'
     '<linearGradient id="lip-white" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#e6e8eb"/><stop offset="1" stop-color="#bfc2c8"/></linearGradient>'
     # plastic, steel, glass
@@ -569,6 +578,65 @@ FLAME = "M8 2.5c.4 2.6 3.8 4.2 3.8 7.4a3.8 3.8 0 0 1-7.6 0c0-1.5.7-2.5 1.6-3.3.1
 PARTITION = (-90, 30, "#1e9bf5")
 
 
+def trash(full=False):
+    """A wire-mesh bin seen slightly from above."""
+    bin_ = "M11 15h42l-4.2 42.4a3 3 0 0 1-3 2.6H18.2a3 3 0 0 1-3-2.6z"
+    papers = ('<path d="M18 14c1-5 6-8 11-6 3-4 9-3 11 1 4-1 8 2 7 6z" fill="#ffffff"/>'
+              '<path d="M24 9.6c2 1.6 3 3.4 3 5.4M36 8.6c-1 2-1 4 .4 6M44 11.6c-2 .6-3.4 1.8-4 3.4" fill="none" '
+              'stroke="#b9bdc5" stroke-width=".7" stroke-linecap="round"/>') if full else ""
+    return ('<ellipse cx="32" cy="15" rx="21" ry="4.6" fill="url(#steel)"/><ellipse cx="32" cy="15" rx="19.2" ry="3.4" fill="#8f939b"/>'
+            + papers + f'<path d="{bin_}" fill="url(#bin)"/><path d="{bin_}" fill="url(#mesh)" fill-opacity=".22"/>'
+            + f'<path d="{bin_}" fill="url(#side)"/>'
+            + '<path d="M11 15a21 4.6 0 0 0 42 0" fill="none" stroke="#e9eaed" stroke-width="2"/>'
+            + '<path d="M11.4 16.2a20.6 4.4 0 0 0 41.2 0" fill="none" stroke="#8e9096" stroke-width=".5"/>'
+            + '<path d="M16 57a16 2.6 0 0 0 32 0" fill="none" stroke="#a6a8ac" stroke-width="1.2"/>')
+
+
+def server():
+    units = "".join(body(18, 9 + i * 10.5, 28, 8, 1.4, "alu-dark") + deboss(rr(22, 12.4 + i * 10.5, 14, 1.6, .8), "#7d7f85")
+                    + led(41, 13 + i * 10.5) for i in range(4))
+    return body(14, 4, 36, 54, 4, "graphite") + lip(14, 51, 36, 7, "lip-dark") + units
+
+
+def globe():
+    grid = ('<g fill="none" stroke="#ffffff" stroke-opacity=".38" stroke-width=".8">'
+            '<ellipse cx="32" cy="32" rx="10" ry="24"/><path d="M32 8v48M8 32h48M11 20h42M11 44h42"/></g>')
+    return ('<circle cx="32" cy="32" r="24.5" fill="url(#globe)"/>' + grid
+            + '<ellipse cx="24" cy="19" rx="10" ry="6" fill="#ffffff" fill-opacity=".45" filter="url(#soft)" transform="rotate(-30 24 19)"/>'
+            + '<circle cx="32" cy="32" r="24.5" fill="none" stroke="#0b3e9c" stroke-opacity=".35" stroke-width=".6"/>')
+
+
+def floppy():
+    shutter = "M22 4h22v17a2 2 0 0 1-2 2H24a2 2 0 0 1-2-2z"
+    return (solid("M9 4h43l5 5v46a3 3 0 0 1-3 3H10a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2z", "graphite")
+            + solid(shutter, "steel") + '<rect x="35" y="7" width="5" height="12" rx="1" fill="#2c2e33"/>'
+            + f'<path d="{rr(13, 30, 38, 26, 2)}" fill="url(#plastic)"/>'
+            + '<rect x="13" y="30" width="38" height="4" fill="url(#label)"/>'
+            + '<path d="M17 40h28M17 45h28M17 50h18" stroke="#a9acb3" stroke-width="1" stroke-linecap="round"/>'
+            + deboss(rr(9.4, 53, 3, 3, .6), "#0e0f11"))
+
+
+def picture():
+    return (body(5, 11, 54, 42, 4, "plastic") + f'<path d="{rr(9.5, 15.5, 45, 33, 1.6)}" fill="#d5d8de" filter="url(#inset)"/>'
+            + '<circle cx="43" cy="24" r="3.6" fill="#c0c4cb"/>'
+            + '<path d="M9.5 46.9 22 31l8 10 6-7 18.5 13.4v-.3a1.6 1.6 0 0 1-1.6 1.6H11.1z" fill="#aeb2ba"/>')
+
+
+def avatar():
+    return ('<clipPath id="face"><circle cx="32" cy="32" r="26"/></clipPath>'
+            '<circle cx="32" cy="32" r="26" fill="url(#alu-dark)"/>'
+            '<g clip-path="url(#face)" fill="#ffffff" fill-opacity=".92"><circle cx="32" cy="25" r="9.5"/>'
+            '<ellipse cx="32" cy="56" rx="19" ry="16"/></g>'
+            '<circle cx="32" cy="32" r="26" fill="url(#bevel)"/>')
+
+
+def status(glyph):
+    """Status icons drawn as objects."""
+    return {name: wrap(art) for name, art in {
+        "avatar-default": avatar(), "image-missing": picture() + badge(glyph("exclaim"), "#e0321f"),
+        "image-loading": picture() + badge(glyph("clock"), "url(#graphite)")}.items()}
+
+
 DEVICES = {
     "audio-card": speaker, "audio-headphones": headphones, "audio-headset": lambda: headphones(mic=True),
     "camera-web": webcam, "computer": laptop, "drive-harddisk": harddisk, "drive-multidisk": multidisk,
@@ -586,7 +654,7 @@ DEVICES = {
     "input-touchscreen": touchscreen, "input-tvremote": tvremote, "memory": memory, "modem": router,
     "multimedia-player": player, "network-card": network_card, "network-modem": router,
     "network-rj11-female": lambda: jack(4), "network-rj45-female": lambda: jack(8), "network-wired": lambda: jack(8),
-    "video-television": television,
+    "video-television": television, "media-floppy": floppy,
 }
 
 
@@ -600,6 +668,17 @@ def discs(glyph, label):
             f'fill="none" stroke="{ink}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>'}
 
 
+def wrap(art):
+    return ('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 64 64">'
+            f'<defs>{DEFS}</defs><g filter="url(#drop)">{art}</g></svg>\n')
+
+
+def places():
+    """The places drawn as objects rather than folders."""
+    return {name: wrap(art) for name, art in {"user-trash": trash(), "user-trash-full": trash(full=True),
+                                              "network-server": server(), "network-workgroup": globe()}.items()}
+
+
 def icons(glyph, label):
     """name → SVG for every device; `glyph(name)` returns the `d` of a symbolic source and
     `label(text, cx, top, height, color)` draws stroked letters."""
@@ -611,5 +690,4 @@ def icons(glyph, label):
     out["bluetooth"] = bluetooth(glyph("bluetooth"))
     out["network-wireless"] = access_point(glyph("network-wireless"))
     out["network_fs"] = nas(glyph("network-workgroup"))
-    return {name: ('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 64 64">'
-                   f'<defs>{DEFS}</defs><g filter="url(#drop)">{art}</g></svg>\n') for name, art in sorted(out.items())}
+    return {name: wrap(art) for name, art in sorted(out.items())}

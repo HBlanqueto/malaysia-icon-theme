@@ -56,10 +56,10 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 | `Malaysia/scalable/{apps,devices,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
 | `Malaysia-Dark/` | tema hijo con carpetas e íconos de app oscuros | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
-| `tools/color/devices.py` | dispositivos: materiales comunes y una función por dispositivo (`DEVICES`) | sí |
-| `src/fullcolor/`, `src/symbolic/` | fuentes de Adwaita de los íconos que aún no se redibujan; se borra la fuente al redibujar su ícono | solo para borrar |
+| `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
+| `src/symbolic/` | fuente de Adwaita de los símbolos que aún no se redibujan | solo para borrar |
 | `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
-| `tools/color/build.py` | carpetas, tipos de archivo, dispositivos e íconos de app (`FOLDERS`, `MIMETYPES`, `APPS`; dispositivos en `devices.py`) | sí |
+| `tools/color/build.py` | carpetas, tipos de archivo, dispositivos e íconos de app (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`, `APPS`; dispositivos en `devices.py`) | sí |
 | `docs/` | `symbols.md`, mapa de íconos y propuesta (generados) | no: se regeneran |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
 

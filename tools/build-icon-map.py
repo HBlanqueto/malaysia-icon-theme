@@ -49,7 +49,8 @@ for size in ("symbolic", "scalable", "16x16"):
             icons.append(item)
 
 # sources in src/
-sources = sorted(f.replace(".source.svg", "") for f in os.listdir(os.path.join(ROOT, "src", "fullcolor")))
+FULLCOLOR = os.path.join(ROOT, "src", "fullcolor")
+sources = sorted(f.replace(".source.svg", "") for f in os.listdir(FULLCOLOR)) if os.path.isdir(FULLCOLOR) else []
 
 version = re.search(r"version\s*:\s*'([^']+)'", open(os.path.join(ROOT, "meson.build")).read()).group(1)
 data = {"icons": icons, "sources": sources, "version": version}

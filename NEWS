@@ -14,6 +14,9 @@ and in this repository's git log up to commit 75a7cc2.
 - Redraw the 22 device icons, plus audio-card, with lifelike rendering after current
   macOS hardware icons: no outlines, light-defined edges, debossed detail and one drop
   shadow.
+- Redraw folders and file types after macOS Finder: 50 folders plus 11 tag colors, 235
+  file types in four styles (tile, page, zip, text), and object drawings for the trash,
+  network, avatar and image status icons. No Adwaita full-color source is left.
 - Add 39 device icons: cameras, CPU, memory, network gear, jacks, memory cards,
   disc variants, partitions, remote, touchpad, touchscreen, TV and their aliases.
 - Add Malaysia-Dark, a child theme with dark folders and app icons, and a
