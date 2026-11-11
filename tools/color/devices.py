@@ -58,7 +58,22 @@ DEFS = (
     '<linearGradient id="pcb" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#3fa95c"/><stop offset=".5" stop-color="#23803f"/><stop offset="1" stop-color="#15582b"/></linearGradient>'
     '<linearGradient id="bin" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#f4f5f7" stop-opacity=".95"/><stop offset="1" stop-color="#c9ccd2" stop-opacity=".95"/></linearGradient>'
+    '<stop offset="0" stop-color="#fbfbfc"/><stop offset=".6" stop-color="#eceef1"/><stop offset="1" stop-color="#d3d6db"/></linearGradient>'
+    '<linearGradient id="bin-dark" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#6a6d73"/><stop offset=".6" stop-color="#4d5056"/><stop offset="1" stop-color="#36383d"/></linearGradient>'
+    '<linearGradient id="bin-inside" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#7d8189"/><stop offset="1" stop-color="#b9bcc3"/></linearGradient>'
+    '<linearGradient id="bin-inside-dark" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#16171a"/><stop offset="1" stop-color="#34363b"/></linearGradient>'
+    '<linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c3c6cc"/></linearGradient>'
+    '<linearGradient id="rim-dark" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#9a9da3"/><stop offset="1" stop-color="#55585e"/></linearGradient>'
+    # perforated metal: rounded square holes on a 2 px pitch
+    '<pattern id="perf" width="1.9" height="1.9" patternUnits="userSpaceOnUse">'
+    '<rect x=".45" y=".45" width="1" height="1" rx=".25" fill="#8a8e96" fill-opacity=".55"/></pattern>'
+    '<pattern id="perf-dark" width="1.9" height="1.9" patternUnits="userSpaceOnUse">'
+    '<rect x=".45" y=".45" width="1" height="1" rx=".25" fill="#0c0d0f" fill-opacity=".6"/></pattern>'
     '<radialGradient id="globe" cx=".36" cy=".3" r=".8">'
     '<stop offset="0" stop-color="#8fdcff"/><stop offset=".5" stop-color="#1e8cf0"/><stop offset="1" stop-color="#0b3e9c"/></radialGradient>'
     '<linearGradient id="lip-white" x1="0" y1="0" x2="0" y2="1">'
@@ -578,18 +593,24 @@ FLAME = "M8 2.5c.4 2.6 3.8 4.2 3.8 7.4a3.8 3.8 0 0 1-7.6 0c0-1.5.7-2.5 1.6-3.3.1
 PARTITION = (-90, 30, "#1e9bf5")
 
 
-def trash(full=False):
-    """A wire-mesh bin seen slightly from above."""
-    bin_ = "M11 15h42l-4.2 42.4a3 3 0 0 1-3 2.6H18.2a3 3 0 0 1-3-2.6z"
-    papers = ('<path d="M18 14c1-5 6-8 11-6 3-4 9-3 11 1 4-1 8 2 7 6z" fill="#ffffff"/>'
-              '<path d="M24 9.6c2 1.6 3 3.4 3 5.4M36 8.6c-1 2-1 4 .4 6M44 11.6c-2 .6-3.4 1.8-4 3.4" fill="none" '
-              'stroke="#b9bdc5" stroke-width=".7" stroke-linecap="round"/>') if full else ""
-    return ('<ellipse cx="32" cy="15" rx="21" ry="4.6" fill="url(#steel)"/><ellipse cx="32" cy="15" rx="19.2" ry="3.4" fill="#8f939b"/>'
-            + papers + f'<path d="{bin_}" fill="url(#bin)"/><path d="{bin_}" fill="url(#mesh)" fill-opacity=".22"/>'
-            + f'<path d="{bin_}" fill="url(#side)"/>'
-            + '<path d="M11 15a21 4.6 0 0 0 42 0" fill="none" stroke="#e9eaed" stroke-width="2"/>'
-            + '<path d="M11.4 16.2a20.6 4.4 0 0 0 41.2 0" fill="none" stroke="#8e9096" stroke-width=".5"/>'
-            + '<path d="M16 57a16 2.6 0 0 0 32 0" fill="none" stroke="#a6a8ac" stroke-width="1.2"/>')
+def trash(full=False, dark=False):
+    """A perforated metal bin seen slightly from above, after the macOS Trash."""
+    k = "-dark" if dark else ""
+    body = "M11 13a21 4.6 0 0 0 42 0l-3.6 43.2a3.5 3.5 0 0 1-3.5 3.2H18.1a3.5 3.5 0 0 1-3.5-3.2z"
+    papers = ('<path d="M17 13c0-5 5-8 10-6 3-4.6 9.6-3.6 11.4.6 4.4-1 8.6 2.4 8.2 6.4z" fill="#ffffff"/>'
+              '<rect x="17" y="12" width="30" height="5" fill="#ffffff"/>'
+              '<path d="M18 9.8c3 0 5 1.4 6 3.6M33 5.6c-1.6 1.8-1.8 4.4-.6 7.2M45.4 9.4c-2.4.4-4.2 1.8-5 3.8M26 6.4c.8 1.2 1 2.8.6 4.4" '
+              'fill="none" stroke="#b9bdc5" stroke-width=".7" stroke-linecap="round"/>') if full else ""
+    return (f'<ellipse cx="32" cy="13" rx="20" ry="4" fill="url(#bin-inside{k})"/>' + papers
+            + f'<path d="{body}" fill="url(#bin{k})"/><path d="{body}" fill="url(#perf{k})"/>'
+            + f'<path d="{body}" fill="url(#side)"/>'
+            + f'<ellipse cx="32" cy="13" rx="21" ry="4.6" fill="none" stroke="url(#rim{k})" stroke-width="2.2"/>'
+            + '<path d="M11.6 12.4a20.4 4 0 0 1 40.8 0" fill="none" stroke="#ffffff" stroke-opacity=".7" stroke-width=".5"/>'
+            + f'<path d="M15.2 55.8a16.8 3 0 0 0 33.6 0" fill="none" stroke="url(#rim{k})" stroke-width="1.6"/>')
+
+
+def trash_icons(dark=False):
+    return {"user-trash": wrap(trash(dark=dark)), "user-trash-full": wrap(trash(full=True, dark=dark))}
 
 
 def server():
@@ -675,8 +696,7 @@ def wrap(art):
 
 def places():
     """The places drawn as objects rather than folders."""
-    return {name: wrap(art) for name, art in {"user-trash": trash(), "user-trash-full": trash(full=True),
-                                              "network-server": server(), "network-workgroup": globe()}.items()}
+    return {**trash_icons(), "network-server": wrap(server()), "network-workgroup": wrap(globe())}
 
 
 def icons(glyph, label):
