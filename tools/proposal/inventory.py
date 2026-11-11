@@ -11,8 +11,10 @@ MAL, BK = sys.argv[1], sys.argv[2]
 
 theme = {}
 for size in ("symbolic", "scalable", "16x16"):
-    for ctx in os.listdir(f"{ROOT}/Adwaita/{size}"):
-        for f in os.listdir(f"{ROOT}/Adwaita/{size}/{ctx}"):
+    if not os.path.isdir(f"{ROOT}/Malaysia/{size}"):
+        continue
+    for ctx in os.listdir(f"{ROOT}/Malaysia/{size}"):
+        for f in os.listdir(f"{ROOT}/Malaysia/{size}/{ctx}"):
             theme.setdefault(os.path.splitext(f)[0], []).append(f"{size}/{ctx}")
 
 # Nombre freedesktop/Adwaita candidato por ícono del escritorio (en orden de preferencia)

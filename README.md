@@ -1,35 +1,61 @@
-# Adwaita Icon Theme
-Private UI icon set for GNOME core apps.
+# Malaysia Icon Theme
 
-![Adwaita Icons](src/logo.svg)
+Icon theme for the [Malaysia](https://github.com/HBlanqueto/malaysia) Wayland desktop.
 
-## Bugs and Requests
-If you're a core GNOME application maintainer (`Files` and `gnome-shell`, really) and you have an icon need that bridges multiple components or apps, feel free to file a request in the [issue tracker](https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/issues). If you're an application developer, file a request against the [Icon Development Kit](https://gitlab.gnome.org/Teams/Design/icon-development-kit/-/issues) instead.
+Malaysia started as a fork of the [Adwaita icon theme](https://gitlab.gnome.org/GNOME/adwaita-icon-theme)
+51.0. It now ships only the icons it keeps or redraws and inherits everything else:
 
+```ini
+[Icon Theme]
+Name=Malaysia
+Inherits=Adwaita,hicolor
+```
 
-## Fullcolor vs symbolic
-For an up to date guide on how to use and how to design GNOME style icons, see the GNOME User Interface Guidelines: [UI Icons](https://developer.gnome.org/hig/guidelines/ui-icons.html) and [App Icons](https://developer.gnome.org/hig/guidelines/app-icons.html).
+An icon that is not in `Malaysia/` is looked up in Adwaita (and, through Adwaita, in
+AdwaitaLegacy) and then in hicolor. The `adwaita-icon-theme` package therefore has to
+be installed next to this one.
 
-## Building and Contributing to Adwaita
-The icon set for system components shares the same workflow as 3rd party app symbolics, the [icon devkit](https://gitlab.gnome.org/Teams/Design/icon-development-kit). Icon devkit provides more detailed guidelines on the symbolic style.
+## Layout
 
-While many legacy symbolics only live as the exported individual SVGS in `Adwaita/symbolic/`, the replacements are maintained in `src/symbolic/core.svg`. Using icon categories/contexts are [no longer used](https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/issues/73) and all new icons go into `actions`. Please refer to the [Devkit guidelines](https://gitlab.gnome.org/Teams/Design/icon-development-kit) on how to structure the metadata.
+```
+Malaysia/
+├── scalable/   full-color SVG: devices, mimetypes, places, status (apps later)
+└── symbolic/   recolorable SVG: actions, categories, devices, mimetypes, places, status, ui
+src/            Inkscape sources inherited from Adwaita (fullcolor/*.source.svg, symbolic/core.svg)
+docs/           icon map and the Malaysia Icons 2 proposal
+tools/          generators for the pages in docs/
+```
 
-Do note that no new additions should be made unless very thoroughly discussed. *a-i-t* is the wrong way to reuse icon assets (no API, false promise of stability).
+Compared with Adwaita 51.0, phase 1 of the proposal removed `16x16/` (PNG copies of the
+scalable icons), `symbolic/legacy/` and `symbolic/emotes/`. All three still resolve through
+the `Adwaita` parent theme.
 
-### Recoloring
-The color of the icon set is defined at runtime by [gtk](https://gtk.org). Every single icon from the set is actually embedded inside an xml container that has a stylesheet overriding the colors.
+## Build and install
 
-There is a couple of things the icon author needs to be aware of and a few things they can make use of. The stylesheet is setting the color of the fill for all rectangles and paths. **DO NOT** leave any rectangles or paths with no fill/stroke thinking it's invisible.
+```sh
+meson setup _build
+meson install -C _build
+```
 
-[Symbolic Preview](https://flathub.org/apps/details/org.gnome.design.SymbolicPreview) doesn't convert strokes to paths yet, so you need to do it manually for now in Inkscape (`Path -> Stroke to Path`). Alternatively you can add Live path effect `join type` to your stroke and keep it non destructive.
+This installs the theme to `$prefix/share/icons/Malaysia` and refreshes its icon cache.
+To use it in the Malaysia desktop, set `MALAYSIA_ICON_THEME=Malaysia` for the launcher
+and choose `Malaysia` as the GTK icon theme.
 
-Gtk doesn't care about the colors you define for the icon. They are recolored at runtime. If you need portions of icons to have a color, you need to include a `class` attribute to the shape or group and set it to one of the three values below. 
+## Pages
 
-- `warning` - this maps to gtk `@warning_color`
-- `error` - maps to `@error_color`
-- `success` - maps to `@success_color`
+- `docs/icon-map.html`: every icon in the theme, searchable. Regenerate with
+  `python3 tools/build-icon-map.py`.
+- `docs/propuesta-malaysia-icons.html`: the Malaysia Icons 2 proposal (in Spanish).
+  Regenerate with `python3 tools/proposal/build.py <malaysia> <barrierkit>`.
 
-### Cursors
+## Symbolic icons and recoloring
 
-The legacy xcursorgen based Adwaita cursors (sources, tooling, and built files) live in the [adwaita-icon-theme-legacy](https://gitlab.gnome.org/GNOME/adwaita-icon-theme-legacy) module.
+GTK recolors symbolic icons at runtime: it wraps each one in a stylesheet that sets the
+fill of every path and rectangle. Do not leave a path or rectangle without a fill or a
+stroke on the assumption that it is invisible. To keep part of an icon in color, set
+`class` on the shape or group to `warning`, `error` or `success`.
+
+## License
+
+Same as Adwaita: GNU LGPL v3 or Creative Commons Attribution-Share Alike 3.0 (see
+`COPYING`). The artwork inherited from Adwaita is by the GNOME Project (see `AUTHORS`).

@@ -1,0 +1,22 @@
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <name xml:lang="en">malaysia-icon-theme</name>
+  <shortdesc xml:lang="en">Icon theme for the Malaysia desktop</shortdesc>
+  <description>
+  Malaysia is the icon theme of the Malaysia Wayland desktop. It is based on the
+  Adwaita icon theme and inherits from it any icon it does not redraw.
+  </description>
+  <homepage rdf:resource="https://github.com/HBlanqueto/malaysia-icon-theme" />
+  <bug-database rdf:resource="https://github.com/HBlanqueto/malaysia-icon-theme/issues" />
+  <programming-language>SVG</programming-language>
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>HBlanqueto</foaf:name>
+    </foaf:Person>
+  </maintainer>
+</Project>

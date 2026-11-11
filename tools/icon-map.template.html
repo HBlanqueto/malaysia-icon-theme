@@ -115,7 +115,7 @@ dialog::backdrop { background: rgba(0,0,0,.4) }
 <header class="wrap top">
   <div>
     <h1>Malaysia Icon Map</h1>
-    <p class="sub">Mapa completo del directorio <code>Adwaita/</code> del repositorio <code>malaysia-icon-theme</code> (base Adwaita <span id="ver"></span>). Cada ícono aparece en su conjunto (<code>symbolic</code>, <code>scalable</code>, <code>16x16</code>) y contexto. Toca un ícono para ver su ruta y sus variantes en otros conjuntos.</p>
+    <p class="sub">Mapa completo del directorio <code>Malaysia/</code> del repositorio <code>malaysia-icon-theme</code> (versión <span id="ver"></span>, basado en Adwaita 51.0). Cada ícono aparece en su conjunto (<code>symbolic</code>, <code>scalable</code>, <code>16x16</code>) y contexto. Toca un ícono para ver su ruta y sus variantes en otros conjuntos.</p>
   </div>
   <div class="stats" id="stats"></div>
 </header>
@@ -151,7 +151,7 @@ dialog::backdrop { background: rgba(0,0,0,.4) }
 const DATA = /*__DATA__*/null;
 const icons = DATA.icons;
 document.getElementById("ver").textContent = DATA.version;
-const SETS = ["symbolic", "scalable", "16x16"];
+const SETS = ["symbolic", "scalable", "16x16"].filter(s => icons.some(i => i.s === s));
 const SET_LABEL = { symbolic: "Symbolic", scalable: "Scalable (color)", "16x16": "16×16 PNG" };
 const SET_COLOR = { symbolic: "var(--accent)", scalable: "var(--ok)", "16x16": "var(--warn)" };
 const state = { set: "all", ctx: "all", q: "" };
@@ -201,7 +201,7 @@ function render() {
   const keys = Object.keys(groups).sort((a, b) => SETS.indexOf(a.split("/")[0]) - SETS.indexOf(b.split("/")[0]) || a.localeCompare(b));
   document.getElementById("main").innerHTML = keys.length ? keys.map(k => {
     const [s, c] = k.split("/");
-    return `<section class="grp"><h2>${c} <span class="path">Adwaita/${k}/</span><span class="n">${SET_LABEL[s]} · ${groups[k].length}</span></h2><div class="grid">` +
+    return `<section class="grp"><h2>${c} <span class="path">Malaysia/${k}/</span><span class="n">${SET_LABEL[s]} · ${groups[k].length}</span></h2><div class="grid">` +
       groups[k].map(i => `<button class="tile" data-i="${i.i}" title="${i.n}"><span class="ic">${art(i)}</span><span class="nm">${esc(i.n)}</span>${i.l ? `<span class="tag">→ ${esc(i.l)}</span>` : i.k ? `<span class="tag">color</span>` : ""}</button>`).join("") +
       `</div></section>`;
   }).join("") : `<div class="empty">No hay íconos que coincidan con “${esc(state.q)}”. Prueba con otro nombre o elige “Todos”.</div>`;
@@ -210,7 +210,7 @@ document.getElementById("main").onclick = e => { const b = e.target.closest(".ti
 
 function openDlg(it) {
   const ext = it.s === "16x16" ? "png" : "svg";
-  const path = `Adwaita/${it.s}/${it.c}/${it.n}.${ext}`;
+  const path = `Malaysia/${it.s}/${it.c}/${it.n}.${ext}`;
   const sib = (byBase[base(it.n)] || []).filter(x => x !== it);
   const src = DATA.sources.includes(base(it.n));
   document.getElementById("dlgBody").innerHTML = `

@@ -17,7 +17,7 @@ def theme_art(name, loc, uid):
         return ""
     size, ctx = loc.split("/")
     ext = "png" if size == "16x16" else "svg"
-    p = f"{ROOT}/Adwaita/{loc}/{name}.{ext}"
+    p = f"{ROOT}/Malaysia/{loc}/{name}.{ext}"
     raw = open(os.path.realpath(p), "rb").read()
     if size == "symbolic":
         s = re.sub(r"<\?xml[^>]*\?>", "", raw.decode())

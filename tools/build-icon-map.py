@@ -7,7 +7,7 @@ import base64, json, os, re
 from collections import defaultdict
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-THEME = os.path.join(ROOT, "Adwaita")
+THEME = os.path.join(ROOT, "Malaysia")
 OUT = os.path.join(ROOT, "docs", "icon-map.html")
 
 NEUTRAL = re.compile(r'(fill|stroke)="#(2e3436|2e3434|474747|222|222222|2d3336|000|000000)"', re.I)
