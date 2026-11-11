@@ -1,35 +1,139 @@
-# Adwaita Icon Theme
-Private UI icon set for GNOME core apps.
+# Malaysia Icon Theme
 
-![Adwaita Icons](src/logo.svg)
+Icon theme for the [Malaysia](https://github.com/HBlanqueto/malaysia) Wayland desktop.
 
-## Bugs and Requests
-If you're a core GNOME application maintainer (`Files` and `gnome-shell`, really) and you have an icon need that bridges multiple components or apps, feel free to file a request in the [issue tracker](https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/issues). If you're an application developer, file a request against the [Icon Development Kit](https://gitlab.gnome.org/Teams/Design/icon-development-kit/-/issues) instead.
+Malaysia started as a fork of the [Adwaita icon theme](https://gitlab.gnome.org/GNOME/adwaita-icon-theme)
+51.0. It now ships only the icons it keeps or redraws and inherits everything else:
 
+```ini
+[Icon Theme]
+Name=Malaysia
+Inherits=Adwaita,hicolor
+```
 
-## Fullcolor vs symbolic
-For an up to date guide on how to use and how to design GNOME style icons, see the GNOME User Interface Guidelines: [UI Icons](https://developer.gnome.org/hig/guidelines/ui-icons.html) and [App Icons](https://developer.gnome.org/hig/guidelines/app-icons.html).
+An icon that is not in `Malaysia/` is looked up in Adwaita (and, through Adwaita, in
+AdwaitaLegacy) and then in hicolor. The `adwaita-icon-theme` package therefore has to
+be installed next to this one.
 
-## Building and Contributing to Adwaita
-The icon set for system components shares the same workflow as 3rd party app symbolics, the [icon devkit](https://gitlab.gnome.org/Teams/Design/icon-development-kit). Icon devkit provides more detailed guidelines on the symbolic style.
+## Layout
 
-While many legacy symbolics only live as the exported individual SVGS in `Adwaita/symbolic/`, the replacements are maintained in `src/symbolic/core.svg`. Using icon categories/contexts are [no longer used](https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/issues/73) and all new icons go into `actions`. Please refer to the [Devkit guidelines](https://gitlab.gnome.org/Teams/Design/icon-development-kit) on how to structure the metadata.
+```
+Malaysia/
+├── scalable/   full-color SVG: apps, devices, mimetypes, places, status
+└── symbolic/   recolorable SVG: actions, categories, devices, mimetypes, places, status, ui
+src/            Inkscape sources inherited from Adwaita (fullcolor/*.source.svg, symbolic/core.svg)
+docs/           icon map and the Malaysia Icons 2 proposal
+tools/          generators for the pages in docs/
+```
 
-Do note that no new additions should be made unless very thoroughly discussed. *a-i-t* is the wrong way to reuse icon assets (no API, false promise of stability).
+Compared with Adwaita 51.0, phase 1 of the proposal removed `16x16/` (PNG copies of the
+scalable icons), `symbolic/legacy/` and `symbolic/emotes/`. All three still resolve through
+the `Adwaita` parent theme.
 
-### Recoloring
-The color of the icon set is defined at runtime by [gtk](https://gtk.org). Every single icon from the set is actually embedded inside an xml container that has a stylesheet overriding the colors.
+## Desktop symbols
 
-There is a couple of things the icon author needs to be aware of and a few things they can make use of. The stylesheet is setting the color of the fill for all rectangles and paths. **DO NOT** leave any rectangles or paths with no fill/stroke thinking it's invisible.
+The Malaysia desktop draws its own symbols in code: the `Symbol` enum in barrierkit
+(`crates/bk/src/symbol.rs`) and the menu icons in malaysia-shell (`src/menubar/icons.rs`).
+Phase 2 brought those 97 symbols into the theme under their freedesktop names, so GTK and
+Qt apps use the same glyphs as the desktop. `docs/symbols.md` lists every symbol with its
+name in the theme.
 
-[Symbolic Preview](https://flathub.org/apps/details/org.gnome.design.SymbolicPreview) doesn't convert strokes to paths yet, so you need to do it manually for now in Inkscape (`Path -> Stroke to Path`). Alternatively you can add Live path effect `join type` to your stroke and keep it non destructive.
+- `src/malaysia-symbolic/<context>/<name>.svg` holds the editable sources, drawn with
+  strokes on a 16 px grid (stroke width from barrierkit's `components.symbol.stroke`).
+- `Malaysia/symbolic/<context>/<name>.svg` holds the exported icons. GTK forces `fill` on
+  every `path`, `rect` and `circle` of a symbolic icon and ignores `stroke`, so the exporter
+  turns every stroke into a filled outline.
 
-Gtk doesn't care about the colors you define for the icon. They are recolored at runtime. If you need portions of icons to have a color, you need to include a `class` attribute to the shape or group and set it to one of the three values below. 
+```sh
+pip install -r tools/requirements.txt
+python3 tools/symbols/import_desktop.py <malaysia> <barrierkit>   # code → src/malaysia-symbolic
+python3 tools/symbols/export.py                                   # src/malaysia-symbolic → Malaysia/symbolic
+python3 tools/symbols/export.py --check                           # fails if an export is out of date
+```
 
-- `warning` - this maps to gtk `@warning_color`
-- `error` - maps to `@error_color`
-- `success` - maps to `@success_color`
+Edit a source in `src/malaysia-symbolic/` and run `export.py`; do not edit the exported
+file. Running `import_desktop.py` again overwrites the sources with what the desktop code
+draws.
 
-### Cursors
+## Folders and file types
 
-The legacy xcursorgen based Adwaita cursors (sources, tooling, and built files) live in the [adwaita-icon-theme-legacy](https://gitlab.gnome.org/GNOME/adwaita-icon-theme-legacy) module.
+Phase 3 replaced the full-color folders and file types with generated ones:
+
+- **Folders** (14 in `scalable/places`, plus `inode-directory`): a blue folder with the
+  folder's symbol embossed on the front. The symbol comes from `src/malaysia-symbolic`.
+- **File types** (26, in `scalable/mimetypes`): a white page, the type's symbol, and a
+  colored label. The label letters are stroked paths, not `<text>`, so they look the
+  same without any font installed. Templates (`*-template`) get a dashed page edge.
+
+`tools/color/build.py` writes all of them; to add a folder or a file type, add a row to
+`FOLDERS` or `MIMETYPES` and run it. Do not edit the generated SVGs.
+
+```sh
+python3 tools/color/build.py            # Malaysia/ and Malaysia-Dark/
+python3 tools/color/build.py --check    # fails if a generated file is out of date
+python3 tools/color/build.py --tint '#e8a33d' --out ~/.local/share/icons/Malaysia-Tinted
+```
+
+Variants are separate themes, because an icon theme cannot change with the color scheme:
+
+- `Malaysia` has the light folders and app icons.
+- `Malaysia-Dark` (installed next to it, `Inherits=Malaysia`) has only the dark folders and
+  app icons.
+- A tinted theme is generated on demand with `--tint` from the user's accent color.
+
+The Adwaita sources in `src/fullcolor/` for these icons are no longer used.
+`network-server`, `network-workgroup` and `user-trash` are still Adwaita's drawings.
+
+## App icons
+
+Phase 4 redrew the icons of the desktop's own apps, Settings
+(`io.github.hblanqueto.malaysia.settings`) and Screenshot
+(`io.github.hblanqueto.malaysia.screenshot`). They live in `scalable/apps`, which is
+searched before `hicolor`, so they replace the copies the desktop installs in `hicolor`
+whenever the Malaysia theme is active. `tools/color/build.py` generates them too; add a
+row to `APPS` for a new app.
+
+Each icon has three layers that change with the variant:
+
+1. **Background**: a continuous-corner squircle (superellipse, n = 5) filling 824 of
+   1024 units, with a two-tone vertical gradient.
+2. **Figure**: the app's 16 px symbol at 3.2× with a 1.6 stroke and a short drop below.
+   White in light, the app's color in dark, the accent in tinted.
+3. **Edge**: an inner highlight along the top and an 18 % outline.
+
+The shadow around the icon is left to whatever draws it (the Dock), not baked in.
+
+The generator checks WCAG 2.2 non-text contrast (1.4.11, 3:1) between every figure and
+background color and stops if a light or dark icon falls short. In the tinted variant the
+accent is the user's choice, so it lightens the figure until it reaches 3:1.
+
+## Build and install
+
+```sh
+meson setup _build
+meson install -C _build
+```
+
+This installs `Malaysia` and `Malaysia-Dark` to `$prefix/share/icons/` and refreshes their
+icon caches.
+To use it in the Malaysia desktop, set `MALAYSIA_ICON_THEME=Malaysia` for the launcher
+and choose `Malaysia` as the GTK icon theme.
+
+## Pages
+
+- `docs/icon-map.html`: every icon in the theme, searchable. Regenerate with
+  `python3 tools/build-icon-map.py`.
+- `docs/propuesta-malaysia-icons.html`: the Malaysia Icons 2 proposal (in Spanish).
+  Regenerate with `python3 tools/proposal/build.py <malaysia> <barrierkit>`.
+
+## Symbolic icons and recoloring
+
+GTK recolors symbolic icons at runtime: it wraps each one in a stylesheet that sets the
+fill of every path and rectangle. Do not leave a path or rectangle without a fill or a
+stroke on the assumption that it is invisible. To keep part of an icon in color, set
+`class` on the shape or group to `warning`, `error` or `success`.
+
+## License
+
+Same as Adwaita: GNU LGPL v3 or Creative Commons Attribution-Share Alike 3.0 (see
+`COPYING`). The artwork inherited from Adwaita is by the GNOME Project (see `AUTHORS`).

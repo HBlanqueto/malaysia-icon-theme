@@ -1,0 +1,512 @@
+<title>Malaysia Icons 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: documento de propuesta en una columna ancha; cada sección es una "lámina" con su muestra visual y la regla que la justifica */
+:root {
+  --bg: #f5f6f8;
+  --sheet: #ffffff;
+  --fg: #16181c;
+  --muted: #5f6570;
+  --line: #e1e4ea;
+  --accent: #0a6cff;
+  --accent-soft: #e3eeff;
+  --ok: #1f8f4e; --ok-soft: #e1f4e8;
+  --alias: #a05a00; --alias-soft: #fbefd9;
+  --miss: #c42b2b; --miss-soft: #fbe3e3;
+  --f-display: "Inter Tight", "Inter", system-ui, sans-serif;
+  --f-body: "Inter", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111316; --sheet: #1b1e22; --fg: #eef0f3; --muted: #9aa1ac; --line: #2c3036;
+  --accent: #4c9dff; --accent-soft: #15284a;
+  --ok: #5fd38d; --ok-soft: #133524; --alias: #f2b35b; --alias-soft: #3a2a10; --miss: #ff7d7d; --miss-soft: #3d1717; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111316; --sheet: #1b1e22; --fg: #eef0f3; --muted: #9aa1ac; --line: #2c3036;
+  --accent: #4c9dff; --accent-soft: #15284a;
+  --ok: #5fd38d; --ok-soft: #133524; --alias: #f2b35b; --alias-soft: #3a2a10; --miss: #ff7d7d; --miss-soft: #3d1717; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 15px/1.55 var(--f-body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: -0.015em }
+h1 { font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.05 }
+h2 { font-size: 1.5rem }
+h3 { font-size: 1.05rem }
+p { margin: 0; max-width: 68ch }
+code, .mono { font-family: var(--f-mono); font-size: .84em }
+.eyebrow { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600 }
+header.hero { padding-block: 40px 28px; display: grid; gap: 20px }
+.hero .lede { font-size: 1.08rem; color: var(--muted) }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px }
+.kpi { background: var(--sheet); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: grid; gap: 2px }
+.kpi b { font-family: var(--f-display); font-size: 1.9rem; line-height: 1.1; font-variant-numeric: tabular-nums }
+.kpi span { font-size: .82rem; color: var(--muted) }
+.kpi.ok b { color: var(--ok) } .kpi.alias b { color: var(--alias) } .kpi.miss b { color: var(--miss) }
+.finding { background: var(--accent-soft); border-radius: 12px; padding: 14px 18px; display: grid; gap: 4px }
+.finding p { max-width: none }
+
+section.sheet { background: var(--sheet); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: grid; gap: 18px; margin-block: 0 22px; min-width: 0 }
+.sheet > header { display: grid; gap: 6px }
+.sheet > header p { color: var(--muted) }
+.sub { display: grid; gap: 10px }
+
+/* inventario */
+.filters { display: flex; flex-wrap: wrap; gap: 6px }
+.fbtn { font: inherit; font-size: .82rem; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--sheet); color: var(--fg); cursor: pointer; font-variant-numeric: tabular-nums }
+.fbtn[aria-pressed="true"] { background: var(--fg); color: var(--sheet); border-color: var(--fg) }
+.fbtn:focus-visible, .mbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.inv-group h3 { font-size: .9rem; margin-bottom: 8px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap }
+.inv-group h3 span { font-family: var(--f-mono); font-weight: 400; font-size: .74rem; color: var(--muted) }
+.inv { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px }
+.card { border: 1px solid var(--line); border-radius: 10px; padding: 10px; display: grid; grid-template-columns: auto auto 1fr; gap: 10px; align-items: center; min-width: 0 }
+.pair { display: grid; gap: 2px; justify-items: center }
+.pair small { font-size: .58rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em }
+.glyph { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; background: var(--bg); color: var(--fg) }
+.glyph svg, .glyph img { width: 20px; height: 20px; display: block }
+.glyph.big svg, .glyph.big img { width: 30px; height: 30px }
+.glyph.none { color: var(--muted); font-size: .8rem }
+.meta { min-width: 0; display: grid; gap: 3px }
+.meta .k { font-family: var(--f-mono); font-size: .75rem; overflow-wrap: anywhere }
+.meta .n { font-family: var(--f-mono); font-size: .68rem; color: var(--muted); overflow-wrap: anywhere }
+.pill { justify-self: start; font-size: .64rem; font-weight: 600; padding: 1px 7px; border-radius: 999px; letter-spacing: .02em }
+.pill.exact { background: var(--ok-soft); color: var(--ok) }
+.pill.alias { background: var(--alias-soft); color: var(--alias) }
+.pill.missing { background: var(--miss-soft); color: var(--miss) }
+
+/* reglas */
+.rules { display: grid; gap: 0; border-top: 1px solid var(--line) }
+.rule { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 20px; padding-block: 14px; border-bottom: 1px solid var(--line) }
+.rule .gg { color: var(--muted); font-size: .9rem }
+.rule .gg b { color: var(--fg); display: block; font-size: .95rem; margin-bottom: 2px }
+.rule .ml { font-size: .92rem }
+.rule .ml b { color: var(--accent) }
+@media (max-width: 720px) { .rule { grid-template-columns: 1fr; gap: 6px } }
+
+/* láminas visuales */
+.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; font-size: .84rem }
+.spec div { border-left: 2px solid var(--accent); padding-left: 10px }
+.spec b { display: block; font-family: var(--f-mono); font-size: .8rem }
+.spec span { color: var(--muted) }
+.symgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line) }
+.sym { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 14px 6px 10px; display: grid; justify-items: center; gap: 8px; position: relative }
+.sym svg { width: 24px; height: 24px; color: var(--fg) }
+.sym .nm { font-family: var(--f-mono); font-size: .6rem; color: var(--muted); text-align: center; overflow-wrap: anywhere; line-height: 1.3 }
+.sym .src { position: absolute; top: 5px; right: 6px; width: 6px; height: 6px; border-radius: 50% }
+.src.bk { background: var(--ok) } .src.shell { background: var(--accent) } .src.new { background: var(--alias) }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: .78rem; color: var(--muted) }
+.legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: 1px }
+.scale { display: flex; gap: 22px; align-items: end; flex-wrap: wrap; padding: 16px; border-radius: 12px; background: var(--bg) }
+.scale figure { margin: 0; display: grid; gap: 6px; justify-items: center }
+.scale figcaption { font-family: var(--f-mono); font-size: .66rem; color: var(--muted) }
+.pairs { display: flex; flex-wrap: wrap; gap: 10px }
+.pairs .pp { display: flex; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px }
+.pairs svg { width: 22px; height: 22px }
+.pairs .pp span { font-family: var(--f-mono); font-size: .66rem; color: var(--muted) }
+
+.side { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 22px; align-items: start }
+@media (max-width: 760px) { .side { grid-template-columns: 1fr } }
+.sidebar { border-radius: 14px; background: var(--bg); padding: 10px; display: grid; gap: 2px }
+.sb { display: flex; gap: 10px; align-items: center; padding: 5px 8px; border-radius: 8px; font-size: .88rem }
+.sb.on { background: var(--accent-soft) }
+.tile { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; flex: none; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.28) }
+.tile svg { width: 15px; height: 15px; color: #fff }
+.sb .lab { flex: 1; min-width: 0 }
+.sb .hex { font-family: var(--f-mono); font-size: .62rem; color: var(--muted) }
+
+.modes { display: inline-flex; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; justify-self: start }
+.mbtn { font: inherit; font-size: .84rem; padding: 6px 14px; border: 0; background: var(--sheet); color: var(--fg); cursor: pointer }
+.mbtn + .mbtn { border-left: 1px solid var(--line) }
+.mbtn[aria-pressed="true"] { background: var(--fg); color: var(--sheet) }
+.stage { border-radius: 14px; padding: 22px 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 18px 10px; transition: background .25s }
+.stage.light { background: linear-gradient(160deg, #dfe8f3, #f4efe9) }
+.stage.dark { background: linear-gradient(160deg, #1d2430, #0d0f13) }
+.stage.tinted { background: linear-gradient(160deg, #2a2418, #120f0a) }
+.stage figure { margin: 0; display: grid; justify-items: center; gap: 8px; min-width: 0 }
+.stage figure svg { width: 92px; height: 92px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.22)) }
+.stage figcaption { font-size: .78rem; text-align: center; justify-self: stretch; min-width: 0 }
+.stage.light figcaption { color: #1d2026 } .stage.dark figcaption, .stage.tinted figcaption { color: #e9ebef }
+.stage figcaption small { display: block; overflow-wrap: anywhere; font-family: var(--f-mono); font-size: .6rem; opacity: .7 }
+.anat { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; align-items: center }
+.anat svg.big { width: 180px; height: 180px; max-width: 100% }
+.anat ol { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: .88rem }
+.anat ol b { font-weight: 600 }
+@media (max-width: 600px) { .anat { grid-template-columns: 1fr } }
+
+.ba > * { min-width: 0 }
+.tree { max-width: 100%; font-family: var(--f-mono); font-size: .76rem; line-height: 1.6; background: var(--bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; white-space: pre; margin: 0 }
+.ba { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px }
+table { border-collapse: collapse; width: 100%; font-size: .84rem; font-variant-numeric: tabular-nums }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line) }
+th { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600 }
+td.num { text-align: right; font-family: var(--f-mono) }
+.tablewrap { overflow-x: auto }
+.phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; counter-reset: ph }
+.phase { border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 6px; align-content: start }
+.phase .eyebrow { color: var(--accent) }
+.phase ul { margin: 0; padding-left: 18px; font-size: .86rem; display: grid; gap: 4px }
+.sources { font-size: .82rem; color: var(--muted); display: grid; gap: 4px; padding-block: 4px 40px }
+.sources a { color: var(--accent) }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+
+<div class="wrap">
+<header class="hero">
+  <span class="eyebrow">Propuesta · noviembre 2026 · base macOS 27 Golden Gate</span>
+  <h1>Malaysia Icons 2</h1>
+  <p class="lede">Qué íconos usa hoy el escritorio Malaysia, cuáles ya existen en <code>malaysia-icon-theme</code> y cómo debería verse el pack actualizado siguiendo la limpieza visual de macOS 27 Golden Gate.</p>
+  <div class="kpis" id="kpis"></div>
+  <div class="finding">
+    <strong>Hallazgo principal</strong>
+    <p>El escritorio no usa el pack para su propia interfaz. Barra de menú, Dock, Ajustes y diálogos dibujan sus íconos directamente en el código (<code>barrierkit/crates/bk/src/symbol.rs</code> y <code>malaysia-shell/src/menubar/icons.rs</code>). El tema solo lo leen el lanzador (<code>MALAYSIA_ICON_THEME</code>, que hoy vale <code>Adwaita</code>) y las apps GTK. Por eso la propuesta convierte el pack en la fuente única: el estilo de trazo que ya tiene barrierkit pasa al pack, y Adwaita queda solo como respaldo heredado.</p>
+  </div>
+</header>
+
+<section class="sheet" id="inventario">
+  <header>
+    <span class="eyebrow">1 · Inventario</span>
+    <h2>Lo que ya existe</h2>
+    <p>Cada ícono que dibuja el escritorio, al lado de su equivalente actual en el pack (Adwaita). <b>Existe</b>: mismo nombre freedesktop. <b>Otro nombre</b>: hay un ícono parecido con otro nombre. <b>Falta</b>: el pack no lo tiene.</p>
+  </header>
+  <div class="filters" id="filters"></div>
+  <div class="sub" id="inv"></div>
+</section>
+
+<section class="sheet" id="golden-gate">
+  <header>
+    <span class="eyebrow">2 · Criterios</span>
+    <h2>Qué limpió Golden Gate y cómo se aplica aquí</h2>
+    <p>macOS 27 corrigió lo más criticado de Tahoe. Cada cambio se traduce en una regla concreta para el pack y el escritorio.</p>
+  </header>
+  <div class="rules">
+    <div class="rule"><div class="gg"><b>Menús con muchos menos íconos</b>Tahoe había puesto un ícono en casi cada opción de menú; Golden Gate los quitó.</div><div class="ml"><b>Regla:</b> los íconos van en barras laterales, barras de herramientas, Dock y barra de estado. Las opciones de menú quedan solo con texto. En <code>appmenu.rs</code> hay 11 íconos de menú (Ajustes, Papelera, Compartir, Expulsar, Imprimir, Buscar, Emoji, vistas…) que se pueden quitar.</div></div>
+    <div class="rule"><div class="gg"><b>Vuelve el color a la barra lateral</b>Los íconos de la barra lateral recuperan su color.</div><div class="ml"><b>Regla:</b> cada sección de Ajustes lleva un símbolo blanco sobre una ficha de color fija (lámina 3b). El color identifica la sección y no cambia con el acento.</div></div>
+    <div class="rule"><div class="gg"><b>Bordes más nítidos y colores más intensos</b>Se corrigió el aspecto borroso de Tahoe y los colores son más saturados.</div><div class="ml"><b>Regla:</b> íconos a color con degradados cortos de dos tonos, sin desenfoques ni brillos difusos, y alineados a la rejilla de píxeles en 16, 32 y 64.</div></div>
+    <div class="rule"><div class="gg"><b>Contornos para dar definición</b>Varias apps (App Store, FaceTime, Siri…) ganaron un contorno.</div><div class="ml"><b>Regla:</b> todo ícono a color lleva un borde interior de 1 px (luz arriba) y un contorno exterior suave para separarse del fondo de pantalla.</div></div>
+    <div class="rule"><div class="gg"><b>Capas de profundidad en claro, oscuro y tintado</b>Los íconos se construyen por capas que cambian según el modo.</div><div class="ml"><b>Regla:</b> cada ícono de app se define en 3 capas (fondo, figura, borde). De ahí salen las variantes <code>-dark</code> y <code>-tinted</code> sin redibujarlas (lámina 3e).</div></div>
+    <div class="rule"><div class="gg"><b>Se mantiene el squircle</b>La forma de cuadrado redondeado sigue siendo obligatoria en Mac.</div><div class="ml"><b>Regla:</b> los íconos de app usan la plantilla de 1024 px con área útil de 824 px y esquina continua. Los íconos de lugares, archivos y dispositivos conservan su silueta propia.</div></div>
+  </div>
+</section>
+
+<section class="sheet" id="simbolicos">
+  <header>
+    <span class="eyebrow">3a · Propuesta</span>
+    <h2>Malaysia Symbolic</h2>
+    <p>Un solo trazo, con las mismas medidas que ya usa <code>ctdesign</code>. Así el pack y el toolkit dibujan igual. Los íconos se nombran con la convención freedesktop, para que las apps GTK y Qt los encuentren sin cambios.</p>
+  </header>
+  <div class="spec">
+    <div><b>rejilla 16 × 16</b><span>margen óptico de 1.5 px</span></div>
+    <div><b>trazo 1.4 px</b><span>token <code>components.symbol.stroke</code></span></div>
+    <div><b>extremos redondos</b><span>linecap y linejoin round</span></div>
+    <div><b>esquinas r 2.2</b><span>igual que los rectángulos de icons.rs</span></div>
+    <div><b>relleno = estado</b><span>contorno normal, relleno cuando está activo</span></div>
+  </div>
+  <div class="legend"><span><i style="background:var(--ok)"></i>ya existe en barrierkit</span><span><i style="background:var(--accent)"></i>ya existe en malaysia-shell</span><span><i style="background:var(--alias)"></i>nuevo, dibujado para esta propuesta</span></div>
+  <div class="symgrid" id="symgrid"></div>
+  <div class="sub">
+    <h3>Escala y estados</h3>
+    <div class="scale" id="scale"></div>
+    <div class="pairs" id="pairs"></div>
+  </div>
+</section>
+
+<section class="sheet" id="barra-lateral">
+  <header>
+    <span class="eyebrow">3b · Propuesta</span>
+    <h2>Fichas de color para Ajustes</h2>
+    <p>Las secciones reales de <code>malaysia-settings</code> con el símbolo que ya usan, ahora sobre una ficha de color como en la barra lateral de Golden Gate.</p>
+  </header>
+  <div class="side">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="sub">
+      <p>Cada ficha mide 22 px, tiene esquina de 6 px y un símbolo blanco de 15 px. Lleva un borde interior de media línea y un brillo de 1 px arriba. Los colores se agrupan por familia: azul para conexiones, rojo y morado para avisos y concentración, gris para sistema y verde para energía. Así la lista se puede recorrer de un vistazo.</p>
+      <p>Para implementarlo, <code>Row::symbol(symbol, tint)</code> ya recibe un tinte. Solo falta pintar la ficha con ese tinte y el símbolo en blanco.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sheet" id="carpetas">
+  <header>
+    <span class="eyebrow">3c · Propuesta</span>
+    <h2>Carpetas</h2>
+    <p>Una carpeta base azul con la figura en relieve, el mismo recurso que usa macOS. El relieve reutiliza el símbolo de la lámina 3a, así que una carpeta nueva no requiere dibujo nuevo.</p>
+  </header>
+  <div class="modes" role="group" aria-label="Modo de las carpetas" data-target="folders"><button class="mbtn" data-m="light" aria-pressed="true">Claro</button><button class="mbtn" data-m="dark" aria-pressed="false">Oscuro</button><button class="mbtn" data-m="tinted" aria-pressed="false">Tintado</button></div>
+  <div class="stage light" id="folders"></div>
+</section>
+
+<section class="sheet" id="documentos">
+  <header>
+    <span class="eyebrow">3d · Propuesta</span>
+    <h2>Documentos y tipos de archivo</h2>
+    <p>Una hoja blanca con esquina doblada, la figura del tipo en el centro y una etiqueta de color con la extensión. La etiqueta sustituye los 27 dibujos de <code>mimetypes</code> que hay hoy por una sola plantilla.</p>
+  </header>
+  <div class="stage light" id="docs"></div>
+</section>
+
+<section class="sheet" id="apps">
+  <header>
+    <span class="eyebrow">3e · Propuesta</span>
+    <h2>Íconos de app en capas</h2>
+    <p>Squircle con tres capas que se combinan según el modo del sistema. El modo tintado toma el color de acento del usuario; prueba a cambiarlo.</p>
+  </header>
+  <div class="anat">
+    <svg class="big" id="anatomy" viewBox="0 0 100 100" aria-label="Anatomía de un ícono de app"></svg>
+    <ol>
+      <li><b>Fondo</b>: squircle de 80 de 100 unidades (824 de 1024), con un degradado vertical de dos tonos.</li>
+      <li><b>Figura</b>: el símbolo de la lámina 3a, ampliado 3.2 veces y con un trazo de 1.6. En claro va blanca; en oscuro toma el color de la app.</li>
+      <li><b>Borde</b>: una luz interior de 1 px arriba y un contorno exterior al 18 %. Es el contorno nuevo de Golden Gate.</li>
+      <li><b>Sombra</b>: una sola caída de 6 px que la pinta el sistema, no el archivo SVG.</li>
+    </ol>
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <div class="modes" role="group" aria-label="Modo de los íconos" data-target="appstage"><button class="mbtn" data-m="light" aria-pressed="true">Claro</button><button class="mbtn" data-m="dark" aria-pressed="false">Oscuro</button><button class="mbtn" data-m="tinted" aria-pressed="false">Tintado</button></div>
+    <label style="font-size:.84rem;color:var(--muted);display:inline-flex;gap:8px;align-items:center" for="tint">Acento del tintado <input id="tint" type="color" value="#e8a33d"></label>
+  </div>
+  <div class="stage light" id="appstage"></div>
+</section>
+
+<section class="sheet" id="estructura">
+  <header>
+    <span class="eyebrow">4 · Limpieza</span>
+    <h2>Estructura del pack actualizado</h2>
+    <p>El pack deja de ser una copia completa de Adwaita. Incluye solo lo que Malaysia dibuja con su propio estilo y hereda el resto de Adwaita y hicolor. Lo que todavía no se ha rediseñado sigue funcionando porque se toma de Adwaita.</p>
+  </header>
+  <div class="ba">
+    <div class="tablewrap"><table>
+      <thead><tr><th>Carpeta</th><th class="num">Hoy</th><th class="num">Propuesta</th></tr></thead>
+      <tbody id="ba"></tbody>
+    </table></div>
+<pre class="tree">Malaysia/
+├── index.theme        Name=Malaysia · Inherits=Adwaita,hicolor
+├── symbolic/
+│   ├── actions/       edit-*, list-*, view-*, window-tile-*
+│   ├── devices/       input-*, audio-*, computer, phone
+│   ├── places/        folder-*, user-*
+│   └── status/        network-*, battery-*, bluetooth-*, audio-volume-*
+└── scalable/
+    ├── apps/          io.github.hblanqueto.malaysia.*  (+ -dark, -tinted)
+    ├── places/        folder, folder-documents, … user-trash
+    ├── mimetypes/     generados desde una plantilla con etiqueta
+    └── devices/       dibujos de Ajustes › Bluetooth</pre>
+  </div>
+  <div class="phases">
+    <div class="phase"><span class="eyebrow">Fase 1 · identidad</span><h3>Renombrar y heredar</h3><ul><li>Cambiar <code>index.theme</code> a <code>Name=Malaysia</code> con <code>Inherits=Adwaita,hicolor</code>.</li><li>Borrar <code>16x16/</code>, <code>symbolic/legacy</code> y <code>symbolic/emotes</code>; los cubre la herencia.</li><li>Cambiar <code>MALAYSIA_ICON_THEME</code> a <code>Malaysia</code>.</li></ul></div>
+    <div class="phase"><span class="eyebrow">Fase 2 · símbolos</span><h3>Una sola fuente</h3><ul><li>Exportar los 61 <code>Symbol</code> de barrierkit y los 39 de <code>icons.rs</code> como SVG con su nombre freedesktop.</li><li>Agregar los 19 que faltan, incluidos los 12 <code>window-tile-*</code>.</li><li>Hacer que barrierkit lea el tema y use su código solo como respaldo.</li></ul></div>
+    <div class="phase"><span class="eyebrow">Fase 3 · color</span><h3>Lugares y archivos</h3><ul><li>Carpetas en capas, con versión clara, oscura y tintada.</li><li>Tipos de archivo generados por un script desde la plantilla con etiqueta.</li><li>Fichas de color en la barra lateral de Ajustes.</li></ul></div>
+    <div class="phase"><span class="eyebrow">Fase 4 · apps</span><h3>Squircle</h3><ul><li>Rehacer los íconos de Ajustes y Captura con la plantilla en capas.</li><li>Quitar los íconos de las opciones de menú (<code>appmenu.rs</code>).</li><li>Revisar el contraste de las 3 variantes con WCAG 2.2 (mínimo 3:1 para la figura).</li></ul></div>
+  </div>
+</section>
+
+<div class="sources">
+  <strong style="color:var(--fg)">Fuentes</strong>
+  <span>Repositorios: <code>HBlanqueto/malaysia</code> (shell, Ajustes, diálogos), <code>HBlanqueto/barrierkit</code> (Symbol, tokens de ctdesign) y <code>HBlanqueto/malaysia-icon-theme</code> (pack Adwaita 51.0).</span>
+  <span>macOS 27 Golden Gate: <a href="https://9to5mac.com/2026/06/09/macos-27-golden-gate-includes-these-changes-that-tahoe-critics-will-appreciate/">9to5Mac, cambios para críticos de Tahoe</a> · <a href="https://tidbits.com/2026/06/22/macos-27-golden-gate-sharpens-tahoes-blurry-icons/">TidBITS, íconos más nítidos</a> · <a href="https://www.macworld.com/article/3161244/macos-golden-gate-in-pictures-5-design-upgrades-coming-to-your-mac.html">Macworld, 5 mejoras de diseño</a> · <a href="https://9to5mac.com/2026/09/14/macos-27-golden-gate-now-available-here-is-everything-new/">9to5Mac, lanzamiento</a> · <a href="https://www.apple.com/os/macos/">Apple, macOS</a></span>
+  <span>Golden Gate es una referencia de dirección visual. No se copia ningún ícono de Apple: todas las figuras están dibujadas desde cero en la rejilla de Malaysia.</span>
+</div>
+</div>
+
+<script>
+const INV = /*__INV__*/null;
+const items = INV.items;
+const ST = { exact: "Existe", alias: "Otro nombre", missing: "Falta" };
+const cnt = s => items.filter(i => i.st === s).length;
+document.getElementById("kpis").innerHTML = [
+  ["", items.length, "íconos dibujados por el escritorio"],
+  ["ok", cnt("exact"), "ya existen en el pack con el mismo nombre"],
+  ["alias", cnt("alias"), "existen con otro nombre"],
+  ["miss", cnt("missing"), "faltan en el pack"],
+].map(([c, n, l]) => `<div class="kpi ${c}"><b>${n}</b><span>${l}</span></div>`).join("");
+
+// ---------- inventario
+let filter = "all";
+function drawInv() {
+  const f = document.getElementById("filters");
+  f.innerHTML = [["all", "Todos", items.length], ["exact", ST.exact, cnt("exact")], ["alias", ST.alias, cnt("alias")], ["missing", ST.missing, cnt("missing")]]
+    .map(([k, l, n]) => `<button class="fbtn" data-f="${k}" aria-pressed="${filter === k}">${l} · ${n}</button>`).join("");
+  const groups = {};
+  items.filter(i => filter === "all" || i.st === filter).forEach(i => (groups[i.g] ||= []).push(i));
+  document.getElementById("inv").innerHTML = Object.entries(groups).map(([g, list]) => `
+    <div class="inv-group"><h3>${g} <span>${list[0].src.replace(/\/[^/]*$/, "/")} · ${list.length}</span></h3><div class="inv">` +
+    list.map(i => `<div class="card">
+      <div class="pair"><div class="glyph ${i.g.startsWith("Ajustes") || i.g.startsWith("Íconos") ? "big" : ""}">${i.svg}</div><small>escritorio</small></div>
+      <div class="pair"><div class="glyph ${i.cur ? "" : "none"} ${i.g.startsWith("Ajustes") || i.g.startsWith("Íconos") ? "big" : ""}">${i.cur || "—"}</div><small>pack hoy</small></div>
+      <div class="meta"><span class="k">${i.k}</span><span class="n">${i.name || "sin equivalente"}</span><span class="pill ${i.st}">${ST[i.st]}</span></div>
+    </div>`).join("") + `</div></div>`).join("");
+}
+document.getElementById("filters").onclick = e => { const b = e.target.closest(".fbtn"); if (b) { filter = b.dataset.f; drawInv() } };
+drawInv();
+
+// ---------- símbolos
+const bkPath = k => { const it = items.find(i => i.k === k); const m = it && it.svg.match(/d="([^"]+)"/); return m ? m[1] : "" };
+const shellSvg = k => (items.find(i => i.k === k) || {}).svg || "";
+const NEW = {
+  "edit-cut-symbolic": "M4.5 13.5a2 2 0 1 0 0-4a2 2 0 0 0 0 4M11.5 13.5a2 2 0 1 0 0-4a2 2 0 0 0 0 4M5.8 9.9 11.5 2.5M10.2 9.9 4.5 2.5",
+  "edit-paste-symbolic": "M10.5 3.5h1a1 1 0 0 1 1 1v8.5a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1h1M6 2.5h4v2H6z",
+  "document-save-symbolic": "M8 2.5v7M5 6.5l3 3 3-3M3 10.5v2a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-2",
+  "view-refresh-symbolic": "M13 8a5 5 0 1 1-1.6-3.7M13 2.5v2.8h-2.8",
+  "audio-volume-muted-symbolic": "M2.5 6h2l3-2.5v9l-3-2.5h-2zM10.5 6.2l3 3.6M13.5 6.2l-3 3.6",
+  "audio-input-microphone-symbolic": "M8 2a2 2 0 0 1 2 2v3.5a2 2 0 0 1-4 0V4a2 2 0 0 1 2-2M4 7.5a4 4 0 0 0 8 0M8 11.5v2.5",
+  "camera-photo-symbolic": "M2.5 5.5H5l1-1.5h4l1 1.5h2.5v7h-11zM8 11a2 2 0 1 0 0-4a2 2 0 0 0 0 4",
+  "display-brightness-symbolic": "M8 10.5a2.5 2.5 0 1 0 0-5a2.5 2.5 0 0 0 0 5M8 1.5V3M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M3.4 12.6l1-1M11.6 4.4l1-1",
+  "airplane-mode-symbolic": "M8 1.8c.6 0 1 .5 1 1.2v3.5l4.5 2.5v1.2L9 9.2V12l1.5 1.2v1L8 13.6l-2.5.6v-1L7 12V9.2l-4.5 1V9L7 6.5V3c0-.7.4-1.2 1-1.2z",
+  "find-location-symbolic": "M8 14s-4.5-4.2-4.5-7.5a4.5 4.5 0 0 1 9 0C12.5 9.8 8 14 8 14zM8 8a1.5 1.5 0 1 0 0-3a1.5 1.5 0 0 0 0 3",
+  "view-reveal-symbolic": "M1.5 8s2.5-4.5 6.5-4.5S14.5 8 14.5 8s-2.5 4.5-6.5 4.5S1.5 8 1.5 8zM8 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4",
+  "view-pin-symbolic": "M5.5 2.5h5M6.5 2.5v4l-2 2.5h7l-2-2.5v-4M8 9v4.5",
+  "insert-link-symbolic": "M7 9a2.5 2.5 0 0 0 3.5 0l2-2A2.5 2.5 0 0 0 9 3.5l-.8.8M9 7a2.5 2.5 0 0 0-3.5 0l-2 2A2.5 2.5 0 0 0 7 12.5l.8-.8",
+  "notifications-disabled-symbolic": "M8 2.5A3.5 3.5 0 0 0 4.5 6v2.6L3 11.5h10l-1.5-2.9V6A3.5 3.5 0 0 0 8 2.5M6.5 13.5a1.5 1.5 0 0 0 3 0M2.5 2.5l11 11",
+  "dialog-warning-symbolic": "M7.1 3a1 1 0 0 1 1.8 0l5 9a1 1 0 0 1-.9 1.5H3a1 1 0 0 1-.9-1.5zM8 6.5v3M8 11.6h0",
+  "dialog-error-symbolic": "M8 14a6 6 0 1 0 0-12a6 6 0 0 0 0 12M6 6l4 4M10 6l-4 4",
+  "emblem-ok-symbolic": "M8 14a6 6 0 1 0 0-12a6 6 0 0 0 0 12M5.5 8.2l1.8 1.8 3.2-3.6",
+  "system-shutdown-symbolic": "M8 2v5.5M5 3.8a5 5 0 1 0 6 0",
+  "system-reboot-symbolic": "M13.2 8a5.2 5.2 0 1 1-1.6-3.7M11.8 1.8v2.7H9.1",
+  "system-log-out-symbolic": "M6.5 2.5h-3a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3M7 8h7M11.5 5.5 14 8l-2.5 2.5",
+  "mail-unread-symbolic": "M2.5 4h11v8h-11zM2.5 4.5 8 8.8l5.5-4.3",
+  "x-office-calendar-symbolic": "M2.5 4h11v9.5h-11zM2.5 7h11M5.5 2.5v3M10.5 2.5v3",
+  "drive-harddisk-symbolic": "M3.5 3.5h9l1.5 6v3h-12v-3zM2 9.5h12M11 11h0",
+  "input-mouse-symbolic": "M8 2a3.5 3.5 0 0 1 3.5 3.5v5a3.5 3.5 0 0 1-7 0v-5A3.5 3.5 0 0 1 8 2M8 4.5v2",
+  "audio-headphones-symbolic": "M2.5 11V8.5a5.5 5.5 0 0 1 11 0V11M2.5 10h2v3.5h-1a1 1 0 0 1-1-1zM13.5 10h-2v3.5h1a1 1 0 0 0 1-1z",
+  "audio-speakers-symbolic": "M4.5 2h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1M8 12a2 2 0 1 0 0-4a2 2 0 0 0 0 4M8 5h0",
+  "folder-new-symbolic": "M2.5 4.5a1 1 0 0 1 1-1h3l1.5 1.5h4.5a1 1 0 0 1 1 1v5.5a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1zM8 7v3.5M6.25 8.75h3.5",
+  "system-suspend-symbolic": "M13 9.6A5.5 5.5 0 1 1 6.4 3a4.4 4.4 0 0 0 6.6 6.6z",
+};
+const S = (d, sw = 1.4, fill = "none") => `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="${fill}" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const SET = [];
+items.filter(i => i.g.startsWith("barrierkit")).forEach(i => SET.push([i.name || i.k, "bk", S(bkPath(i.k), 1.4, i.k.endsWith("Fill") ? "currentColor" : "none")]));
+items.filter(i => i.g === "malaysia-shell · menú").forEach(i => SET.push([i.name, "shell", i.svg]));
+Object.entries(NEW).forEach(([n, d]) => SET.push([n, "new", S(d)]));
+const seen = new Set();
+document.getElementById("symgrid").innerHTML = SET.filter(([n]) => !seen.has(n) && seen.add(n))
+  .sort((a, b) => a[0].localeCompare(b[0]))
+  .map(([n, s, svg]) => `<div class="sym"><span class="src ${s}" title="${s}"></span>${svg}<span class="nm">${n.replace(/-symbolic$/, "")}</span></div>`).join("");
+
+const folderD = bkPath("Folder"), bellD = bkPath("Bell");
+document.getElementById("scale").innerHTML = [12, 16, 24, 32, 48, 64].map(s => `<figure><span style="width:${s}px;height:${s}px;display:block;color:var(--fg)">${S(bkPath("Wifi")).replace("<svg", `<svg width="${s}" height="${s}"`)}</span><figcaption>${s} px</figcaption></figure>`).join("");
+document.getElementById("pairs").innerHTML = [["Folder", folderD], ["Bell", bellD], ["Star", bkPath("Star")], ["Bookmark", bkPath("Bookmark")], ["Person", bkPath("Person")]]
+  .map(([n, d]) => `<div class="pp">${S(d)}${S(d, 1.4, "currentColor")}<span>${n.toLowerCase()} · ${n.toLowerCase()}.fill</span></div>`).join("");
+
+// ---------- barra lateral
+const SIDE = [
+  ["Wi‑Fi", "Wifi", "#1e7bf2"], ["Red", "Network", "#1e7bf2"], ["VPN", "Lock", "#1e7bf2"], ["Bluetooth", "Bluetooth", "#1e7bf2"],
+  ["Notificaciones", "Bell", "#ec3b3b"], ["Concentración", "Moon", "#6b4fd8"],
+  ["Batería", "Battery", "#2fb350"], ["Energía", "Bolt", "#2fb350"],
+  ["Apariencia", "CircleHalf", "#2a2d33"], ["Escritorio y Dock", "MenubarDockRectangle", "#2a2d33"], ["Fondo de pantalla", "Photo", "#14a5c9"],
+  ["Pantalla", "Display", "#1e7bf2"], ["Accesibilidad", "Accessibility", "#1e7bf2"], ["Opciones freedesktop", "SlidersVertical", "#7a808a"],
+];
+document.getElementById("sidebar").innerHTML = SIDE.map(([l, k, c], i) => `<div class="sb ${i === 4 ? "on" : ""}"><span class="tile" style="background:linear-gradient(${c}, ${shade(c, -18)})">${S(bkPath(k), 1.7)}</span><span class="lab">${l}</span><span class="hex">${c}</span></div>`).join("");
+
+function shade(hex, pct) {
+  const n = parseInt(hex.slice(1), 16), f = pct / 100;
+  const ch = v => Math.round(Math.min(255, Math.max(0, f < 0 ? v * (1 + f) : v + (255 - v) * f)));
+  return "#" + [n >> 16, (n >> 8) & 255, n & 255].map(ch).map(v => v.toString(16).padStart(2, "0")).join("");
+}
+let uid = 0;
+
+// ---------- carpetas
+const FOLDERS = [["folder", ""], ["folder-documents", bkPath("Document")], ["folder-download", bkPath("ArrowDown")], ["folder-pictures", bkPath("Photo")],
+  ["folder-music", "M6 12.5V4l7-1.5v8.5M6 12.5a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0M13 11a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0"],
+  ["folder-videos", bkPath("Film")], ["user-desktop", bkPath("Display")], ["user-home", bkPath("House")], ["folder-publicshare", bkPath("Person")],
+  ["folder-remote", bkPath("Network")], ["folder-templates", bkPath("SquareOnSquare")], ["folder-projects", bkPath("ChevronLeftForwardSlashChevronRight")]];
+const FPAL = {
+  light: { back: ["#58a6ee", "#2f7fd6"], front: ["#9ad2fb", "#5fb0f2"], glyph: "#1f62ad", rim: "rgba(10,50,110,.28)", hi: "rgba(255,255,255,.65)" },
+  dark: { back: ["#2d6fbf", "#1c4f8e"], front: ["#5b9fe3", "#3a7ecb"], glyph: "#123b6c", rim: "rgba(0,0,0,.45)", hi: "rgba(255,255,255,.35)" },
+};
+function tintPal(t) { return { back: [shade(t, -35), shade(t, -55)], front: [shade(t, -10), shade(t, -32)], glyph: shade(t, -70), rim: "rgba(0,0,0,.45)", hi: "rgba(255,255,255,.3)" } }
+function folder(d, p) {
+  const i = ++uid;
+  return `<svg viewBox="0 0 64 64" aria-hidden="true"><defs>
+    <linearGradient id="fb${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.back[0]}"/><stop offset="1" stop-color="${p.back[1]}"/></linearGradient>
+    <linearGradient id="ff${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${p.front[0]}"/><stop offset="1" stop-color="${p.front[1]}"/></linearGradient></defs>
+    <path d="M5 15a4 4 0 0 1 4-4h14.5l5 5H55a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z" fill="url(#fb${i})"/>
+    <path d="M5 23a4 4 0 0 1 4-4h46a4 4 0 0 1 4 4v25a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z" fill="url(#ff${i})" stroke="${p.rim}" stroke-width=".8"/>
+    <path d="M9 19.9h46" stroke="${p.hi}" stroke-width=".9" stroke-linecap="round"/>
+    ${d ? `<g transform="translate(22 25.5) scale(1.25)"><path d="${d}" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(0 .5)"/><path d="${d}" fill="none" stroke="${p.glyph}" stroke-opacity=".75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>` : ""}
+  </svg>`;
+}
+function drawFolders(mode) {
+  const p = mode === "tinted" ? tintPal(document.getElementById("tint").value) : FPAL[mode];
+  const el = document.getElementById("folders");
+  el.className = "stage " + mode;
+  el.innerHTML = FOLDERS.map(([n, d]) => `<figure>${folder(d, p)}<figcaption>${n.replace("folder-", "").replace("user-", "")}<small>${n}</small></figcaption></figure>`).join("");
+}
+
+// ---------- documentos
+const DOCS = [["text-x-generic", "TXT", "#6b7280", bkPath("ListBullet")], ["application-pdf", "PDF", "#e5322d", bkPath("Document")],
+  ["image-x-generic", "PNG", "#14a5c9", bkPath("Photo")], ["audio-x-generic", "MP3", "#ec3b7a", "M6 12.5V4l7-1.5v8.5M6 12.5a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0M13 11a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0"],
+  ["video-x-generic", "MP4", "#6b4fd8", bkPath("Play")], ["package-x-generic", "ZIP", "#c98a1b", "M2.5 5 8 2.5 13.5 5v6L8 13.5 2.5 11zM2.5 5 8 7.5 13.5 5M8 7.5v6"],
+  ["text-x-script", "SH", "#2a2d33", bkPath("ChevronLeftForwardSlashChevronRight")], ["x-office-spreadsheet", "ODS", "#2fb350", "M2.5 3.5h11v9h-11zM2.5 6.5h11M2.5 9.5h11M6.5 3.5v9"],
+  ["x-office-presentation", "ODP", "#f07c1b", "M2.5 3.5h11v7h-11zM8 10.5v3M5.5 13.5h5"], ["font-x-generic", "TTF", "#5f6570", "M4 13 8 3l4 10M5.5 9.5h5"]];
+function doc([n, ext, c, d]) {
+  const i = ++uid;
+  return `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="dp${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#eef0f4"/></linearGradient></defs>
+    <path d="M15 5h22l13 13v39a2 2 0 0 1-2 2H15a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z" fill="url(#dp${i})" stroke="rgba(20,30,50,.22)" stroke-width=".8"/>
+    <path d="M37 5v11a2 2 0 0 0 2 2h11" fill="#e3e6ec" stroke="rgba(20,30,50,.22)" stroke-width=".8" stroke-linejoin="round"/>
+    <g transform="translate(22.5 20) scale(1.19)"><path d="${d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <rect x="13" y="44" width="37" height="11" rx="2" fill="${c}"/>
+    <text x="31.5" y="52.2" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="7.4" fill="#fff" letter-spacing=".4">${ext}</text></svg>`;
+}
+document.getElementById("docs").innerHTML = DOCS.map(x => `<figure>${doc(x)}<figcaption>${x[1]}<small>${x[0]}</small></figcaption></figure>`).join("");
+
+// ---------- apps
+const GEAR = (() => {
+  const pts = []; const T = 8;
+  for (let k = 0; k < T; k++) {
+    const a = k / T * 2 * Math.PI - Math.PI / 2, w = Math.PI / T * 0.55;
+    [[a - w * 1.25, 4.7], [a - w * 0.75, 6.3], [a + w * 0.75, 6.3], [a + w * 1.25, 4.7]].forEach(([t, r]) => pts.push((8 + r * Math.cos(t)).toFixed(2) + " " + (8 + r * Math.sin(t)).toFixed(2)));
+  }
+  return "M" + pts.join("L") + "zM8 10.2a2.2 2.2 0 1 0 0-4.4a2.2 2.2 0 0 0 0 4.4";
+})();
+const APPS = [
+  ["Ajustes", "io.github.hblanqueto.malaysia.settings", ["#b9bdc4", "#6d727b"], GEAR],
+  ["Captura", "io.github.hblanqueto.malaysia.screenshot", ["#8b8f97", "#3f434a"], "M2.5 5.5v-2a1 1 0 0 1 1-1h2M10.5 2.5h2a1 1 0 0 1 1 1v2M13.5 10.5v2a1 1 0 0 1-1 1h-2M5.5 13.5h-2a1 1 0 0 1-1-1v-2M8 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4"],
+  ["Archivos", "org.gnome.Nautilus", ["#45a8f7", "#1468e0"], bkPath("Folder")],
+  ["Terminal", "org.gnome.Console", ["#3b3e44", "#121315"], "M3.5 5l3 3-3 3M8 11.5h4.5"],
+  ["Navegador", "org.mozilla.firefox", ["#3cc8f2", "#1270e0"], bkPath("Network")],
+  ["Música", "org.gnome.Music", ["#ff6b7a", "#f2253f"], "M6 12.5V4l7-1.5v8.5M6 12.5a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0M13 11a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0"],
+  ["Correo", "org.gnome.Geary", ["#5aa9ff", "#1f6ff0"], NEW["mail-unread-symbolic"]],
+  ["Calendario", "org.gnome.Calendar", ["#ff8a5c", "#f04b2a"], NEW["x-office-calendar-symbolic"]],
+];
+function app([, , g, d], mode, tint) {
+  const i = ++uid;
+  let bg, fg, rimIn;
+  if (mode === "light") { bg = g; fg = "#ffffff"; rimIn = "rgba(255,255,255,.45)" }
+  else if (mode === "dark") { bg = ["#33363c", "#16171a"]; fg = `url(#gl${i})`; rimIn = "rgba(255,255,255,.14)" }
+  else { bg = [shade(tint, -62), shade(tint, -78)]; fg = shade(tint, 18); rimIn = "rgba(255,255,255,.14)" }
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs>
+    <linearGradient id="bg${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></linearGradient>
+    <linearGradient id="gl${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(g[0], 15)}"/><stop offset="1" stop-color="${g[1]}"/></linearGradient>
+    <linearGradient id="ri${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${rimIn}"/><stop offset=".35" stop-color="rgba(255,255,255,0)"/></linearGradient></defs>
+    <rect x="10" y="10" width="80" height="80" rx="18" fill="url(#bg${i})"/>
+    <g transform="translate(24.4 24.4) scale(3.2)"><path d="${d}" fill="none" stroke="${fg}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+    <rect x="10.6" y="10.6" width="78.8" height="78.8" rx="17.4" fill="none" stroke="url(#ri${i})" stroke-width="1.2"/>
+    <rect x="10" y="10" width="80" height="80" rx="18" fill="none" stroke="rgba(0,0,0,.18)" stroke-width=".6"/></svg>`;
+}
+function drawApps(mode) {
+  const tint = document.getElementById("tint").value;
+  const el = document.getElementById("appstage");
+  el.className = "stage " + mode;
+  el.innerHTML = APPS.map(a => `<figure>${app(a, mode, tint)}<figcaption>${a[0]}<small>${a[1]}${mode === "light" ? "" : "-" + mode}</small></figcaption></figure>`).join("");
+}
+// anatomía: capas separadas en perspectiva
+document.getElementById("anatomy").innerHTML = (() => {
+  const a = app(APPS[0], "light", "#000").replace(/^<svg[^>]*>|<\/svg>$/g, "");
+  return a;
+})();
+
+const modes = { folders: "light", appstage: "light" };
+document.querySelectorAll(".modes").forEach(g => g.onclick = e => {
+  const b = e.target.closest(".mbtn"); if (!b) return;
+  [...g.children].forEach(x => x.setAttribute("aria-pressed", x === b));
+  modes[g.dataset.target] = b.dataset.m;
+  g.dataset.target === "folders" ? drawFolders(b.dataset.m) : drawApps(b.dataset.m);
+});
+document.getElementById("tint").oninput = () => { drawApps(modes.appstage); if (modes.folders === "tinted") drawFolders("tinted") };
+drawFolders("light"); drawApps("light");
+
+// ---------- antes / después
+const BA = [["symbolic/ (activos)", 568, "≈ 150"], ["symbolic/legacy", 52, "0 (heredado)"], ["symbolic/emotes", 26, "0 (heredado)"],
+  ["scalable/ (color)", 70, "≈ 60 + variantes"], ["16x16/ (PNG)", 51, "0"], ["Total de archivos propios", 767, "≈ 210"]];
+document.getElementById("ba").innerHTML = BA.map(([a, b, c], i) => `<tr${i === BA.length - 1 ? ' style="font-weight:600"' : ""}><td>${a}</td><td class="num">${b}</td><td class="num">${c}</td></tr>`).join("");
+</script>
