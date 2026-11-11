@@ -95,14 +95,19 @@ Variants are separate themes, because an icon theme cannot change with the color
 
 ## Devices
 
-The 23 icons in `scalable/devices` follow current macOS hardware icons (the macOS 26.1
-drive icon is the reference): seen almost straight on, with the bottom face showing as a
-darker lip, a soft contact shadow, and detail kept to debossed marks. No icon copies an
-Apple drawing or logo.
+The 23 icons in `scalable/devices` follow Apple's guidance for macOS icons (lifelike
+rendering: a front-facing, level view, one consistent drop shadow, and physical materials
+with mass) and the macOS 26.1 drive icon as the visual reference. No icon copies an Apple
+drawing or logo.
 
-- `tools/color/devices.py` draws every device from shared materials: silver aluminum with
-  cylindrical side shading, white plastic, steel, black glass and a bold wallpaper.
-- Each device is a function in `DEVICES`; `printer-network` is `printer` plus a badge.
+- No outlines: edges come from light. Each body has a rounded side lit from the front (a
+  thin highlight at the very edge, then a darker band), a beveled top edge and a darker
+  bottom band the full width of the body.
+- Marks are pressed into the surface with a soft inner shadow (`inset` filter), and every
+  device casts the same shadow (`drop` filter).
+- `tools/color/devices.py` draws every device from these shared materials: aluminum,
+  white plastic, steel, black glass, speaker mesh and a bold wallpaper. Each device is a
+  function in `DEVICES`; `printer-network` is `printer` plus a badge.
 - To add a device, add a function and run `tools/color/build.py`.
 
 ## App icons
