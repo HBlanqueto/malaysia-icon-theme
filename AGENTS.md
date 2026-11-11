@@ -54,13 +54,13 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 | `index.theme` | tema `Malaysia` | sí |
 | `Malaysia/symbolic/` | símbolos exportados | solo los que no tienen fuente en `src/malaysia-symbolic/` (heredados de Adwaita) |
 | `Malaysia/scalable/{apps,devices,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
-| `Malaysia-Dark/` | tema hijo con carpetas e íconos de app oscuros | no: `tools/color/build.py` |
+| `Malaysia-Dark/` | tema hijo con carpetas y papelera oscuras | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
 | `src/apps/` | íconos de app copiados tal cual del escritorio (`malaysia/share/icons/hicolor`) | solo para volver a copiarlos |
 | `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
 | `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
 | `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
-| `tools/color/build.py` | carpetas, tipos de archivo, dispositivos e íconos de app (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`, `APPS`; dispositivos en `devices.py`) | sí |
+| `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`; dispositivos en `devices.py`); copia `src/apps/` | sí |
 | `docs/` | `symbols.md`, mapa de íconos y propuesta (generados) | no: se regeneran |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
 
@@ -68,7 +68,7 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 
 1. `pip install -r tools/requirements.txt` (picosvg y skia-pathops).
 2. Edita la fuente: un símbolo en `src/malaysia-symbolic/`, un dispositivo en
-   `tools/color/devices.py`, o una fila de `FOLDERS`, `MIMETYPES` o `APPS` en
+   `tools/color/devices.py`, o una fila de `FOLDERS` o `MIMETYPES` en
    `tools/color/build.py`.
 3. Genera: `python3 tools/symbols/export.py` y `python3 tools/color/build.py`.
 4. Comprueba antes de cada push, en este orden:
@@ -95,10 +95,9 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
    `components.symbol.stroke` de barrierkit (hoy 1.4), extremos y uniones
    redondos.
 4. **Íconos a color:** nada de `<text>`, porque depende de las fuentes
-   instaladas. Las letras de las etiquetas son trazos (`LETTERS`). Los íconos de
-   app no llevan la sombra exterior: la pinta quien los dibuja.
-5. **Contraste:** figura y fondo de un ícono de app, al menos 3:1 (WCAG 2.2,
-   1.4.11). `tools/color/build.py` lo comprueba; no lo desactives.
+   instaladas. Las letras de las etiquetas son trazos (`LETTERS`).
+5. **Íconos de app:** los del escritorio se copian tal cual de
+   `malaysia/share/icons/hicolor` a `src/apps/`; el tema no los redibuja.
 6. **Variantes** como temas aparte que heredan de `Malaysia`
    (`Malaysia-Dark`, el tintado de `--tint`). Un tema no cambia solo con el
    modo de color.
@@ -159,8 +158,7 @@ Se cumplen al pie de la letra. Ganan el diff más corto y la respuesta más cort
    que el código no puede expresar: un límite de GTK o librsvg, un rodeo de un
    bug externo (con enlace) o una regla de la especificación.
 7. **Diff mínimo.** Toca solo lo que pide el cambio.
-8. **Tests solo para lógica con riesgo.** Aquí son los `--check` y el control de
-   contraste; no los saltes.
+8. **Tests solo para lógica con riesgo.** Aquí son los `--check`; no los saltes.
 9. **Ahorra tokens.** Lee rangos, no ficheros enteros; los SVG generados no se
    leen enteros. Cierra con 1–3 líneas: qué cambió y qué queda.
 10. **Investiga antes de suponer.** En este orden:

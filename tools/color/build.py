@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Generate the full-color icons: places (folders), file types, devices and app icons.
+"""Generate the full-color icons: places (folders), file types and devices.
 
-Figures come from the symbolic sources (src/malaysia-symbolic), so a new folder, file type
-or app needs no drawing of its own: add a row to FOLDERS, MIMETYPES or APPS.
+Figures come from the symbolic sources (src/malaysia-symbolic), so a new folder or file type
+needs no drawing of its own: add a row to FOLDERS or MIMETYPES. App icons are the desktop's
+own files, copied unchanged from src/apps.
 
 Usage:
   python3 tools/color/build.py                 write Malaysia/ (light) and Malaysia-Dark/ (dark)
   python3 tools/color/build.py --check         fail if a generated file is out of date
   python3 tools/color/build.py --tint '#e8a33d' --out ~/.local/share/icons/Malaysia-Tinted
                                                write a theme tinted with that accent
-                                               (inherits Malaysia; folders and app icons only)
+                                               (inherits Malaysia; folders only)
 """
 import argparse, colorsys, os, re, sys
 
@@ -367,85 +368,9 @@ def document(fig, color, text, style, template):
     return svg(stack + sheet + fold + art + (label(text, 31, 47.5, 4.6, ink) if text else ""), defs)
 
 
-# Continuous-corner squircle (superellipse, n = 5) filling 824 of 1024 units, the macOS
-# app icon grid: 80.47 of 100 units, centered.
-SQ_HALF, SQ_N = 40.23, 5
-
-
-def squircle(half=SQ_HALF, n=SQ_N, steps=180):
-    import math
-    pts = []
-    for i in range(steps):
-        t = 2 * math.pi * i / steps
-        c, s_ = math.cos(t), math.sin(t)
-        x = 50 + half * math.copysign(abs(c) ** (2 / n), c)
-        y = 50 + half * math.copysign(abs(s_) ** (2 / n), s_)
-        pts.append(f"{x:.2f} {y:.2f}")
-    return "M" + "L".join(pts) + "z"
-
-
-# app id → (figure on the 16 px grid, light background gradient top/bottom)
-APPS = {
-    "io.github.hblanqueto.malaysia.screenshot": (
-        "M2.5 5.5v-2a1 1 0 0 1 1-1h2M10.5 2.5h2a1 1 0 0 1 1 1v2M13.5 10.5v2a1 1 0 0 1-1 1h-2"
-        "M5.5 13.5h-2a1 1 0 0 1-1-1v-2M8 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4", ("#62739a", "#2b3449")),
-}
-MIN_CONTRAST = 3.0  # WCAG 2.2, 1.4.11 non-text contrast
-
-
-def luminance(hex_):
-    def ch(v):
-        v /= 255
-        return v / 12.92 if v <= .04045 else ((v + .055) / 1.055) ** 2.4
-    r, g, b = (ch(int(hex_[i:i + 2], 16)) for i in (1, 3, 5))
-    return .2126 * r + .7152 * g + .0722 * b
-
-
-def contrast(a, b):
-    la, lb = sorted((luminance(a), luminance(b)), reverse=True)
-    return (la + .05) / (lb + .05)
-
-
-def app_layers(colors, variant, tint=None):
-    """Colors of the three layers (background, figure, edge) for a variant."""
-    top, bottom = colors
-    if variant == "light":
-        return dict(bg=(top, bottom), fig=("#ffffff", "#e9edf2"), rim=.45)
-    if variant == "dark":
-        return dict(bg=("#34373d", "#17181b"), fig=(shade(top, 45), shade(top, 20)), rim=.14)
-    # the user picks the accent, so lighten the figure until it reaches MIN_CONTRAST
-    bg = (shade(tint, -62), shade(tint, -78))
-    for lift in range(5, 101, 5):
-        fig = (shade(tint, min(100, lift + 20)), shade(tint, lift))
-        if min(contrast(f, b) for f in fig for b in bg) >= MIN_CONTRAST:
-            break
-    return dict(bg=bg, fig=fig, rim=.14)
-
-
-def app_icon(fig, colors, variant, tint=None, name=""):
-    L = app_layers(colors, variant, tint)
-    worst = min(contrast(f, b) for f in L["fig"] for b in L["bg"])
-    if worst < MIN_CONTRAST:
-        sys.exit(f"{name} ({variant}): figure/background contrast {worst:.2f}:1, minimum {MIN_CONTRAST}:1")
-    sq = squircle()
-    defs = (grad("bg", *L["bg"]) + grad("fig", *L["fig"])
-            + f'<linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" '
-              f'stop-opacity="{L["rim"]}"/><stop offset=".35" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
-            + f'<clipPath id="sq"><path d="{sq}"/></clipPath>')
-    common = 'fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"'
-    body = (
-        f'<path fill="url(#bg)" d="{sq}"/>'
-        f'<g transform="translate(24.4 25.2) scale(3.2)"><path {common} stroke="#000000" stroke-opacity=".18" d="{fig}"/></g>'
-        f'<g transform="translate(24.4 24.4) scale(3.2)"><path {common} stroke="url(#fig)" d="{fig}"/></g>'
-        f'<path clip-path="url(#sq)" fill="none" stroke="url(#rim)" stroke-width="2.4" d="{sq}"/>'
-        f'<path fill="none" stroke="#000000" stroke-opacity=".18" stroke-width=".6" d="{sq}"/>')
-    return ('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 100 100">'
-            f"<defs>{defs}</defs>{body}</svg>\n")
-
-
-CONTEXTS = {"apps": "Applications", "places": "Places", "mimetypes": "MimeTypes", "status": "Status"}
+CONTEXTS = {"places": "Places", "mimetypes": "MimeTypes", "status": "Status"}
 # scalable/status only holds folder-open, which meson installs as a link to places/folder.svg
-VARIANT_DIRS = ["scalable/apps", "scalable/mimetypes", "scalable/places", "scalable/status"]
+VARIANT_DIRS = ["scalable/mimetypes", "scalable/places", "scalable/status"]
 
 
 def theme_index(name, comment, inherits, dirs):
@@ -462,8 +387,6 @@ def files(variant, tint=None):
     for name, fig in FOLDERS.items():
         ctx = "mimetypes" if name.startswith("inode-") else "places"
         out[f"scalable/{ctx}/{name}.svg"] = folder(fig, p)
-    for name, (fig, colors) in APPS.items():
-        out[f"scalable/apps/{name}.svg"] = app_icon(fig, colors, variant, tint, name)
     if variant == "dark":
         for name, svg_ in devices.trash_icons(dark=True).items():
             out[f"scalable/places/{name}.svg"] = svg_
@@ -518,7 +441,7 @@ def main():
         return
     stale = sync(os.path.join(ROOT, "Malaysia"), files("light"), a.check)
     stale += sync(os.path.join(ROOT, "Malaysia-Dark"), files("dark"), a.check,
-                  theme_index("Malaysia-Dark", "Malaysia with dark folders and app icons", "Malaysia",
+                  theme_index("Malaysia-Dark", "Malaysia with dark folders and trash", "Malaysia",
                               VARIANT_DIRS))
     if a.check:
         sys.exit("out of date:\n  " + "\n  ".join(stale)) if stale else print("up to date")
