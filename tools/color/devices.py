@@ -7,6 +7,7 @@ aluminum with rounded, cylindrically lit sides, a beveled top edge, a rounded bo
 with its own volume, and marks pressed into the metal with a soft inner shadow.
 """
 import math
+import random
 
 # one drop shadow for every device, folder and document: a soft cast shadow plus a tight contact shadow
 DROP = (
@@ -59,9 +60,9 @@ DEFS = (
     '<stop offset="0" stop-color="#3fa95c"/><stop offset=".5" stop-color="#23803f"/><stop offset="1" stop-color="#15582b"/></linearGradient>'
     # frosted plastic bin
     '<linearGradient id="bin" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#ffffff" stop-opacity=".76"/><stop offset="1" stop-color="#e2e4e8" stop-opacity=".86"/></linearGradient>'
+    '<stop offset="0" stop-color="#ffffff" stop-opacity=".66"/><stop offset="1" stop-color="#e2e4e8" stop-opacity=".8"/></linearGradient>'
     '<linearGradient id="bin-dark" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#6b6e74" stop-opacity=".9"/><stop offset="1" stop-color="#36383d" stop-opacity=".95"/></linearGradient>'
+    '<stop offset="0" stop-color="#6b6e74" stop-opacity=".8"/><stop offset="1" stop-color="#36383d" stop-opacity=".88"/></linearGradient>'
     '<linearGradient id="bin-inside" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#c9ccd2"/><stop offset="1" stop-color="#f4f5f7"/></linearGradient>'
     '<linearGradient id="bin-inside-dark" x1="0" y1="0" x2="0" y2="1">'
@@ -69,7 +70,10 @@ DEFS = (
     '<linearGradient id="frost" x1="0" y1="0" x2="1" y2="0">'
     '<stop offset=".08" stop-color="#ffffff" stop-opacity="0"/><stop offset=".2" stop-color="#ffffff" stop-opacity=".55"/>'
     '<stop offset=".32" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
-    '<filter id="haze" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter>'
+    '<linearGradient id="crumple" x1="0" y1="0" x2="1" y2="1">'
+    '<stop offset="0" stop-color="#ffffff" stop-opacity=".35"/><stop offset=".55" stop-color="#ffffff" stop-opacity="0"/>'
+    '<stop offset="1" stop-color="#000000" stop-opacity=".22"/></linearGradient>'
+    '<filter id="haze" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.7"/></filter>'
     '<radialGradient id="globe" cx=".36" cy=".3" r=".8">'
     '<stop offset="0" stop-color="#8fdcff"/><stop offset=".5" stop-color="#1e8cf0"/><stop offset="1" stop-color="#0b3e9c"/></radialGradient>'
     '<linearGradient id="lip-white" x1="0" y1="0" x2="0" y2="1">'
@@ -589,22 +593,57 @@ FLAME = "M8 2.5c.4 2.6 3.8 4.2 3.8 7.4a3.8 3.8 0 0 1-7.6 0c0-1.5.7-2.5 1.6-3.3.1
 PARTITION = (-90, 30, "#1e9bf5")
 
 
+def crumple(cx, cy, rx, ry, seed, prints=()):
+    """A crumpled sheet: an irregular outline, printed patches, light and shadow facets and creases."""
+    rnd = random.Random(seed)
+    edge = [(cx + rx * rnd.uniform(.72, 1) * math.cos(a), cy + ry * rnd.uniform(.72, 1) * math.sin(a))
+            for a in sorted(rnd.uniform(0, 2 * math.pi) for _ in range(13))]
+    d = "M" + "L".join(f"{x:.2f} {y:.2f}" for x, y in edge) + "z"
+    pick = lambda: (rnd.uniform(cx - rx, cx + rx), rnd.uniform(cy - ry, cy + ry))
+    tri = lambda: "M" + "L".join(f"{x:.2f} {y:.2f}" for x, y in (pick(), pick(), pick())) + "z"
+    patches = "".join(f'<path d="{tri()}" fill="{c}"/>' for c in prints[1:] for _ in range(2))
+    facets = "".join(f'<path d="{tri()}" fill="{c}" fill-opacity="{a:.2f}"/>'
+                     for c, a in [("#000000", rnd.uniform(.05, .14)) for _ in range(4)] + [("#ffffff", rnd.uniform(.25, .5)) for _ in range(3)])
+    creases = "".join("M" + "L".join(f"{x:.2f} {y:.2f}" for x, y in (pick(), pick())) for _ in range(3))
+    return (f'<clipPath id="sheet{seed}"><path d="{d}"/></clipPath><path d="{d}" fill="{prints[0] if prints else "#f2f3f5"}"/>'
+            f'<g clip-path="url(#sheet{seed})"><g filter="url(#soft)">{patches}{facets}</g><path d="{d}" fill="url(#crumple)"/>'
+            f'<path d="{creases}" fill="none" stroke="#7d828b" stroke-opacity=".3" stroke-width=".4" stroke-linecap="round"/></g>'
+            f'<path d="{d}" fill="none" stroke="#8a8f98" stroke-opacity=".4" stroke-width=".35" stroke-linejoin="round"/>')
+
+
+SCRAPS = (  # x, y, rx, ry, angle, color: the bin's contents, seen blurred through the frosted wall
+    (15, 20, 4, 2.4, 20, "#ffffff"), (23, 22, 3, 2, -30, "#4fb4ff"), (31, 20, 4.4, 2.6, 10, "#ffffff"),
+    (40, 21, 3, 2.2, 40, "#ff8a3d"), (48, 20, 3.4, 2, -15, "#e8eaee"), (18, 28, 2.6, 1.8, 60, "#5fcf7f"),
+    (27, 29, 4.6, 2.8, -20, "#ffffff"), (37, 28, 3, 2, 15, "#c9ccd2"), (46, 29, 3.4, 2.2, -40, "#ffffff"),
+    (16, 36, 3.2, 2.2, 0, "#ffd34d"), (24, 37, 3, 2, 35, "#ffffff"), (33, 36, 4, 2.4, -10, "#7f9dff"),
+    (43, 37, 3.4, 2.2, 25, "#ffffff"), (50, 35, 2, 1.6, 0, "#ff6b5b"), (19, 44, 4, 2.6, -25, "#ffffff"),
+    (28, 45, 3, 2, 15, "#ff8a3d"), (37, 45, 4.2, 2.4, 5, "#e8eaee"), (46, 44, 2.8, 2, -30, "#5fcf7f"),
+    (22, 51, 3.6, 2.2, 10, "#ffe27a"), (31, 52, 4.4, 2.4, -5, "#ffffff"), (41, 52, 3.4, 2.2, 20, "#c9ccd2"),
+    (27, 56, 3, 1.8, 0, "#4fb4ff"), (37, 57, 3, 1.8, 0, "#ffffff"),
+)
+
+
+def trash_contents():
+    scraps = "".join(f'<ellipse cx="{x}" cy="{y}" rx="{rx}" ry="{ry}" transform="rotate({a} {x} {y})" fill="{c}"/>'
+                     for x, y, rx, ry, a, c in SCRAPS)
+    curl = ('<path d="M47.6 6c3.4-1.4 6.8.4 6.8 3.4 0 2.4-2 3.8-4 3.4-1.8-.4-2.4-2.4-1.2-3.4" fill="#f4f5f7" '
+            'stroke="#a9aeb6" stroke-width=".5"/><path d="M50 7.8c1.6-.6 3 .2 3 1.6" fill="none" stroke="#c9ccd2" stroke-width=".6"/>')
+    return (f'<g clip-path="url(#bin-clip)"><g filter="url(#haze)" opacity=".95">{scraps}</g></g>'
+            + crumple(17, 9.4, 10, 7.4, 1) + crumple(46.4, 9, 9.4, 7.4, 2)
+            + crumple(27.4, 9.6, 8.4, 6.8, 3, ("#e9f6ff", "#43c0ff", "#2b9bef", "#6fd08c", "#3fb35f"))
+            + crumple(38.4, 8.6, 8, 7.2, 4, ("#fff1e6", "#ff8a3d", "#e2532f", "#3c63c9", "#2d3b5c"))
+            + crumple(32, 13, 7.4, 4.2, 5) + curl)
+
+
 def trash(full=False, dark=False):
     """A frosted, translucent bin seen slightly from above, after the macOS Trash."""
     k = "-dark" if dark else ""
-    body = "M9 11a23 4.2 0 0 0 46 0l-4.4 43.6a5 5 0 0 1-5 4.4H18.4a5 5 0 0 1-5-4.4z"
-    inside = ('<g filter="url(#haze)" opacity=".9"><ellipse cx="25" cy="30" rx="9" ry="12" fill="#ffffff"/>'
-              '<ellipse cx="39" cy="26" rx="7" ry="9" fill="#7cc4ff"/><ellipse cx="33" cy="44" rx="10" ry="7" fill="#ffd76a"/>'
-              '<ellipse cx="42" cy="47" rx="5" ry="6" fill="#ff8a7a"/></g>') if full else ""
-    papers = ('<path d="M14 12c0-5 5-8.4 10-6.6 3-4.6 9.6-3.6 11.4.6 2.6-.8 5 0 6.4 1.6 3.4-.6 7.4 1.6 8.2 4.4z" fill="#ffffff"/>'
-              '<path d="M38 7.4 46 4l3 6.6-8 2.4z" fill="#6fb7ff"/><path d="M38 7.4l8-3.4" stroke="#ffffff" stroke-opacity=".6" stroke-width=".6"/>'
-              '<rect x="14" y="11" width="36" height="5" fill="#ffffff"/>'
-              '<path d="M15.4 9c3 0 5 1.4 6 3.6M30.6 5c-1.6 1.8-1.8 4.4-.6 7.2M23.6 5.8c.8 1.2 1 2.8.6 4.4" '
-              'fill="none" stroke="#b9bdc5" stroke-width=".7" stroke-linecap="round"/>') if full else ""
-    return (f'<ellipse cx="32" cy="11" rx="23" ry="4.2" fill="url(#bin-inside{k})"/>' + inside + papers
-            + f'<path d="{body}" fill="url(#bin{k})"/><path d="{body}" fill="url(#side)"/><path d="{body}" fill="url(#frost)"/>'
-            + f'<ellipse cx="32" cy="11" rx="23" ry="4.2" fill="none" stroke="#ffffff" stroke-opacity="{.35 if dark else .9}" stroke-width=".9"/>'
-            + f'<path d="M15 55.4a17 3.2 0 0 0 34 0" fill="none" stroke="#000000" stroke-opacity=".08" stroke-width="1.2"/>')
+    body = "M7 11a25 5 0 0 0 50 0L50.6 55a18.6 4 0 0 1-37.2 0z"
+    return (f'<clipPath id="bin-clip"><path d="{body}"/></clipPath><ellipse cx="32" cy="11" rx="25" ry="5" fill="url(#bin-inside{k})"/>' + (trash_contents() if full else "")
+            + f'<path d="{body}" fill="url(#bin{k})"/><path d="{body}" fill="url(#side)"/><path d="{body}" fill="url(#frost)" opacity="{.35 if dark else 1}"/>'
+            + f'<path d="M7 11a25 5 0 0 0 50 0" fill="none" stroke="#ffffff" stroke-opacity="{.4 if dark else .95}" stroke-width="1"/>'
+            + ("" if full else f'<ellipse cx="32" cy="11" rx="25" ry="5" fill="none" stroke="#ffffff" stroke-opacity="{.3 if dark else .8}" stroke-width=".8"/>')
+            + '<path d="M13.4 55a18.6 4 0 0 0 37.2 0" fill="none" stroke="#000000" stroke-opacity=".1" stroke-width="1"/>')
 
 
 def trash_icons(dark=False):
