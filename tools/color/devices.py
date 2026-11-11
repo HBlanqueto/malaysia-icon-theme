@@ -56,9 +56,13 @@ DEFS = (
     '<linearGradient id="reflect" x1="0" y1="0" x2="1" y2="1">'
     '<stop offset="0" stop-color="#ffffff" stop-opacity=".18"/><stop offset=".42" stop-color="#ffffff" stop-opacity=".06"/>'
     '<stop offset=".43" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
-    '<radialGradient id="wall" cx=".25" cy=".2" r="1.1">'
-    '<stop offset="0" stop-color="#5aa8ff"/><stop offset=".35" stop-color="#2f5bff"/><stop offset=".7" stop-color="#7b32e6"/>'
-    '<stop offset="1" stop-color="#ff4f7b"/></radialGradient>'
+    '<linearGradient id="crystal" x1="0" y1="0" x2=".7" y2="1">'
+    '<stop offset="0" stop-color="#4fdcff"/><stop offset=".55" stop-color="#1e9bf5"/><stop offset="1" stop-color="#1565e0"/></linearGradient>'
+    '<linearGradient id="graphite" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#4a4c52"/><stop offset=".5" stop-color="#2c2e33"/><stop offset="1" stop-color="#18191c"/></linearGradient>'
+    '<radialGradient id="platter" cx=".38" cy=".3" r=".8">'
+    '<stop offset="0" stop-color="#ffffff"/><stop offset=".4" stop-color="#cfd2d8"/><stop offset=".75" stop-color="#9ea2aa"/>'
+    '<stop offset="1" stop-color="#e2e4e8"/></radialGradient>'
     '<linearGradient id="label" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#3d8bff"/><stop offset="1" stop-color="#1048c8"/></linearGradient>'
     '<linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">'
@@ -118,8 +122,7 @@ def glass(x, y, w, h, r):
 
 def screen(x, y, w, h, r):
     d = rr(x, y, w, h, r)
-    return (f'<path d="{d}" fill="url(#wall)"/>'
-            f'<path d="{d}" fill="none" stroke="#000000" stroke-opacity=".35" stroke-width=".5"/>')
+    return f'<path d="{d}" fill="url(#crystal)"/>'
 
 
 def reflection(x, y, w, h, r):
@@ -144,12 +147,35 @@ def drive(x, y, w, h, fill="alu"):
     return body(x, y, w, h, round(max(3.6, w * .12), 1), fill) + lip(x, y + h - band, w, band)
 
 
+def screw(cx, cy):
+    return (f'<circle cx="{cx}" cy="{cy}" r="1.3" fill="url(#steel)" filter="url(#inset)"/>'
+            f'<path d="M{cx - .7} {cy}h1.4" stroke="#5c5f66" stroke-width=".45"/>')
+
+
 def harddisk():
-    return drive(15, 6, 34, 51) + deboss(ring(32, 27, 7.5, 2.6))
+    """An open 3.5-inch drive seen from above: platter, spindle, actuator arm and label."""
+    platter = ring(32, 25, 19, 4.6)
+    arm = "M46.6 47.6 35.4 31.6a1.3 1.3 0 0 1 2-1.5l12.8 15.2z"
+    label = rr(13.5, 48, 22, 8.6, 1.2)
+    return (body(9, 3, 46, 57, 4) + deboss(rr(11.4, 5.4, 41.2, 52.2, 2.6), "#c3c5c9")
+            + f'<path fill-rule="evenodd" d="{ring(32, 25, 19.8, 19)}" fill="#000000" fill-opacity=".25" filter="url(#soft)"/>'
+            + f'<path fill-rule="evenodd" d="{platter}" fill="url(#platter)"/>'
+            + f'<path fill-rule="evenodd" d="{platter}" fill="url(#sheen2)"/>'
+            + '<circle cx="32" cy="25" r="4.6" fill="url(#steel)"/><circle cx="32" cy="25" r="1.6" fill="#3a3c41"/>'
+            + "".join(f'<circle cx="{32 + 3.1 * c:.2f}" cy="{25 + 3.1 * s:.2f}" r=".45" fill="#5c5f66"/>'
+                      for c, s in ((1, 0), (-.5, .866), (-.5, -.866)))
+            + f'<path d="{arm}" fill="#000000" fill-opacity=".3" filter="url(#soft)" transform="translate(.6 .8)"/>'
+            + solid(arm, "steel") + '<rect x="34.4" y="29.4" width="2.6" height="1.6" rx=".5" fill="#2c2e33" transform="rotate(50 35.7 30.2)"/>'
+            + '<circle cx="47.4" cy="48.4" r="4.4" fill="url(#graphite)"/><circle cx="47.4" cy="48.4" r="1.6" fill="url(#steel)"/>'
+            + f'<path d="{label}" fill="url(#plastic)"/>'
+            + '<path d="M16 51h11M16 53.4h16" stroke="#a9acb3" stroke-width=".9" stroke-linecap="round"/>'
+            + '<rect x="16" y="55.2" width="5" height=".7" fill="#1565e0"/>'
+            + "".join(screw(x, y) for x, y in ((13.4, 7.4), (50.6, 7.4), (50.6, 55.6))))
 
 
 def multidisk():
-    return drive(24, 3, 30, 44, "alu-dark") + drive(10, 12, 30, 46) + deboss(ring(25, 31, 6.4, 2.2))
+    return (f'<g transform="translate(9 -1) scale(.82)" opacity=".9">{harddisk()}</g>'
+            f'<g transform="translate(1 9) scale(.82)">{harddisk()}</g>')
 
 
 def removable_drive():
@@ -263,18 +289,22 @@ def mouse():
     top = rr(20, 5, 24, 48, 12)
     return (body(20.6, 8.4, 22.8, 47.6, 11.4, "alu-dark") + solid(top, "plastic")
             + '<ellipse cx="27.4" cy="16" rx="3.2" ry="8" fill="#ffffff" fill-opacity=".9" filter="url(#soft)"/>'
-            + '<path d="M22 40a10 10 0 0 0 20 0" fill="none" stroke="#000000" stroke-opacity=".05" stroke-width="3" filter="url(#soft)"/>')
+            + '<path d="M22 40a10 10 0 0 0 20 0" fill="none" stroke="#000000" stroke-opacity=".05" stroke-width="3" filter="url(#soft)"/>'
+            + '<path d="M32 5.6v17.4M20.6 23h22.8" stroke="#b5b8be" stroke-width=".5"/>'
+            + '<rect x="30.2" y="9.6" width="3.6" height="8.4" rx="1.8" fill="url(#graphite)" filter="url(#inset)"/>'
+            + '<path d="M31 11.4h2M31 13h2M31 14.6h2M31 16.2h2" stroke="#ffffff" stroke-opacity=".25" stroke-width=".5"/>')
 
 
 def gamepad():
     d = ("M20 15h24c6.5 0 9.6 3.6 11.4 9.4l3.6 12.4c1.5 5.2-3.2 9.3-7.8 6.6L45 39H19l-6.2 4.4"
          "c-4.6 2.7-9.3-1.4-7.8-6.6l3.6-12.4C10.4 18.6 13.5 15 20 15z")
-    buttons = "".join(deboss(ring(x, y, 2.1, .01), "#d0d3d8") for x, y in ((45, 21), (49, 25), (45, 29), (41, 25)))
+    buttons = "".join(deboss(ring(x, y, 2.1, .01), color) for (x, y), color in zip(((45, 21), (49, 25), (45, 29), (41, 25)),
+                                          ("#ffd60a", "#ff453a", "#30d158", "#0a84ff")))
     sticks = "".join(f'<circle cx="{x}" cy="33" r="4.4" fill="#000000" fill-opacity=".3" filter="url(#soft)"/>'
                      f'<circle cx="{x}" cy="32.6" r="3.9" fill="url(#cone)"/>'
                      f'<circle cx="{x}" cy="32.6" r="2.5" fill="none" stroke="#ffffff" stroke-opacity=".16" stroke-width=".6"/>'
                      for x in (25, 39))
-    return (solid(d, "plastic") + deboss("M17.6 20.4h3.2v3.2h3.2v3.2h-3.2v3.2h-3.2v-3.2h-3.2v-3.2h3.2z", "#d0d3d8")
+    return (solid(d, "graphite") + deboss("M17.6 20.4h3.2v3.2h3.2v3.2h-3.2v3.2h-3.2v-3.2h-3.2v-3.2h3.2z", "#55585f")
             + buttons + sticks)
 
 
@@ -286,8 +316,8 @@ def headphones(mic=False):
     cups = ""
     for x, cx in ((6, 19.2), (43, 40.8)):
         cushion = rr(cx - 3.2, 30.4, 6.4, 20.4, 3.2)
-        cups += (body(x, 28, 15, 25, 6.8) + f'<path d="{cushion}" fill="url(#plastic)"/>'
-                 + f'<path d="{cushion}" fill="url(#mesh-light)"/><path d="{cushion}" fill="url(#side)"/>')
+        cups += (body(x, 28, 15, 25, 6.8, "graphite") + f'<path d="{cushion}" fill="url(#graphite)"/>'
+                 + f'<path d="{cushion}" fill="url(#mesh-light)" fill-opacity=".35"/><path d="{cushion}" fill="url(#side)"/>')
     boom = ('<path d="M12 52c1 4.4 6 5.4 13 5.4" fill="none" stroke="#7d7f85" stroke-width="2.6" stroke-linecap="round"/>'
             '<path d="M12 52c1 4.4 6 5.4 13 5.4" fill="none" stroke="#eceef1" stroke-width="1.6" stroke-linecap="round"/>'
             '<rect x="23.6" y="55.2" width="6.8" height="4.2" rx="2.1" fill="url(#cone)"/>') if mic else ""

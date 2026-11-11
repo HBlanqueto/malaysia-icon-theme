@@ -105,8 +105,11 @@ drawing or logo.
   bottom band the full width of the body.
 - Marks are pressed into the surface with a soft inner shadow (`inset` filter), and every
   device casts the same shadow (`drop` filter).
+- Devices show their working parts: the hard disk is an open drive with platter and
+  actuator arm, the mouse has buttons and a scroll wheel. Aluminum and white plastic
+  pair with glossy graphite for contrast, and screens show crystal blue glass.
 - `tools/color/devices.py` draws every device from these shared materials: aluminum,
-  white plastic, steel, black glass, speaker mesh and a bold wallpaper. Each device is a
+  white plastic, graphite, steel, black glass, speaker mesh and crystal blue. Each device is a
   function in `DEVICES`; `printer-network` is `printer` plus a badge.
 - To add a device, add a function and run `tools/color/build.py`.
 
