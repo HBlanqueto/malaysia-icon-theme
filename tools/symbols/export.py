@@ -5,6 +5,8 @@ GTK recolors symbolic icons by forcing `fill` on every rect, circle and path and
 `stroke` alone, so an unconverted stroke would render as a solid shape. This script turns
 strokes into filled outlines with Skia (skia-pathops, through picosvg) and uses a single
 color (#2e3436), like the rest of the theme.
+Where the theme has right-to-left names for an icon (name-symbolic-rtl, name-rtl-symbolic),
+they get a mirrored copy of the same source.
 
 Usage: python3 tools/symbols/export.py [--check]
        --check  write nothing; exit with an error if an export is out of date.
@@ -40,7 +42,7 @@ def outline(shape, stroke):
     return sk
 
 
-def convert(path):
+def convert(path, mirror=False):
     svg = SVG.parse(path)
     vb = svg.view_box()
     layers = {}  # opacity → merged outline
@@ -57,20 +59,33 @@ def convert(path):
     for alpha in sorted(layers, reverse=True):
         sk = layers[alpha]
         sk.simplify(fix_winding=True)
-        d = SVGPath.from_commands(svg_commands(sk)).apply_transform(Affine2D.identity().scale(1 / SCALE)).round_floats(3).d
+        back = Affine2D.identity().scale(1 / SCALE)
+        if mirror:
+            back = Affine2D.compose_ltr((back, Affine2D(-1, 0, 0, 1, vb.x * 2 + vb.w, 0)))
+        d = SVGPath.from_commands(svg_commands(sk)).apply_transform(back).round_floats(3).d
         body.append(f'<path fill="{INK}"' + (f' opacity="{alpha:g}"' if alpha < 1 else "") + f' d="{d}"/>')
     w, h = f"{vb.w:g}", f"{vb.h:g}"
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="{vb.x:g} {vb.y:g} {w} {h}">'
             + "".join(body) + "</svg>\n")
 
 
+def exports(ctx, f):
+    """(file name, SVG) pairs for a source: the icon and, where the theme has right-to-left
+    names for it, a mirrored copy under each (Icon Naming Spec: the -rtl suffix)."""
+    src = os.path.join(SRC, ctx, f)
+    out = [(f, convert(src))]
+    base = f.removesuffix("-symbolic.svg")
+    rtl = [n for n in (f"{base}-symbolic-rtl.svg", f"{base}-rtl-symbolic.svg") if os.path.exists(os.path.join(OUT, ctx, n))]
+    if rtl:
+        mirrored = convert(src, mirror=True)
+        out += [(n, mirrored) for n in rtl]
+    return out
+
+
 def main(check):
     stale, written = [], 0
     for ctx in sorted(os.listdir(SRC)):
-        for f in sorted(os.listdir(os.path.join(SRC, ctx))):
-            if not f.endswith(".svg"):
-                continue
-            svg = convert(os.path.join(SRC, ctx, f))
+        for f, svg in [pair for g in sorted(os.listdir(os.path.join(SRC, ctx))) if g.endswith(".svg") for pair in exports(ctx, g)]:
             dest = os.path.join(OUT, ctx, f)
             # a name lives in one context: remove Adwaita's copy if it was in another
             others = [os.path.join(OUT, c, f) for c in os.listdir(OUT) if c != ctx and os.path.exists(os.path.join(OUT, c, f))]
