@@ -28,7 +28,7 @@ jobs:
       - name: Symbols are exported
         run: python3 tools/symbols/export.py --check
 
-      - name: Folders, file types and app icons are generated
+      - name: Folders, file types, devices and app icons are up to date
         run: python3 tools/color/build.py --check
 
       - name: Icon map is current
