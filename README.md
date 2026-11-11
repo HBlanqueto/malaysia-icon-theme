@@ -24,7 +24,6 @@ Malaysia/                the Malaysia theme
 Malaysia-Dark/           child theme with the dark folders and app icons (generated)
 src/
 ├── malaysia-symbolic/   stroke sources of the desktop symbols
-├── malaysia-devices/    device pictures, 40×32, in the style of malaysia-settings
 ├── fullcolor/           Adwaita's Inkscape sources (*.source.svg)
 └── symbolic/            Adwaita's symbolic sheets (core.svg)
 docs/                    symbols.md, icon map and the Malaysia Icons 2 proposal
@@ -96,16 +95,15 @@ Variants are separate themes, because an icon theme cannot change with the color
 
 ## Devices
 
-The 23 icons in `scalable/devices` are product pictures in the style of the device
-pictures in Malaysia's Settings (Bluetooth): space-gray hardware, a thin dark edge, a top
-highlight and a soft shadow on the floor.
+The 23 icons in `scalable/devices` follow current macOS hardware icons (the macOS 26.1
+drive icon is the reference): seen almost straight on, with the bottom face showing as a
+darker lip, a soft contact shadow, and detail kept to debossed marks. No icon copies an
+Apple drawing or logo.
 
-- The sources are in `src/malaysia-devices/<name>.svg`, drawn on the 40×32 canvas that
-  Settings uses. Eight come from `malaysia-settings/assets/devices`; the other fifteen
-  are drawn in the same style.
-- `tools/color/build.py` centers each picture on a square 40×40 icon. `printer-network`
-  is `printer` plus a network badge (`DEVICE_BADGES`), not a separate drawing.
-- To add a device, add its source and run the generator.
+- `tools/color/devices.py` draws every device from shared materials: silver aluminum with
+  cylindrical side shading, white plastic, steel, black glass and a bold wallpaper.
+- Each device is a function in `DEVICES`; `printer-network` is `printer` plus a badge.
+- To add a device, add a function and run `tools/color/build.py`.
 
 ## App icons
 
@@ -172,6 +170,5 @@ stroke on the assumption that it is invisible. To keep part of an icon in color,
 
 Same as Adwaita: GNU LGPL v3 or Creative Commons Attribution-Share Alike 3.0 (see
 `COPYING`). The artwork inherited from Adwaita is by the GNOME Project (see `AUTHORS`).
-The desktop symbols in `src/malaysia-symbolic` and the device pictures in
-`src/malaysia-devices` also come under the MIT License of malaysia and barrierkit
-(`COPYING_MIT`).
+The desktop symbols in `src/malaysia-symbolic` also come under the MIT License of
+malaysia and barrierkit (`COPYING_MIT`).

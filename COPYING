@@ -14,6 +14,5 @@ it, "Malaysia project" is enough; link to https://github.com/HBlanqueto/malaysia
 where available. The artwork inherited from Adwaita keeps the GNOME Project attribution
 above.
 
-The symbol sources in src/malaysia-symbolic, the device pictures in src/malaysia-devices,
-and the icons generated from them, come from the Malaysia desktop and barrierkit, which are
-under the MIT License (see COPYING_MIT).
+The symbol sources in src/malaysia-symbolic, and the symbols exported from them, come from
+the Malaysia desktop and barrierkit, which are under the MIT License (see COPYING_MIT).
