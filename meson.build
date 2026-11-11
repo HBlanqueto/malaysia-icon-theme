@@ -23,30 +23,43 @@ install_subdir(
 )
 
 files('Malaysia/scalable/places/folder.svg')
-if host_machine.system() == 'windows'
-  install_data(
-    'Malaysia/scalable/places/folder.svg',
-    install_dir: theme_dir / 'scalable' / 'status',
-    rename: 'folder-open.svg',
-    install_tag : 'runtime',
-  )
-else
-  install_symlink(
-    'folder-open.svg',
-    install_dir: theme_dir / 'scalable' / 'status',
-    install_tag: 'runtime',
-    pointing_to: '../places/folder.svg',
-  )
-endif
+# Malaysia-Dark: carpetas oscuras, hereda todo lo demás de Malaysia (tools/color/build.py)
+dark_dir = get_option('datadir') / 'icons' / 'Malaysia-Dark'
+install_subdir(
+  'Malaysia-Dark',
+  install_dir: dark_dir,
+  strip_directory : true,
+  install_tag : 'runtime',
+)
+
+foreach variant : [['Malaysia', theme_dir], ['Malaysia-Dark', dark_dir]]
+  if host_machine.system() == 'windows'
+    install_data(
+      variant[0] / 'scalable' / 'places' / 'folder.svg',
+      install_dir: variant[1] / 'scalable' / 'status',
+      rename: 'folder-open.svg',
+      install_tag : 'runtime',
+    )
+  else
+    install_symlink(
+      'folder-open.svg',
+      install_dir: variant[1] / 'scalable' / 'status',
+      install_tag: 'runtime',
+      pointing_to: '../places/folder.svg',
+    )
+  endif
+endforeach
 
 gtk_update_icon_cache = find_program(
   'gtk4-update-icon-cache',
   'gtk-update-icon-cache',
   required : true,
 )
-meson.add_install_script(
-  gtk_update_icon_cache,
-  '-qtf',
-  get_option('prefix') / theme_dir,
-  skip_if_destdir: true,
-)
+foreach dir : [theme_dir, dark_dir]
+  meson.add_install_script(
+    gtk_update_icon_cache,
+    '-qtf',
+    get_option('prefix') / dir,
+    skip_if_destdir: true,
+  )
+endforeach

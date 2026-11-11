@@ -1,0 +1,28 @@
+[Icon Theme]
+Name=Malaysia-Dark
+Comment=Malaysia with dark folders
+Example=folder
+Inherits=Malaysia
+
+Directories=scalable/mimetypes,scalable/places,scalable/status
+
+[scalable/mimetypes]
+Context=MimeTypes
+Size=128
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[scalable/places]
+Context=Places
+Size=128
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[scalable/status]
+Context=Status
+Size=128
+MinSize=8
+MaxSize=512
+Type=Scalable

@@ -55,6 +55,34 @@ Edit a source in `src/malaysia-symbolic/` and run `export.py`; do not edit the e
 file. Running `import_desktop.py` again overwrites the sources with what the desktop code
 draws.
 
+## Folders and file types
+
+Phase 3 replaced the full-color folders and file types with generated ones:
+
+- **Folders** (14 in `scalable/places`, plus `inode-directory`): a blue folder with the
+  folder's symbol embossed on the front. The symbol comes from `src/malaysia-symbolic`.
+- **File types** (26, in `scalable/mimetypes`): a white page, the type's symbol, and a
+  colored label. The label letters are stroked paths, not `<text>`, so they look the
+  same without any font installed. Templates (`*-template`) get a dashed page edge.
+
+`tools/color/build.py` writes all of them; to add a folder or a file type, add a row to
+`FOLDERS` or `MIMETYPES` and run it. Do not edit the generated SVGs.
+
+```sh
+python3 tools/color/build.py            # Malaysia/ and Malaysia-Dark/
+python3 tools/color/build.py --check    # fails if a generated file is out of date
+python3 tools/color/build.py --tint '#e8a33d' --out ~/.local/share/icons/Malaysia-Tinted
+```
+
+Variants are separate themes, because an icon theme cannot change with the color scheme:
+
+- `Malaysia` has the light folders.
+- `Malaysia-Dark` (installed next to it, `Inherits=Malaysia`) has only the dark folders.
+- A tinted theme is generated on demand with `--tint` from the user's accent color.
+
+The Adwaita sources in `src/fullcolor/` for these icons are no longer used.
+`network-server`, `network-workgroup` and `user-trash` are still Adwaita's drawings.
+
 ## Build and install
 
 ```sh
@@ -62,7 +90,8 @@ meson setup _build
 meson install -C _build
 ```
 
-This installs the theme to `$prefix/share/icons/Malaysia` and refreshes its icon cache.
+This installs `Malaysia` and `Malaysia-Dark` to `$prefix/share/icons/` and refreshes their
+icon caches.
 To use it in the Malaysia desktop, set `MALAYSIA_ICON_THEME=Malaysia` for the launcher
 and choose `Malaysia` as the GTK icon theme.
 
