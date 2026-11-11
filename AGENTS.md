@@ -57,7 +57,7 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 | `Malaysia-Dark/` | tema hijo con carpetas e íconos de app oscuros | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
 | `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
-| `src/symbolic/` | fuente de Adwaita de los símbolos que aún no se redibujan | solo para borrar |
+| `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
 | `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
 | `tools/color/build.py` | carpetas, tipos de archivo, dispositivos e íconos de app (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`, `APPS`; dispositivos en `devices.py`) | sí |
 | `docs/` | `symbols.md`, mapa de íconos y propuesta (generados) | no: se regeneran |
