@@ -19,7 +19,7 @@ be installed next to this one.
 
 ```
 Malaysia/
-├── scalable/   full-color SVG: devices, mimetypes, places, status (apps later)
+├── scalable/   full-color SVG: apps, devices, mimetypes, places, status
 └── symbolic/   recolorable SVG: actions, categories, devices, mimetypes, places, status, ui
 src/            Inkscape sources inherited from Adwaita (fullcolor/*.source.svg, symbolic/core.svg)
 docs/           icon map and the Malaysia Icons 2 proposal
@@ -76,12 +76,36 @@ python3 tools/color/build.py --tint '#e8a33d' --out ~/.local/share/icons/Malaysi
 
 Variants are separate themes, because an icon theme cannot change with the color scheme:
 
-- `Malaysia` has the light folders.
-- `Malaysia-Dark` (installed next to it, `Inherits=Malaysia`) has only the dark folders.
+- `Malaysia` has the light folders and app icons.
+- `Malaysia-Dark` (installed next to it, `Inherits=Malaysia`) has only the dark folders and
+  app icons.
 - A tinted theme is generated on demand with `--tint` from the user's accent color.
 
 The Adwaita sources in `src/fullcolor/` for these icons are no longer used.
 `network-server`, `network-workgroup` and `user-trash` are still Adwaita's drawings.
+
+## App icons
+
+Phase 4 redrew the icons of the desktop's own apps, Settings
+(`io.github.hblanqueto.malaysia.settings`) and Screenshot
+(`io.github.hblanqueto.malaysia.screenshot`). They live in `scalable/apps`, which is
+searched before `hicolor`, so they replace the copies the desktop installs in `hicolor`
+whenever the Malaysia theme is active. `tools/color/build.py` generates them too; add a
+row to `APPS` for a new app.
+
+Each icon has three layers that change with the variant:
+
+1. **Background**: a continuous-corner squircle (superellipse, n = 5) filling 824 of
+   1024 units, with a two-tone vertical gradient.
+2. **Figure**: the app's 16 px symbol at 3.2× with a 1.6 stroke and a short drop below.
+   White in light, the app's color in dark, the accent in tinted.
+3. **Edge**: an inner highlight along the top and an 18 % outline.
+
+The shadow around the icon is left to whatever draws it (the Dock), not baked in.
+
+The generator checks WCAG 2.2 non-text contrast (1.4.11, 3:1) between every figure and
+background color and stops if a light or dark icon falls short. In the tinted variant the
+accent is the user's choice, so it lightens the figure until it reaches 3:1.
 
 ## Build and install
 

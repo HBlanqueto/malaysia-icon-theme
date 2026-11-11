@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Genera los íconos a color de lugares (carpetas) y tipos de archivo.
+"""Genera los íconos a color: lugares (carpetas), tipos de archivo e íconos de app.
 
 Las figuras vienen de las fuentes simbólicas (src/malaysia-symbolic), así que una carpeta o
 un tipo nuevo no necesita dibujo propio: basta con agregar una fila a FOLDERS o MIMETYPES.
@@ -9,7 +9,7 @@ Uso:
   python3 tools/color/build.py --check         falla si algún archivo está desactualizado
   python3 tools/color/build.py --tint '#e8a33d' --out ~/.local/share/icons/Malaysia-Tinted
                                                escribe un tema tintado con ese acento
-                                               (hereda de Malaysia; solo trae carpetas)
+                                               (hereda de Malaysia; trae carpetas e íconos de app)
 """
 import argparse, colorsys, os, re, sys
 
@@ -183,9 +183,100 @@ def document(fig, color, text, template):
     return svg(body, defs)
 
 
-CONTEXTS = {"places": "Places", "mimetypes": "MimeTypes", "status": "Status"}
+# ---------------------------------------------------------------- íconos de app (fase 4)
+# Squircle de esquina continua (superelipse, n = 5). Área útil de 824 de 1024, como la
+# plantilla de app de macOS: 80.47 de 100 unidades, centrada.
+SQ_HALF, SQ_N = 40.23, 5
+
+
+def squircle(half=SQ_HALF, n=SQ_N, steps=180):
+    import math
+    pts = []
+    for i in range(steps):
+        t = 2 * math.pi * i / steps
+        c, s_ = math.cos(t), math.sin(t)
+        x = 50 + half * math.copysign(abs(c) ** (2 / n), c)
+        y = 50 + half * math.copysign(abs(s_) ** (2 / n), s_)
+        pts.append(f"{x:.2f} {y:.2f}")
+    return "M" + "L".join(pts) + "z"
+
+
+def gear(teeth=8, outer=6.3, root=4.7, hole=2.2):
+    import math
+    pts = []
+    for k in range(teeth):
+        a, w = 2 * math.pi * k / teeth - math.pi / 2, math.pi / teeth * 0.55
+        for t, r in ((a - w * 1.25, root), (a - w * .75, outer), (a + w * .75, outer), (a + w * 1.25, root)):
+            pts.append(f"{8 + r * math.cos(t):.2f} {8 + r * math.sin(t):.2f}")
+    return "M" + "L".join(pts) + f"zM8 {8 + hole}a{hole} {hole} 0 1 0 0-{2 * hole}a{hole} {hole} 0 0 0 0 {2 * hole}"
+
+
+# id → (figura en rejilla de 16, degradado del fondo en claro arriba/abajo)
+APPS = {
+    "io.github.hblanqueto.malaysia.settings": (gear(), ("#80858d", "#4f545b")),
+    "io.github.hblanqueto.malaysia.screenshot": (
+        "M2.5 5.5v-2a1 1 0 0 1 1-1h2M10.5 2.5h2a1 1 0 0 1 1 1v2M13.5 10.5v2a1 1 0 0 1-1 1h-2"
+        "M5.5 13.5h-2a1 1 0 0 1-1-1v-2M8 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4", ("#62739a", "#2b3449")),
+}
+MIN_CONTRAST = 3.0  # WCAG 2.2, 1.4.11: contraste mínimo de un objeto gráfico
+
+
+def luminance(hex_):
+    def ch(v):
+        v /= 255
+        return v / 12.92 if v <= .04045 else ((v + .055) / 1.055) ** 2.4
+    r, g, b = (ch(int(hex_[i:i + 2], 16)) for i in (1, 3, 5))
+    return .2126 * r + .7152 * g + .0722 * b
+
+
+def contrast(a, b):
+    la, lb = sorted((luminance(a), luminance(b)), reverse=True)
+    return (la + .05) / (lb + .05)
+
+
+def app_layers(colors, variant, tint=None):
+    """Colores de las tres capas (fondo, figura, borde) para cada modo."""
+    top, bottom = colors
+    if variant == "light":
+        return dict(bg=(top, bottom), fig=("#ffffff", "#e9edf2"), rim=.45)
+    if variant == "dark":
+        return dict(bg=("#34373d", "#17181b"), fig=(shade(top, 45), shade(top, 20)), rim=.14)
+    # el acento lo elige el usuario: si la figura no llega al contraste mínimo, se aclara
+    bg = (shade(tint, -62), shade(tint, -78))
+    for lift in range(5, 101, 5):
+        fig = (shade(tint, min(100, lift + 20)), shade(tint, lift))
+        if min(contrast(f, b) for f in fig for b in bg) >= MIN_CONTRAST:
+            break
+    return dict(bg=bg, fig=fig, rim=.14)
+
+
+def app_icon(fig, colors, variant, tint=None, name=""):
+    L = app_layers(colors, variant, tint)
+    worst = min(contrast(f, b) for f in L["fig"] for b in L["bg"])
+    if worst < MIN_CONTRAST:
+        sys.exit(f"{name} ({variant}): contraste figura/fondo {worst:.2f}:1, mínimo {MIN_CONTRAST}:1")
+    sq = squircle()
+    defs = (grad("bg", *L["bg"]) + grad("fig", *L["fig"])
+            + f'<linearGradient id="rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" '
+              f'stop-opacity="{L["rim"]}"/><stop offset=".35" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
+            + f'<clipPath id="sq"><path d="{sq}"/></clipPath>')
+    common = 'fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"'
+    body = (
+        # 1. fondo
+        f'<path fill="url(#bg)" d="{sq}"/>'
+        # 2. figura: sombra corta debajo y figura con degradado
+        f'<g transform="translate(24.4 25.2) scale(3.2)"><path {common} stroke="#000000" stroke-opacity=".18" d="{fig}"/></g>'
+        f'<g transform="translate(24.4 24.4) scale(3.2)"><path {common} stroke="url(#fig)" d="{fig}"/></g>'
+        # 3. borde: luz interior arriba y contorno exterior (Golden Gate)
+        f'<path clip-path="url(#sq)" fill="none" stroke="url(#rim)" stroke-width="2.4" d="{sq}"/>'
+        f'<path fill="none" stroke="#000000" stroke-opacity=".18" stroke-width=".6" d="{sq}"/>')
+    return ('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 100 100">'
+            f"<defs>{defs}</defs>{body}</svg>\n")
+
+
+CONTEXTS = {"apps": "Applications", "places": "Places", "mimetypes": "MimeTypes", "status": "Status"}
 # scalable/status solo lleva folder-open, que meson instala como enlace a places/folder.svg
-VARIANT_DIRS = ["scalable/mimetypes", "scalable/places", "scalable/status"]
+VARIANT_DIRS = ["scalable/apps", "scalable/mimetypes", "scalable/places", "scalable/status"]
 
 
 def theme_index(name, comment, inherits, dirs):
@@ -202,6 +293,8 @@ def files(variant, tint=None):
     for name, fig in FOLDERS.items():
         ctx = "mimetypes" if name.startswith("inode-") else "places"
         out[f"scalable/{ctx}/{name}.svg"] = folder(fig, p)
+    for name, (fig, colors) in APPS.items():
+        out[f"scalable/apps/{name}.svg"] = app_icon(fig, colors, variant, tint, name)
     if variant == "light":
         for name, (fig, color, text) in MIMETYPES.items():
             out[f"scalable/mimetypes/{name}.svg"] = document(fig, color, text, name in TEMPLATES)
@@ -243,7 +336,7 @@ def main():
         return
     stale = sync(os.path.join(ROOT, "Malaysia"), files("light"), a.check)
     stale += sync(os.path.join(ROOT, "Malaysia-Dark"), files("dark"), a.check,
-                  theme_index("Malaysia-Dark", "Malaysia with dark folders", "Malaysia",
+                  theme_index("Malaysia-Dark", "Malaysia with dark folders and app icons", "Malaysia",
                               VARIANT_DIRS))
     if a.check:
         sys.exit("desactualizados:\n  " + "\n  ".join(stale)) if stale else print("todo al día")
