@@ -24,6 +24,7 @@ Malaysia/                the Malaysia theme
 Malaysia-Dark/           child theme with the dark folders and app icons (generated)
 src/
 ├── malaysia-symbolic/   stroke sources of the desktop symbols
+├── malaysia-devices/    device pictures, 40×32, in the style of malaysia-settings
 ├── fullcolor/           Adwaita's Inkscape sources (*.source.svg)
 └── symbolic/            Adwaita's symbolic sheets (core.svg)
 docs/                    symbols.md, icon map and the Malaysia Icons 2 proposal
@@ -32,8 +33,9 @@ tools/                   importers and generators
 ```
 
 Nothing is generated from `src/fullcolor/` or `src/symbolic/`. They stay as the editable
-sources of the icons that are still Adwaita's drawings: about 500 symbols, the devices and
-status icons in `scalable/`, and `network-server`, `network-workgroup` and `user-trash`. Delete a source once its icon is redrawn.
+sources of the icons that are still Adwaita's drawings: about 500 symbols, the status icons
+in `scalable/`, and `network-server`, `network-workgroup` and `user-trash`. Delete a source
+once its icon is redrawn.
 
 Compared with Adwaita 51.0, phase 1 of the proposal removed `16x16/` (PNG copies of the
 scalable icons), `symbolic/legacy/` and `symbolic/emotes/`. All three still resolve through
@@ -90,8 +92,20 @@ Variants are separate themes, because an icon theme cannot change with the color
   app icons.
 - A tinted theme is generated on demand with `--tint` from the user's accent color.
 
-The Adwaita sources in `src/fullcolor/` for these icons are no longer used.
 `network-server`, `network-workgroup` and `user-trash` are still Adwaita's drawings.
+
+## Devices
+
+The 23 icons in `scalable/devices` are product pictures in the style of the device
+pictures in Malaysia's Settings (Bluetooth): space-gray hardware, a thin dark edge, a top
+highlight and a soft shadow on the floor.
+
+- The sources are in `src/malaysia-devices/<name>.svg`, drawn on the 40×32 canvas that
+  Settings uses. Eight come from `malaysia-settings/assets/devices`; the other fifteen
+  are drawn in the same style.
+- `tools/color/build.py` centers each picture on a square 40×40 icon. `printer-network`
+  is `printer` plus a network badge (`DEVICE_BADGES`), not a separate drawing.
+- To add a device, add its source and run the generator.
 
 ## App icons
 
@@ -158,5 +172,6 @@ stroke on the assumption that it is invisible. To keep part of an icon in color,
 
 Same as Adwaita: GNU LGPL v3 or Creative Commons Attribution-Share Alike 3.0 (see
 `COPYING`). The artwork inherited from Adwaita is by the GNOME Project (see `AUTHORS`).
-The desktop symbols in `src/malaysia-symbolic` also come under the MIT License of
-malaysia and barrierkit (`COPYING_MIT`).
+The desktop symbols in `src/malaysia-symbolic` and the device pictures in
+`src/malaysia-devices` also come under the MIT License of malaysia and barrierkit
+(`COPYING_MIT`).

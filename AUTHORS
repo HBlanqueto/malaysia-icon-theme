@@ -1,12 +1,14 @@
 Malaysia
 ========
 
-Malaysia artwork (src/malaysia-symbolic, the generated folders, file types and app icons)
----------------------------------------------------------------------------------------
+Malaysia artwork (src/malaysia-symbolic, src/malaysia-devices, the generated folders, file
+types and app icons)
+------------------------------------------------------------------------------------------
 HBlanqueto
 
 The symbols in src/malaysia-symbolic come from the Malaysia desktop
 (github.com/HBlanqueto/malaysia) and its toolkit (github.com/HBlanqueto/barrierkit).
+Eight device pictures in src/malaysia-devices come from malaysia-settings.
 
 Adwaita
 =======

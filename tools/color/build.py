@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the full-color icons: places (folders), file types and app icons.
+"""Generate the full-color icons: places (folders), file types, devices and app icons.
 
 Figures come from the symbolic sources (src/malaysia-symbolic), so a new folder, file type
 or app needs no drawing of its own: add a row to FOLDERS, MIMETYPES or APPS.
@@ -15,6 +15,7 @@ import argparse, colorsys, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SYM = os.path.join(ROOT, "src", "malaysia-symbolic")
+DEVICES = os.path.join(ROOT, "src", "malaysia-devices")
 
 
 def glyph(name):
@@ -270,6 +271,29 @@ def app_icon(fig, colors, variant, tint=None, name=""):
             f"<defs>{defs}</defs>{body}</svg>\n")
 
 
+# Device pictures are drawn on the 40x32 canvas of malaysia-settings; icons are square.
+# name → (base picture, badge symbol) for devices drawn as another device plus a badge.
+DEVICE_BADGES = {"printer-network": ("printer", "network-wireless")}
+
+
+def device_art(name):
+    svg = open(os.path.join(DEVICES, f"{name}.svg"), encoding="utf-8").read()
+    return svg[svg.index(">") + 1:svg.rindex("</svg>")]
+
+
+def badge(fig):
+    return ('<circle cx="33" cy="7" r="5.4" fill="#1e7bf2" stroke="#ffffff" stroke-width=".8"/>'
+            f'<g transform="translate(28.6 2.6) scale(.55)"><path fill="none" stroke="#ffffff" stroke-width="2" '
+            f'stroke-linecap="round" stroke-linejoin="round" d="{G(fig)}"/></g>')
+
+
+def device(name):
+    base, fig = DEVICE_BADGES.get(name, (name, None))
+    inner = device_art(base) + (badge(fig) if fig else "")
+    return ('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 40 40">'
+            f'<svg y="4" width="40" height="32" viewBox="0 0 40 32">{inner}</svg></svg>\n')
+
+
 CONTEXTS = {"apps": "Applications", "places": "Places", "mimetypes": "MimeTypes", "status": "Status"}
 # scalable/status only holds folder-open, which meson installs as a link to places/folder.svg
 VARIANT_DIRS = ["scalable/apps", "scalable/mimetypes", "scalable/places", "scalable/status"]
@@ -292,6 +316,9 @@ def files(variant, tint=None):
     for name, (fig, colors) in APPS.items():
         out[f"scalable/apps/{name}.svg"] = app_icon(fig, colors, variant, tint, name)
     if variant == "light":
+        names = sorted(f.removesuffix(".svg") for f in os.listdir(DEVICES)) + sorted(DEVICE_BADGES)
+        for name in names:
+            out[f"scalable/devices/{name}.svg"] = device(name)
         for name, (fig, color, text) in MIMETYPES.items():
             out[f"scalable/mimetypes/{name}.svg"] = document(fig, color, text, name in TEMPLATES)
     return out

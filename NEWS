@@ -11,6 +11,8 @@ and in this repository's git log up to commit 75a7cc2.
   freedesktop names: 71 replace Adwaita's drawing, 26 are new, including the
   window-tile-* icons.
 - Generate 15 folders, 26 file types and the Settings and Screenshot app icons.
+- Redraw the 22 device icons, plus audio-card, in the style of the device pictures in
+  Malaysia's Settings.
 - Add Malaysia-Dark, a child theme with dark folders and app icons, and a
   generator for a theme tinted with the user's accent color.
 - Check exports, generated icons and installation in CI.

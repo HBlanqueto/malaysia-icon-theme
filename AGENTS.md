@@ -53,20 +53,22 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 |---|---|---|
 | `index.theme` | tema `Malaysia` | sí |
 | `Malaysia/symbolic/` | símbolos exportados | solo los que no tienen fuente en `src/malaysia-symbolic/` (heredados de Adwaita) |
-| `Malaysia/scalable/{apps,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
+| `Malaysia/scalable/{apps,devices,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
 | `Malaysia-Dark/` | tema hijo con carpetas e íconos de app oscuros | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
+| `src/malaysia-devices/` | dibujos de dispositivos, 40×32, estilo Ajustes de malaysia | sí |
 | `src/fullcolor/`, `src/symbolic/` | fuentes de Adwaita de los íconos que aún no se redibujan; se borra la fuente al redibujar su ícono | solo para borrar |
 | `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
-| `tools/color/build.py` | carpetas, tipos de archivo e íconos de app (`FOLDERS`, `MIMETYPES`, `APPS`) | sí |
+| `tools/color/build.py` | carpetas, tipos de archivo, dispositivos e íconos de app (`FOLDERS`, `MIMETYPES`, `DEVICE_BADGES`, `APPS`) | sí |
 | `docs/` | `symbols.md`, mapa de íconos y propuesta (generados) | no: se regeneran |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
 
 ## Flujo de trabajo
 
 1. `pip install -r tools/requirements.txt` (picosvg y skia-pathops).
-2. Edita la fuente: un símbolo en `src/malaysia-symbolic/`, o una fila de
-   `FOLDERS`, `MIMETYPES` o `APPS` en `tools/color/build.py`.
+2. Edita la fuente: un símbolo en `src/malaysia-symbolic/`, un dibujo en
+   `src/malaysia-devices/`, o una fila de `FOLDERS`, `MIMETYPES`, `APPS` o
+   `DEVICE_BADGES` en `tools/color/build.py`.
 3. Genera: `python3 tools/symbols/export.py` y `python3 tools/color/build.py`.
 4. Comprueba antes de cada push, en este orden:
    ```sh
