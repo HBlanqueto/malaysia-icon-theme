@@ -294,7 +294,7 @@ def files(variant, tint=None):
     for name, (fig, colors) in APPS.items():
         out[f"scalable/apps/{name}.svg"] = app_icon(fig, colors, variant, tint, name)
     if variant == "light":
-        for name, svg_ in devices.icons(G).items():
+        for name, svg_ in devices.icons(G, label).items():
             out[f"scalable/devices/{name}.svg"] = svg_
         for name, (fig, color, text) in MIMETYPES.items():
             out[f"scalable/mimetypes/{name}.svg"] = document(fig, color, text, name in TEMPLATES)

@@ -95,7 +95,7 @@ Variants are separate themes, because an icon theme cannot change with the color
 
 ## Devices
 
-The 23 icons in `scalable/devices` follow Apple's guidance for macOS icons (lifelike
+The 62 icons in `scalable/devices` follow Apple's guidance for macOS icons (lifelike
 rendering: a front-facing, level view, one consistent drop shadow, and physical materials
 with mass) and the macOS 26.1 drive icon as the visual reference. No icon copies an Apple
 drawing or logo.
@@ -113,7 +113,10 @@ drawing or logo.
   scanner base) and blue anodized aluminum (USB stick).
 - `tools/color/devices.py` draws every device from these shared materials: aluminum,
   white plastic, graphite, steel, black glass, speaker mesh and crystal blue. Each device is a
-  function in `DEVICES`; `printer-network` is `printer` plus a badge.
+  function in `DEVICES`; badged and labeled variants (`printer-network`, the discs) are
+  built in `icons()`.
+- The set covers the device names other macOS-style themes ship (cards, discs, jacks,
+  network gear, cameras), plus the freedesktop names `modem` and `network-wired`.
 - To add a device, add a function and run `tools/color/build.py`.
 
 ## App icons

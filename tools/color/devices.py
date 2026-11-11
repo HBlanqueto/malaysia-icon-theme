@@ -6,6 +6,7 @@ Edges come from light, never from an outline. The reference is the macOS 26.1 dr
 aluminum with rounded, cylindrically lit sides, a beveled top edge, a rounded bottom face
 with its own volume, and marks pressed into the metal with a soft inner shadow.
 """
+import math
 
 DEFS = (
     # one drop shadow for every device: a soft cast shadow plus a tight contact shadow
@@ -47,6 +48,10 @@ DEFS = (
     '<stop offset="0" stop-color="#45474d"/><stop offset=".2" stop-color="#26282c"/><stop offset="1" stop-color="#0c0d0f"/></linearGradient>'
     '<linearGradient id="blue-alu" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#6c9de3"/><stop offset=".5" stop-color="#3a6ec4"/><stop offset="1" stop-color="#22498f"/></linearGradient>'
+    '<linearGradient id="green" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#7be08a"/><stop offset=".5" stop-color="#34b552"/><stop offset="1" stop-color="#1d8a35"/></linearGradient>'
+    '<linearGradient id="pcb" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#3fa95c"/><stop offset=".5" stop-color="#23803f"/><stop offset="1" stop-color="#15582b"/></linearGradient>'
     '<linearGradient id="lip-white" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#e6e8eb"/><stop offset="1" stop-color="#bfc2c8"/></linearGradient>'
     # plastic, steel, glass
@@ -138,11 +143,28 @@ def ring(cx, cy, r_out, r_in):
             f'M{cx} {cy - r_in}a{r_in} {r_in} 0 1 0 0 {2 * r_in}a{r_in} {r_in} 0 1 0 0-{2 * r_in}z')
 
 
-def badge(fig):
-    return ('<circle cx="51" cy="13" r="9" fill="#ffffff"/><circle cx="51" cy="13" r="7.8" fill="url(#label)"/>'
-            '<circle cx="51" cy="13" r="7.8" fill="url(#bevel)"/>'
-            f'<g transform="translate(44.6 6.6) scale(.8)"><path fill="none" stroke="#ffffff" stroke-width="1.8" '
-            f'stroke-linecap="round" stroke-linejoin="round" d="{fig}"/></g>')
+def emblem(cx, cy, r, fig, fill="url(#label)"):
+    """A round seal with a symbol stroked in white; `fig` is a path on the 16 px grid."""
+    k = r * .8 / 9
+    return (f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="#ffffff"/><circle cx="{cx}" cy="{cy}" r="{r - 1.2:g}" fill="{fill}"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="{r - 1.2:g}" fill="url(#bevel)"/>'
+            f'<g transform="translate({cx - 8 * k:g} {cy - 8 * k:g}) scale({k:g})"><path fill="none" stroke="#ffffff" '
+            f'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="{fig}"/></g>')
+
+
+def badge(fig, fill="url(#label)"):
+    return emblem(51, 13, 9, fig, fill)
+
+
+def circle(cx, cy, r):
+    return f'M{cx} {cy - r}a{r} {r} 0 1 1 0 {2 * r}a{r} {r} 0 1 1 0-{2 * r}z'
+
+
+def sector(cx, cy, r_in, r_out, a0, a1, color):
+    pt = lambda r, a: f"{cx + r * math.cos(math.radians(a)):.2f} {cy + r * math.sin(math.radians(a)):.2f}"
+    big = int(a1 - a0 > 180)
+    return (f'<path d="M{pt(r_out, a0)}A{r_out} {r_out} 0 {big} 1 {pt(r_out, a1)}L{pt(r_in, a1)}'
+            f'A{r_in} {r_in} 0 {big} 0 {pt(r_in, a0)}z" fill="{color}" fill-opacity=".55"/>')
 
 
 def drive(x, y, w, h, fill="alu", base="lip"):
@@ -161,7 +183,7 @@ def screw(cx, cy):
             f'<path d="M{cx - .7} {cy}h1.4" stroke="#5c5f66" stroke-width=".45"/>')
 
 
-def harddisk():
+def harddisk(partitions=()):
     """An open 3.5-inch drive seen from above: platter, spindle, actuator arm and label."""
     platter = ring(32, 25, 19, 4.6)
     arm = "M46.6 47.6 35.4 31.6a1.3 1.3 0 0 1 2-1.5l12.8 15.2z"
@@ -170,6 +192,7 @@ def harddisk():
             + f'<path fill-rule="evenodd" d="{ring(32, 25, 19.8, 19)}" fill="#000000" fill-opacity=".25" filter="url(#soft)"/>'
             + f'<path fill-rule="evenodd" d="{platter}" fill="url(#platter)"/>'
             + f'<path fill-rule="evenodd" d="{platter}" fill="url(#sheen2)"/>'
+            + "".join(sector(32, 25, 6, 18.4, a0, a1, color) for a0, a1, color in partitions)
             + '<circle cx="32" cy="25" r="4.6" fill="url(#steel)"/><circle cx="32" cy="25" r="1.6" fill="#3a3c41"/>'
             + "".join(f'<circle cx="{32 + 3.1 * c:.2f}" cy="{25 + 3.1 * s:.2f}" r=".45" fill="#5c5f66"/>'
                       for c, s in ((1, 0), (-.5, .866), (-.5, -.866)))
@@ -391,6 +414,161 @@ def scanner():
             + deboss(ring(53, 35.4, 1.6, .01), "#3a3c41") + led(48.4, 35.4))
 
 
+def sim():
+    d = "M19 6h21l8 8v40a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3z"
+    chip = rr(21, 22, 22, 18, 3.4)
+    return (solid(d, "plastic") + f'<path d="{chip}" fill="url(#gold)"/><path d="{chip}" fill="url(#bevel)"/>'
+            + '<path d="M21 31h22M32 22v18M21 26.5h7M36 26.5h7M21 35.5h7M36 35.5h7" stroke="#9a7428" stroke-width=".7"/>')
+
+
+def battery():
+    wrap = rr(21, 15, 22, 43, 4.5)
+    return (body(28, 6, 8, 6, 1.5, "steel") + body(21, 10, 22, 48, 4.5, "steel") + solid(wrap, "green")
+            + deboss("M31 21h2v3h3v2h-3v3h-2v-3h-3v-2h3z", "#1d8a35") + deboss(rr(28, 44, 8, 2, 1), "#1d8a35"))
+
+
+def bluetooth(fig):
+    return body(17, 10, 30, 44, 9, "plastic") + lip(17, 47, 30, 7, "lip-white") + emblem(32, 27, 10, fig) + led(32, 42.5, "#0a84ff")
+
+
+def camera_photo():
+    lens = ('<circle cx="32" cy="37" r="13.2" fill="url(#steel)"/><circle cx="32" cy="37" r="11.2" fill="#08090b"/>'
+            '<circle cx="32" cy="37" r="7.6" fill="url(#lens)"/><circle cx="32" cy="37" r="3" fill="#0a1022"/>'
+            '<ellipse cx="29" cy="34" rx="2.4" ry="1.6" fill="#ffffff" fill-opacity=".7"/>')
+    return (body(13, 12, 15, 9, 2, "alu") + body(43, 14, 9, 6, 2, "steel") + body(5, 18, 54, 36, 5)
+            + '<rect x="5" y="27" width="54" height="20" fill="url(#graphite)"/><rect x="5" y="27" width="54" height="20" fill="url(#mesh-light)" fill-opacity=".15"/>'
+            + '<rect x="5" y="27" width="54" height="20" fill="url(#side)"/>'
+            + glass(9, 21, 9, 4, 1) + '<rect x="10" y="21.8" width="7" height="2.4" rx=".6" fill="#ffffff" fill-opacity=".55"/>'
+            + lens + led(52, 23, "#ff9f0a"))
+
+
+def camera_video():
+    panel = rr(2, 23, 13, 18, 2)
+    return (body(12, 15, 13, 8, 2, "graphite") + body(8, 20, 38, 26, 6, "graphite")
+            + body(44, 23, 15, 20, 3, "graphite") + '<ellipse cx="58" cy="33" rx="2.2" ry="8" fill="url(#lens)"/>'
+            + '<ellipse cx="57.6" cy="30" rx=".8" ry="2.4" fill="#ffffff" fill-opacity=".6"/>'
+            + solid(panel, "graphite") + f'<path d="{rr(3.4, 24.4, 10.2, 15.2, 1.2)}" fill="url(#crystal)"/>'
+            + reflection(3.4, 24.4, 10.2, 15.2, 1.2) + led(20, 27, "#ff453a")
+            + "".join(deboss(rr(24 + i * 5, 38, 3.4, 2, 1), "#3a3c41") for i in range(3)))
+
+
+def cpu():
+    pins = "".join(f'<rect x="{12.5 + i * 4}" y="{y}" width="2" height="1.2" rx=".3" fill="url(#gold)"/>'
+                   for i in range(10) for y in (8.6, 54.2))
+    return (body(6, 6, 52, 52, 4, "pcb") + pins + '<path d="M9 9h5l-5 5z" fill="url(#gold)"/>'
+            + body(14, 14, 36, 36, 4) + deboss(rr(20, 40, 24, 2.4, 1.2)) + deboss(rr(20, 20, 10, 2.4, 1.2)))
+
+
+def memory():
+    board = "M4.6 20h54.8a1.6 1.6 0 0 1 1.6 1.6V42H36v-2.6h-3V42H3V21.6A1.6 1.6 0 0 1 4.6 20z"
+    fingers = "".join(f'<rect x="{4.4 + i * 2.1:.1f}" y="38.4" width="1.3" height="3.4" fill="url(#gold)"/>'
+                      for i in range(27) if not 30.6 < 4.4 + i * 2.1 < 36.4)
+    chips = "".join(body(6.6 + i * 13.2, 24, 11, 11, .8, "graphite") for i in range(4))
+    return solid(board, "pcb") + fingers + chips
+
+
+def network_card():
+    board = "M10 14h46a1.6 1.6 0 0 1 1.6 1.6V42H52v4.4H22V42H10z"
+    fingers = "".join(f'<rect x="{23.2 + i * 2.1:.1f}" y="42.6" width="1.3" height="3.6" fill="url(#gold)"/>' for i in range(14))
+    return (body(4, 8, 6, 46, 1, "steel") + solid(board, "pcb") + fingers
+            + body(10, 18, 11, 13, 1, "graphite") + '<rect x="12" y="21" width="7" height="5" rx=".6" fill="#08090b"/>'
+            + '<path d="M13.2 21.4v1.8M14.6 21.4v1.8M16 21.4v1.8M17.4 21.4v1.8" stroke="#d6ae55" stroke-width=".5"/>'
+            + body(32, 20, 14, 14, 1.2, "graphite") + led(14, 36) + led(18, 36, "#ff9f0a"))
+
+
+def media_cf():
+    holes = "".join(f'<circle cx="{15.6 + i * 2.8:.1f}" cy="{y}" r=".55" fill="#08090b"/>' for i in range(12) for y in (10.4, 12.6))
+    label = rr(15, 17, 34, 34, 2)
+    return (body(12, 7, 40, 48, 2.6, "graphite") + holes
+            + f'<path d="{label}" fill="url(#label)"/><path d="{label}" fill="url(#bevel)"/>'
+            + '<path d="M32 22l3.4 4.4h-6.8z" fill="#ffffff"/>')
+
+
+def media_ms():
+    contacts = "".join(f'<rect x="6.4" y="{23.2 + i * 1.9:.1f}" width="3.6" height="1.1" rx=".3" fill="url(#gold)"/>' for i in range(10))
+    label = rr(15, 23.5, 41, 17, 1.6)
+    return (body(4, 20, 56, 24, 2, "graphite") + contacts + f'<path d="{label}" fill="url(#plastic)"/>'
+            + '<rect x="15" y="23.5" width="41" height="4" fill="url(#label)"/>'
+            + '<path d="M19 33h24M19 36.4h16" stroke="#a9acb3" stroke-width="1" stroke-linecap="round"/>')
+
+
+def media_sm():
+    d = "M14 6h30l6 6v43a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"
+    plate, label = rr(19, 13, 24, 19, 2), rr(16, 38, 30, 14, 1.6)
+    return (solid(d, "plastic") + f'<path d="{plate}" fill="url(#gold)"/><path d="{plate}" fill="url(#bevel)"/>'
+            + '<path d="M19 19.3h24M19 25.6h24M31 13v19" stroke="#9a7428" stroke-width=".7"/>'
+            + f'<path d="{label}" fill="url(#label)"/><path d="{label}" fill="url(#bevel)"/>')
+
+
+def dialpad():
+    keys = "".join(deboss(rr(17.4 + c * 10.4, 9 + r * 11.6, 8.4, 9.2, 3.2), "#d4d6db") for c in range(3) for r in range(4))
+    return body(12, 3, 40, 56, 7, "plastic") + lip(12, 52, 40, 7, "lip-white") + keys
+
+
+def touchpad():
+    return body(4, 13, 56, 36, 5) + f'<path d="{rr(6.4, 15.4, 51.2, 26.6, 3.4)}" fill="#e2e4e7" filter="url(#inset)"/>' + lip(4, 43, 56, 6)
+
+
+def touchscreen():
+    touch = ('<circle cx="35" cy="31" r="8" fill="#ffffff" fill-opacity=".18"/><circle cx="35" cy="31" r="5" fill="#ffffff" fill-opacity=".3"/>'
+             '<circle cx="35" cy="31" r="2.6" fill="#ffffff" fill-opacity=".9"/>')
+    return (body(5, 8, 54, 46, 5, "graphite") + glass(6.5, 9.5, 51, 43, 3.6) + screen(9, 12, 46, 38, 1.4) + touch
+            + reflection(6.5, 9.5, 51, 43, 3.6))
+
+
+def tvremote():
+    buttons = "".join(deboss(circle(x, y, 1.9), "#4a4c52") for x in (28, 36) for y in (29, 35))
+    return (body(24, 3, 16, 58, 8, "graphite") + solid(circle(32, 16, 6.6), "alu-dark")
+            + '<circle cx="32" cy="16" r="2.6" fill="url(#graphite)"/>' + buttons
+            + deboss(rr(29.6, 41, 4.8, 13, 2.4), "#4a4c52") + led(32, 8, "#ff453a"))
+
+
+def player():
+    arrows = ('<path d="M24.6 44l2.4-1.6v3.2zM39.4 44 37 42.4v3.2zM32 36.4l-1.4 2h2.8zM31 50.6h2" fill="#5c5f66" '
+              'stroke="#5c5f66" stroke-width=".6" stroke-linejoin="round"/>')
+    return (body(18, 3, 28, 57, 6, "graphite") + glass(20.5, 6, 23, 23, 2.4) + screen(22, 7.5, 20, 20, 1.2)
+            + reflection(20.5, 6, 23, 23, 2.4) + solid(circle(32, 44, 10.4), "alu") + arrows
+            + deboss(circle(32, 44, 4), "#c3c5c9"))
+
+
+def router():
+    antennas = body(12, 6, 3.6, 30, 1.8, "graphite") + body(48.4, 6, 3.6, 30, 1.8, "graphite")
+    lights = "".join(led(16 + i * 5.2, 38.4) for i in range(5))
+    return (antennas + body(6, 29, 52, 22, 5, "plastic") + lip(6, 44.6, 52, 6.4, "lip-white") + lights
+            + deboss(rr(44, 37.4, 9, 2, 1), "#d4d6db"))
+
+
+def jack(pins):
+    w = 4 + pins * 2.2
+    socket = rr(32 - w / 2, 20, w, 22, 2)
+    contacts = "".join(f'<rect x="{32 - (pins - 1) * 1.1 + i * 2.2 - .45:.2f}" y="21.6" width=".9" height="7" fill="url(#gold)"/>'
+                       for i in range(pins))
+    return (body(10, 5, 44, 54, 6, "plastic") + f'<path d="{socket}" fill="#151618" filter="url(#inset)"/>' + contacts
+            + f'<rect x="{32 - w / 4:.1f}" y="38" width="{w / 2:.1f}" height="4" fill="#2a2c31"/>' + screw(32, 11) + screw(32, 53))
+
+
+def access_point(fig):
+    return (body(18, 5, 28, 53, 10, "plastic") + lip(18, 50, 28, 8, "lip-white")
+            + f'<g transform="translate(23 16) scale(1.125)"><path d="{fig}" fill="none" stroke="#1e9bf5" stroke-width="1.6" '
+            'stroke-linecap="round" stroke-linejoin="round"/></g>' + led(32, 40))
+
+
+def nas(fig):
+    bays = "".join(body(x, 13, 17, 32, 2, "alu-dark") + deboss(rr(x + 3, 40, 11, 1.8, .9), "#7d7f85") + led(x + 8.5, 17)
+                   for x in (14, 33))
+    return body(10, 8, 44, 50, 5, "graphite") + lip(10, 51, 44, 7, "lip-dark") + bays + badge(fig)
+
+
+def television():
+    feet = solid("M13 46l-4.4 10h4.4l5-10z", "alu-dark") + solid("M51 46l4.4 10H51l-5-10z", "alu-dark")
+    return (feet + body(2, 8, 60, 40, 2.6, "graphite") + glass(3, 9, 58, 38, 2) + screen(4.4, 10.4, 55.2, 35.2, .6)
+            + reflection(3, 9, 58, 38, 2))
+
+
+FLAME = "M8 2.5c.4 2.6 3.8 4.2 3.8 7.4a3.8 3.8 0 0 1-7.6 0c0-1.5.7-2.5 1.6-3.3.1 1.3.6 2 1.3 2.3C6.8 6.9 7.2 4.7 8 2.5z"
+PARTITION = (-90, 30, "#1e9bf5")
+
+
 DEVICES = {
     "audio-card": speaker, "audio-headphones": headphones, "audio-headset": lambda: headphones(mic=True),
     "camera-web": webcam, "computer": laptop, "drive-harddisk": harddisk, "drive-multidisk": multidisk,
@@ -398,12 +576,40 @@ DEVICES = {
     "input-gaming": gamepad, "input-keyboard": keyboard, "input-mouse": mouse, "input-tablet": drawing_tablet,
     "media-flash": sd_card, "media-optical": optical_disc, "media-removable": usb_stick,
     "microphone": microphone, "phone": phone, "printer": printer, "scanner": scanner, "video-display": display,
+    "audio-input-microphone": microphone, "audio-speakers": speaker, "auth-sim": sim, "battery": battery,
+    "camera-photo": camera_photo, "camera-video": camera_video, "computer-laptop": laptop, "cpu": cpu,
+    "device-harddisk-usb": removable_drive, "drive-removable-media-usb": usb_stick,
+    "drive-partition": lambda: harddisk((PARTITION,)),
+    "drive-multipartition": lambda: harddisk((PARTITION, (30, 140, "#ff9f0a"), (140, 215, "#30d158"))),
+    "gnome-dev-media-cf": media_cf, "gnome-dev-media-ms": media_ms, "gnome-dev-media-sdmmc": sd_card,
+    "gnome-dev-media-sm": media_sm, "input-dialpad": dialpad, "input-touchpad": touchpad,
+    "input-touchscreen": touchscreen, "input-tvremote": tvremote, "memory": memory, "modem": router,
+    "multimedia-player": player, "network-card": network_card, "network-modem": router,
+    "network-rj11-female": lambda: jack(4), "network-rj45-female": lambda: jack(8), "network-wired": lambda: jack(8),
+    "video-television": television,
 }
 
 
-def icons(glyph):
-    """name → SVG for every device; `glyph(name)` returns the `d` of a symbolic source."""
+def discs(glyph, label):
+    ink = "#7d8088"
+    cd = optical_disc() + label("CD", 30.4, 40.6, 5.4, ink) + label("R", 38.4, 42.6, 3.4, ink)
+    dvd = optical_disc() + label("DVD", 32, 40.6, 5.4, ink)
+    return {"media-cdr": cd, "media-dvd": dvd, "media-write-cd": cd + emblem(51, 51, 9, FLAME, "url(#graphite)"),
+            "media-write-dvd": dvd + emblem(51, 51, 9, FLAME, "#8e44d6"),
+            "media-cdrom-audio": optical_disc() + f'<g transform="translate(26.4 38) scale(.7)"><path d="{glyph("note")}" '
+            f'fill="none" stroke="{ink}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></g>'}
+
+
+def icons(glyph, label):
+    """name → SVG for every device; `glyph(name)` returns the `d` of a symbolic source and
+    `label(text, cx, top, height, color)` draws stroked letters."""
     out = {name: draw() for name, draw in DEVICES.items()}
+    out.update(discs(glyph, label))
     out["printer-network"] = printer() + badge(glyph("network-wireless"))
+    out["gnome-dev-printer-new"] = printer() + badge(glyph("list-add"), "url(#green)")
+    out["drive-harddisk-root"] = harddisk() + badge(glyph("emblem-system"))
+    out["bluetooth"] = bluetooth(glyph("bluetooth"))
+    out["network-wireless"] = access_point(glyph("network-wireless"))
+    out["network_fs"] = nas(glyph("network-workgroup"))
     return {name: ('<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 64 64">'
                    f'<defs>{DEFS}</defs><g filter="url(#drop)">{art}</g></svg>\n') for name, art in sorted(out.items())}
