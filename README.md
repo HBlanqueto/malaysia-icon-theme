@@ -80,8 +80,8 @@ Folders and file types follow macOS Finder: no outlines, one drop shadow (the sa
   language is a `tile` row in `CODE`. Templates (`*-template`) sit on a stack of sheets.
 - The extension letters are stroked paths (`LETTERS`), not `<text>`, so they look the same
   without any font installed. Symbols come from `src/malaysia-symbolic` or `EXTRA`.
-- `user-trash` and `user-trash-full` are a perforated metal bin after the macOS Trash, with
-  a dark version in `Malaysia-Dark`.
+- `user-trash` and `user-trash-full` are a frosted, translucent bin after the macOS Trash
+  (the contents show blurred through the wall), with a smoky version in `Malaysia-Dark`.
 - `user-trash`, `user-trash-full`, `network-server` and `network-workgroup` are objects,
   and so are the status icons `avatar-default`, `image-missing` and `image-loading`:
   `places()` and `status()` in `tools/color/devices.py` draw them.

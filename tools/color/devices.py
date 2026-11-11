@@ -57,23 +57,19 @@ DEFS = (
     '<stop offset="0" stop-color="#7be08a"/><stop offset=".5" stop-color="#34b552"/><stop offset="1" stop-color="#1d8a35"/></linearGradient>'
     '<linearGradient id="pcb" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#3fa95c"/><stop offset=".5" stop-color="#23803f"/><stop offset="1" stop-color="#15582b"/></linearGradient>'
+    # frosted plastic bin
     '<linearGradient id="bin" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#fbfbfc"/><stop offset=".6" stop-color="#eceef1"/><stop offset="1" stop-color="#d3d6db"/></linearGradient>'
+    '<stop offset="0" stop-color="#ffffff" stop-opacity=".76"/><stop offset="1" stop-color="#e2e4e8" stop-opacity=".86"/></linearGradient>'
     '<linearGradient id="bin-dark" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#6a6d73"/><stop offset=".6" stop-color="#4d5056"/><stop offset="1" stop-color="#36383d"/></linearGradient>'
+    '<stop offset="0" stop-color="#6b6e74" stop-opacity=".9"/><stop offset="1" stop-color="#36383d" stop-opacity=".95"/></linearGradient>'
     '<linearGradient id="bin-inside" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#7d8189"/><stop offset="1" stop-color="#b9bcc3"/></linearGradient>'
+    '<stop offset="0" stop-color="#c9ccd2"/><stop offset="1" stop-color="#f4f5f7"/></linearGradient>'
     '<linearGradient id="bin-inside-dark" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#16171a"/><stop offset="1" stop-color="#34363b"/></linearGradient>'
-    '<linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#c3c6cc"/></linearGradient>'
-    '<linearGradient id="rim-dark" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#9a9da3"/><stop offset="1" stop-color="#55585e"/></linearGradient>'
-    # perforated metal: rounded square holes on a 2 px pitch
-    '<pattern id="perf" width="1.9" height="1.9" patternUnits="userSpaceOnUse">'
-    '<rect x=".45" y=".45" width="1" height="1" rx=".25" fill="#8a8e96" fill-opacity=".55"/></pattern>'
-    '<pattern id="perf-dark" width="1.9" height="1.9" patternUnits="userSpaceOnUse">'
-    '<rect x=".45" y=".45" width="1" height="1" rx=".25" fill="#0c0d0f" fill-opacity=".6"/></pattern>'
+    '<stop offset="0" stop-color="#26282c"/><stop offset="1" stop-color="#55585e"/></linearGradient>'
+    '<linearGradient id="frost" x1="0" y1="0" x2="1" y2="0">'
+    '<stop offset=".08" stop-color="#ffffff" stop-opacity="0"/><stop offset=".2" stop-color="#ffffff" stop-opacity=".55"/>'
+    '<stop offset=".32" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
+    '<filter id="haze" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter>'
     '<radialGradient id="globe" cx=".36" cy=".3" r=".8">'
     '<stop offset="0" stop-color="#8fdcff"/><stop offset=".5" stop-color="#1e8cf0"/><stop offset="1" stop-color="#0b3e9c"/></radialGradient>'
     '<linearGradient id="lip-white" x1="0" y1="0" x2="0" y2="1">'
@@ -594,19 +590,21 @@ PARTITION = (-90, 30, "#1e9bf5")
 
 
 def trash(full=False, dark=False):
-    """A perforated metal bin seen slightly from above, after the macOS Trash."""
+    """A frosted, translucent bin seen slightly from above, after the macOS Trash."""
     k = "-dark" if dark else ""
-    body = "M11 13a21 4.6 0 0 0 42 0l-3.6 43.2a3.5 3.5 0 0 1-3.5 3.2H18.1a3.5 3.5 0 0 1-3.5-3.2z"
-    papers = ('<path d="M17 13c0-5 5-8 10-6 3-4.6 9.6-3.6 11.4.6 4.4-1 8.6 2.4 8.2 6.4z" fill="#ffffff"/>'
-              '<rect x="17" y="12" width="30" height="5" fill="#ffffff"/>'
-              '<path d="M18 9.8c3 0 5 1.4 6 3.6M33 5.6c-1.6 1.8-1.8 4.4-.6 7.2M45.4 9.4c-2.4.4-4.2 1.8-5 3.8M26 6.4c.8 1.2 1 2.8.6 4.4" '
+    body = "M9 11a23 4.2 0 0 0 46 0l-4.4 43.6a5 5 0 0 1-5 4.4H18.4a5 5 0 0 1-5-4.4z"
+    inside = ('<g filter="url(#haze)" opacity=".9"><ellipse cx="25" cy="30" rx="9" ry="12" fill="#ffffff"/>'
+              '<ellipse cx="39" cy="26" rx="7" ry="9" fill="#7cc4ff"/><ellipse cx="33" cy="44" rx="10" ry="7" fill="#ffd76a"/>'
+              '<ellipse cx="42" cy="47" rx="5" ry="6" fill="#ff8a7a"/></g>') if full else ""
+    papers = ('<path d="M14 12c0-5 5-8.4 10-6.6 3-4.6 9.6-3.6 11.4.6 2.6-.8 5 0 6.4 1.6 3.4-.6 7.4 1.6 8.2 4.4z" fill="#ffffff"/>'
+              '<path d="M38 7.4 46 4l3 6.6-8 2.4z" fill="#6fb7ff"/><path d="M38 7.4l8-3.4" stroke="#ffffff" stroke-opacity=".6" stroke-width=".6"/>'
+              '<rect x="14" y="11" width="36" height="5" fill="#ffffff"/>'
+              '<path d="M15.4 9c3 0 5 1.4 6 3.6M30.6 5c-1.6 1.8-1.8 4.4-.6 7.2M23.6 5.8c.8 1.2 1 2.8.6 4.4" '
               'fill="none" stroke="#b9bdc5" stroke-width=".7" stroke-linecap="round"/>') if full else ""
-    return (f'<ellipse cx="32" cy="13" rx="20" ry="4" fill="url(#bin-inside{k})"/>' + papers
-            + f'<path d="{body}" fill="url(#bin{k})"/><path d="{body}" fill="url(#perf{k})"/>'
-            + f'<path d="{body}" fill="url(#side)"/>'
-            + f'<ellipse cx="32" cy="13" rx="21" ry="4.6" fill="none" stroke="url(#rim{k})" stroke-width="2.2"/>'
-            + '<path d="M11.6 12.4a20.4 4 0 0 1 40.8 0" fill="none" stroke="#ffffff" stroke-opacity=".7" stroke-width=".5"/>'
-            + f'<path d="M15.2 55.8a16.8 3 0 0 0 33.6 0" fill="none" stroke="url(#rim{k})" stroke-width="1.6"/>')
+    return (f'<ellipse cx="32" cy="11" rx="23" ry="4.2" fill="url(#bin-inside{k})"/>' + inside + papers
+            + f'<path d="{body}" fill="url(#bin{k})"/><path d="{body}" fill="url(#side)"/><path d="{body}" fill="url(#frost)"/>'
+            + f'<ellipse cx="32" cy="11" rx="23" ry="4.2" fill="none" stroke="#ffffff" stroke-opacity="{.35 if dark else .9}" stroke-width=".9"/>'
+            + f'<path d="M15 55.4a17 3.2 0 0 0 34 0" fill="none" stroke="#000000" stroke-opacity=".08" stroke-width="1.2"/>')
 
 
 def trash_icons(dark=False):
