@@ -30,6 +30,31 @@ Compared with Adwaita 51.0, phase 1 of the proposal removed `16x16/` (PNG copies
 scalable icons), `symbolic/legacy/` and `symbolic/emotes/`. All three still resolve through
 the `Adwaita` parent theme.
 
+## Desktop symbols
+
+The Malaysia desktop draws its own symbols in code: the `Symbol` enum in barrierkit
+(`crates/bk/src/symbol.rs`) and the menu icons in malaysia-shell (`src/menubar/icons.rs`).
+Phase 2 brought those 97 symbols into the theme under their freedesktop names, so GTK and
+Qt apps use the same glyphs as the desktop. `docs/symbols.md` lists every symbol with its
+name in the theme.
+
+- `src/malaysia-symbolic/<context>/<name>.svg` holds the editable sources, drawn with
+  strokes on a 16 px grid (stroke width from barrierkit's `components.symbol.stroke`).
+- `Malaysia/symbolic/<context>/<name>.svg` holds the exported icons. GTK forces `fill` on
+  every `path`, `rect` and `circle` of a symbolic icon and ignores `stroke`, so the exporter
+  turns every stroke into a filled outline.
+
+```sh
+pip install -r tools/requirements.txt
+python3 tools/symbols/import_desktop.py <malaysia> <barrierkit>   # code → src/malaysia-symbolic
+python3 tools/symbols/export.py                                   # src/malaysia-symbolic → Malaysia/symbolic
+python3 tools/symbols/export.py --check                           # fails if an export is out of date
+```
+
+Edit a source in `src/malaysia-symbolic/` and run `export.py`; do not edit the exported
+file. Running `import_desktop.py` again overwrites the sources with what the desktop code
+draws.
+
 ## Build and install
 
 ```sh
