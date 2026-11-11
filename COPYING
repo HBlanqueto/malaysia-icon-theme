@@ -8,3 +8,11 @@ Commons, 171 Second Street, Suite 300, San Francisco, California 94105, USA.
 When attributing the artwork, using "GNOME Project" is enough.
 Please link to http://www.gnome.org where available.
 
+
+The artwork added by the Malaysia project is under the same licenses. When attributing
+it, "Malaysia project" is enough; link to https://github.com/HBlanqueto/malaysia-icon-theme
+where available. The artwork inherited from Adwaita keeps the GNOME Project attribution
+above.
+
+The symbol sources in src/malaysia-symbolic, and the symbols exported from them, come from
+the Malaysia desktop and barrierkit, which are under the MIT License (see COPYING_MIT).

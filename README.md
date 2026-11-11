@@ -18,13 +18,22 @@ be installed next to this one.
 ## Layout
 
 ```
-Malaysia/
-├── scalable/   full-color SVG: apps, devices, mimetypes, places, status
-└── symbolic/   recolorable SVG: actions, categories, devices, mimetypes, places, status, ui
-src/            Inkscape sources inherited from Adwaita (fullcolor/*.source.svg, symbolic/core.svg)
-docs/           icon map and the Malaysia Icons 2 proposal
-tools/          generators for the pages in docs/
+Malaysia/                the Malaysia theme
+├── scalable/            full-color SVG: apps, devices, mimetypes, places, status
+└── symbolic/            recolorable SVG: actions, categories, devices, mimetypes, places, status, ui
+Malaysia-Dark/           child theme with the dark folders and app icons (generated)
+src/
+├── malaysia-symbolic/   stroke sources of the desktop symbols
+├── fullcolor/           Adwaita's Inkscape sources (*.source.svg)
+└── symbolic/            Adwaita's symbolic sheets (core.svg)
+docs/                    symbols.md, icon map and the Malaysia Icons 2 proposal
+tools/                   importers and generators
+.github/workflows/       CI
 ```
+
+Nothing is generated from `src/fullcolor/` or `src/symbolic/`. They stay as the editable
+sources of the icons that are still Adwaita's drawings: about 500 symbols, the devices and
+status icons in `scalable/`, and `network-server`, `network-workgroup` and `user-trash`. Delete a source once its icon is redrawn.
 
 Compared with Adwaita 51.0, phase 1 of the proposal removed `16x16/` (PNG copies of the
 scalable icons), `symbolic/legacy/` and `symbolic/emotes/`. All three still resolve through
@@ -119,6 +128,18 @@ icon caches.
 To use it in the Malaysia desktop, set `MALAYSIA_ICON_THEME=Malaysia` for the launcher
 and choose `Malaysia` as the GTK icon theme.
 
+## Checks
+
+`.github/workflows/check.yml` runs on every push to `master` and on pull requests:
+
+1. `python3 tools/symbols/export.py --check`
+2. `python3 tools/color/build.py --check`
+3. `python3 tools/build-icon-map.py`, then `docs/icon-map.html` must be unchanged.
+4. `meson install` to a temporary prefix; both themes must get an icon cache and the
+   `folder-open` link.
+
+Run the same steps locally before pushing.
+
 ## Pages
 
 - `docs/icon-map.html`: every icon in the theme, searchable. Regenerate with
@@ -137,3 +158,5 @@ stroke on the assumption that it is invisible. To keep part of an icon in color,
 
 Same as Adwaita: GNU LGPL v3 or Creative Commons Attribution-Share Alike 3.0 (see
 `COPYING`). The artwork inherited from Adwaita is by the GNOME Project (see `AUTHORS`).
+The desktop symbols in `src/malaysia-symbolic` also come under the MIT License of
+malaysia and barrierkit (`COPYING_MIT`).
