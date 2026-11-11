@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Inventario de íconos que usa el escritorio Malaysia (repos malaysia + barrierkit)
-y su cruce con el pack Adwaita de este repositorio.
+"""Inventory of the icons the Malaysia desktop draws (malaysia and barrierkit repos),
+matched against the icons in this theme.
 
-Uso: python3 tools/proposal/inventory.py <ruta-malaysia> <ruta-barrierkit>  > inventory.json
+Usage: python3 tools/proposal/inventory.py <malaysia-path> <barrierkit-path> > inventory.json
 """
 import json, os, re, sys
 
@@ -17,7 +17,7 @@ for size in ("symbolic", "scalable", "16x16"):
         for f in os.listdir(f"{ROOT}/Malaysia/{size}/{ctx}"):
             theme.setdefault(os.path.splitext(f)[0], []).append(f"{size}/{ctx}")
 
-# Nombre freedesktop/Adwaita candidato por ícono del escritorio (en orden de preferencia)
+# Candidate freedesktop/Adwaita names for each desktop icon, in order of preference
 MAP = {
  # barrierkit Symbol
  "MagnifyingGlass": ["system-search-symbolic", "edit-find-symbolic"], "XMark": ["window-close-symbolic"],
@@ -70,11 +70,11 @@ MAP = {
  "BOOK": ["accessories-dictionary-symbolic", "help-contents-symbolic"], "KEYBOARD": ["input-keyboard-symbolic"],
  "LAPTOP": ["computer-symbolic", "laptop-symbolic"], "FILE": ["application-x-generic-symbolic", "text-x-generic-symbolic"],
  "FILE_TEXT": ["x-office-document-symbolic", "text-x-generic-symbolic"], "FILE_IMAGE": ["image-x-generic-symbolic"],
- # diálogos y barra
+ # dialogs and menu bar
  "POWER_SVG": ["system-shutdown-symbolic"], "RESTART_SVG": ["system-reboot-symbolic"], "LOGOUT_SVG": ["system-log-out-symbolic"],
  "power.svg": ["system-shutdown-symbolic"], "snowflake.svg": ["weather-snow-symbolic", "temperature-symbolic"],
  "wifi (niveles)": ["network-wireless-signal-good-symbolic"], "battery (niveles)": ["battery-level-50-symbolic"],
- # dibujos de dispositivo (Ajustes › Bluetooth)
+ # device pictures (Settings › Bluetooth)
  "computer.svg": ["computer"], "keyboard.svg": ["input-keyboard"], "mouse.svg": ["input-mouse"], "tablet.svg": ["input-tablet"],
  "gamepad.svg": ["input-gaming"], "headphones.svg": ["audio-headphones"], "speaker.svg": ["audio-speakers", "audio-card"],
  "phone.svg": ["phone"], "generic.svg": ["bluetooth", "preferences-system"],
@@ -95,7 +95,7 @@ def add(group, key, svg, where):
     items.append({"g": group, "k": key, "svg": svg, "src": where, "st": st, "name": name, "loc": loc,
                   "cands": MAP.get(key, [])})
 
-# 1. barrierkit Symbol (trazos en rejilla de 16, stroke 1.4)
+# barrierkit Symbol: strokes on the 16 px grid
 src = open(f"{BK}/crates/bk/src/symbol.rs").read()
 body = src[src.index("fn path(self)"):]
 for m in re.finditer(r"Self::(\w+)(?:\s*\|\s*Self::(\w+))?\s*=>\s*\{?\s*\"([^\"]+)\"", body):
@@ -104,10 +104,10 @@ for m in re.finditer(r"Self::(\w+)(?:\s*\|\s*Self::(\w+))?\s*=>\s*\{?\s*\"([^\"]
         fill = "currentColor" if k.endswith("Fill") else "none"
         svg = f'<svg viewBox="0 0 16 16"><path d="{d}" fill="{fill}" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
         add("barrierkit · Symbol", k, svg, "barrierkit/crates/bk/src/symbol.rs")
-# 2. shell icons.rs
+# malaysia-shell icons.rs
 for m in re.finditer(r'pub const (\w+): &str = "(.*)";', open(f"{MAL}/crates/malaysia-shell/src/menubar/icons.rs").read()):
     add("malaysia-shell · menú", m.group(1), m.group(2).encode().decode("unicode_escape"), "crates/malaysia-shell/src/menubar/icons.rs")
-# 3. diálogos
+# dialogs
 for m in re.finditer(r'const (\w+_SVG): &str = "(.*)";', open(f"{MAL}/crates/malaysia-shell/src/dialogs.rs").read()):
     add("malaysia-shell · diálogos", m.group(1), m.group(2).encode().decode("unicode_escape"), "crates/malaysia-shell/src/dialogs.rs")
 for f in ("power.svg", "snowflake.svg"):
@@ -116,13 +116,13 @@ wifi = '<svg viewBox="0 0 16 16"><g fill="none" stroke="currentColor" stroke-wid
 bat = '<svg viewBox="0 0 24 12"><rect x="0.5" y="0.5" width="20" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity="0.55"/><rect x="2" y="2" width="9" height="8" rx="1.6" fill="currentColor"/><path d="M22.5 4.5v3" stroke="currentColor" stroke-opacity="0.55" stroke-linecap="round"/></svg>'
 add("malaysia-shell · barra", "wifi (niveles)", wifi, "crates/malaysia-services/src/networkmanager.rs (generado)")
 add("malaysia-shell · barra", "battery (niveles)", bat, "crates/malaysia-shell/src/menubar/extras.rs (generado)")
-# 4. dispositivos y apps
+# devices and apps
 for f in sorted(os.listdir(f"{MAL}/crates/malaysia-settings/assets/devices")):
     add("Ajustes · dispositivos", f, open(f"{MAL}/crates/malaysia-settings/assets/devices/{f}").read(), f"crates/malaysia-settings/assets/devices/{f}")
 for f in sorted(os.listdir(f"{MAL}/share/icons/hicolor/scalable/apps")):
     add("Íconos de app", f, open(f"{MAL}/share/icons/hicolor/scalable/apps/{f}").read(), f"share/icons/hicolor/scalable/apps/{f}")
 
-# prefijar ids para que no choquen al incrustarlos
+# inline SVGs share one document, so ids must be unique
 for i, it in enumerate(items):
     s = re.sub(r"<\?xml[^>]*\?>", "", it["svg"])
     for idv in set(re.findall(r'id="([^"]+)"', s)):

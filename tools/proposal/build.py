@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Genera docs/propuesta-malaysia-icons.html.
+"""Generate docs/propuesta-malaysia-icons.html.
 
-Uso: python3 tools/proposal/build.py <ruta-malaysia> <ruta-barrierkit>
+Usage: python3 tools/proposal/build.py <malaysia-path> <barrierkit-path>
 """
 import base64, json, os, re, subprocess, sys
 

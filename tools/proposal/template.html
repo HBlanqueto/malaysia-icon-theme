@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: documento de propuesta en una columna ancha; cada sección es una "lámina" con su muestra visual y la regla que la justifica */
+/* Layout: one wide column; each section is a sheet with its visual sample and the rule behind it */
 :root {
   --bg: #f5f6f8;
   --sheet: #ffffff;
@@ -53,7 +53,7 @@ section.sheet { background: var(--sheet); border: 1px solid var(--line); border-
 .sheet > header p { color: var(--muted) }
 .sub { display: grid; gap: 10px }
 
-/* inventario */
+/* inventory */
 .filters { display: flex; flex-wrap: wrap; gap: 6px }
 .fbtn { font: inherit; font-size: .82rem; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--sheet); color: var(--fg); cursor: pointer; font-variant-numeric: tabular-nums }
 .fbtn[aria-pressed="true"] { background: var(--fg); color: var(--sheet); border-color: var(--fg) }
@@ -76,7 +76,7 @@ section.sheet { background: var(--sheet); border: 1px solid var(--line); border-
 .pill.alias { background: var(--alias-soft); color: var(--alias) }
 .pill.missing { background: var(--miss-soft); color: var(--miss) }
 
-/* reglas */
+/* rules */
 .rules { display: grid; gap: 0; border-top: 1px solid var(--line) }
 .rule { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 20px; padding-block: 14px; border-bottom: 1px solid var(--line) }
 .rule .gg { color: var(--muted); font-size: .9rem }
@@ -85,7 +85,7 @@ section.sheet { background: var(--sheet); border: 1px solid var(--line); border-
 .rule .ml b { color: var(--accent) }
 @media (max-width: 720px) { .rule { grid-template-columns: 1fr; gap: 6px } }
 
-/* láminas visuales */
+/* visual sheets */
 .spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; font-size: .84rem }
 .spec div { border-left: 2px solid var(--accent); padding-left: 10px }
 .spec b { display: block; font-family: var(--f-mono); font-size: .8rem }
@@ -320,7 +320,7 @@ document.getElementById("kpis").innerHTML = [
   ["miss", cnt("missing"), "faltan en el pack"],
 ].map(([c, n, l]) => `<div class="kpi ${c}"><b>${n}</b><span>${l}</span></div>`).join("");
 
-// ---------- inventario
+// ---------- inventory
 let filter = "all";
 function drawInv() {
   const f = document.getElementById("filters");
@@ -339,7 +339,7 @@ function drawInv() {
 document.getElementById("filters").onclick = e => { const b = e.target.closest(".fbtn"); if (b) { filter = b.dataset.f; drawInv() } };
 drawInv();
 
-// ---------- símbolos
+// ---------- symbols
 const bkPath = k => { const it = items.find(i => i.k === k); const m = it && it.svg.match(/d="([^"]+)"/); return m ? m[1] : "" };
 const shellSvg = k => (items.find(i => i.k === k) || {}).svg || "";
 const NEW = {
@@ -387,7 +387,7 @@ document.getElementById("scale").innerHTML = [12, 16, 24, 32, 48, 64].map(s => `
 document.getElementById("pairs").innerHTML = [["Folder", folderD], ["Bell", bellD], ["Star", bkPath("Star")], ["Bookmark", bkPath("Bookmark")], ["Person", bkPath("Person")]]
   .map(([n, d]) => `<div class="pp">${S(d)}${S(d, 1.4, "currentColor")}<span>${n.toLowerCase()} · ${n.toLowerCase()}.fill</span></div>`).join("");
 
-// ---------- barra lateral
+// ---------- sidebar
 const SIDE = [
   ["Wi‑Fi", "Wifi", "#1e7bf2"], ["Red", "Network", "#1e7bf2"], ["VPN", "Lock", "#1e7bf2"], ["Bluetooth", "Bluetooth", "#1e7bf2"],
   ["Notificaciones", "Bell", "#ec3b3b"], ["Concentración", "Moon", "#6b4fd8"],
@@ -404,7 +404,7 @@ function shade(hex, pct) {
 }
 let uid = 0;
 
-// ---------- carpetas
+// ---------- folders
 const FOLDERS = [["folder", ""], ["folder-documents", bkPath("Document")], ["folder-download", bkPath("ArrowDown")], ["folder-pictures", bkPath("Photo")],
   ["folder-music", "M6 12.5V4l7-1.5v8.5M6 12.5a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0M13 11a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0"],
   ["folder-videos", bkPath("Film")], ["user-desktop", bkPath("Display")], ["user-home", bkPath("House")], ["folder-publicshare", bkPath("Person")],
@@ -432,7 +432,7 @@ function drawFolders(mode) {
   el.innerHTML = FOLDERS.map(([n, d]) => `<figure>${folder(d, p)}<figcaption>${n.replace("folder-", "").replace("user-", "")}<small>${n}</small></figcaption></figure>`).join("");
 }
 
-// ---------- documentos
+// ---------- file types
 const DOCS = [["text-x-generic", "TXT", "#6b7280", bkPath("ListBullet")], ["application-pdf", "PDF", "#e5322d", bkPath("Document")],
   ["image-x-generic", "PNG", "#14a5c9", bkPath("Photo")], ["audio-x-generic", "MP3", "#ec3b7a", "M6 12.5V4l7-1.5v8.5M6 12.5a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0M13 11a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0"],
   ["video-x-generic", "MP4", "#6b4fd8", bkPath("Play")], ["package-x-generic", "ZIP", "#c98a1b", "M2.5 5 8 2.5 13.5 5v6L8 13.5 2.5 11zM2.5 5 8 7.5 13.5 5M8 7.5v6"],
@@ -489,7 +489,6 @@ function drawApps(mode) {
   el.className = "stage " + mode;
   el.innerHTML = APPS.map(a => `<figure>${app(a, mode, tint)}<figcaption>${a[0]}<small>${a[1]}${mode === "light" ? "" : "-" + mode}</small></figcaption></figure>`).join("");
 }
-// anatomía: capas separadas en perspectiva
 document.getElementById("anatomy").innerHTML = (() => {
   const a = app(APPS[0], "light", "#000").replace(/^<svg[^>]*>|<\/svg>$/g, "");
   return a;
@@ -505,7 +504,7 @@ document.querySelectorAll(".modes").forEach(g => g.onclick = e => {
 document.getElementById("tint").oninput = () => { drawApps(modes.appstage); if (modes.folders === "tinted") drawFolders("tinted") };
 drawFolders("light"); drawApps("light");
 
-// ---------- antes / después
+// ---------- before / after
 const BA = [["symbolic/ (activos)", 568, "≈ 150"], ["symbolic/legacy", 52, "0 (heredado)"], ["symbolic/emotes", 26, "0 (heredado)"],
   ["scalable/ (color)", 70, "≈ 60 + variantes"], ["16x16/ (PNG)", 51, "0"], ["Total de archivos propios", 767, "≈ 210"]];
 document.getElementById("ba").innerHTML = BA.map(([a, b, c], i) => `<tr${i === BA.length - 1 ? ' style="font-weight:600"' : ""}><td>${a}</td><td class="num">${b}</td><td class="num">${c}</td></tr>`).join("");

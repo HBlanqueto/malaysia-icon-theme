@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Exporta src/malaysia-symbolic/<contexto>/<nombre>.svg a Malaysia/symbolic/<contexto>/<nombre>.svg.
+"""Export src/malaysia-symbolic/<context>/<name>.svg to Malaysia/symbolic/<context>/<name>.svg.
 
-GTK pinta los íconos simbólicos forzando `fill` en cada rect, circle y path, y no toca
-`stroke`. Por eso un trazo sin convertir se vería como una figura rellena. Este script
-convierte los trazos en contornos rellenos con Skia (skia-pathops, vía picosvg) y deja un solo color (#2e3436),
-como el resto del tema.
+GTK recolors symbolic icons by forcing `fill` on every rect, circle and path and leaves
+`stroke` alone, so an unconverted stroke would render as a solid shape. This script turns
+strokes into filled outlines with Skia (skia-pathops, through picosvg) and uses a single
+color (#2e3436), like the rest of the theme.
 
-Uso: python3 tools/symbols/export.py [--check]
-     --check  no escribe nada; termina con error si alguna exportación está desactualizada.
+Usage: python3 tools/symbols/export.py [--check]
+       --check  write nothing; exit with an error if an export is out of date.
 
-Requiere picosvg (pip install -r tools/requirements.txt).
+Requires picosvg (pip install -r tools/requirements.txt).
 """
 import os, re, sys
 import pathops
@@ -22,15 +22,15 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 SRC = os.path.join(ROOT, "src", "malaysia-symbolic")
 OUT = os.path.join(ROOT, "Malaysia", "symbolic")
 INK = "#2e3436"
-# El trazador de Skia pierde precisión con coordenadas pequeñas (rejilla de 16): los arcos
-# interiores salen con un solo segmento por cuadrante. Se amplía la figura, se traza y se reduce.
+# Skia's stroker loses precision at small coordinates (16 px grid): inner arcs come out as a
+# single segment per quadrant. Scale up, stroke, then scale back down.
 SCALE = 64
 CAPS = {"butt": pathops.LineCap.BUTT_CAP, "round": pathops.LineCap.ROUND_CAP, "square": pathops.LineCap.SQUARE_CAP}
 JOINS = {"miter": pathops.LineJoin.MITER_JOIN, "round": pathops.LineJoin.ROUND_JOIN, "bevel": pathops.LineJoin.BEVEL_JOIN}
 
 
 def outline(shape, stroke):
-    """Contorno relleno (Skia) de una figura, ya ampliado por SCALE."""
+    """Filled Skia outline of a shape, scaled up by SCALE."""
     path = shape.as_path().apply_transform(Affine2D.identity().scale(SCALE))
     sk = skia_path(path.as_cmd_seq(), fill_rule="nonzero" if stroke else shape.fill_rule)
     if stroke:
@@ -43,7 +43,7 @@ def outline(shape, stroke):
 def convert(path):
     svg = SVG.parse(path)
     vb = svg.view_box()
-    layers = {}  # opacidad → contorno unido
+    layers = {}  # opacity → merged outline
     for shape in svg.shapes():
         pieces = []
         if shape.fill not in ("none", "") and shape.fill_opacity > 0:
@@ -72,7 +72,7 @@ def main(check):
                 continue
             svg = convert(os.path.join(SRC, ctx, f))
             dest = os.path.join(OUT, ctx, f)
-            # un nombre vive en un solo contexto: borrar la copia de Adwaita si estaba en otro
+            # a name lives in one context: remove Adwaita's copy if it was in another
             others = [os.path.join(OUT, c, f) for c in os.listdir(OUT) if c != ctx and os.path.exists(os.path.join(OUT, c, f))]
             current = open(dest, encoding="utf-8").read() if os.path.exists(dest) else None
             if current != svg or others:

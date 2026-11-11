@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Importa los símbolos que el escritorio Malaysia dibuja en código y los guarda como
-fuentes editables (con trazo) en src/malaysia-symbolic/<contexto>/<nombre>.svg.
+"""Import the symbols the Malaysia desktop draws in code and save them as editable stroke
+sources in src/malaysia-symbolic/<context>/<name>.svg.
 
-Uso: python3 tools/symbols/import_desktop.py <ruta-malaysia> <ruta-barrierkit>
+Usage: python3 tools/symbols/import_desktop.py <malaysia-path> <barrierkit-path>
 
-Fuentes:
-  barrierkit/crates/bk/src/symbol.rs          enum Symbol (rejilla 16, trazo components.symbol.stroke)
-  malaysia/crates/malaysia-shell/src/menubar/icons.rs   íconos de menú de la barra
+Sources:
+  barrierkit/crates/bk/src/symbol.rs                    Symbol enum (16 px grid, components.symbol.stroke)
+  malaysia/crates/malaysia-shell/src/menubar/icons.rs   menu bar icons
 
-También escribe docs/symbols.md con la tabla Symbol/constante → nombre del tema.
-Después hay que correr tools/symbols/export.py.
+Also writes docs/symbols.md with the Symbol/constant → theme name table.
+Run tools/symbols/export.py afterwards.
 """
 import json, os, re, subprocess, sys
 
@@ -17,9 +17,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 SRC = os.path.join(ROOT, "src", "malaysia-symbolic")
 INK = "#2e3436"
 
-# clave → (nombre en el tema, contexto si el nombre es nuevo)
-# Regla: nombre freedesktop/Adwaita cuando el significado coincide; si no, nombre del objeto
-# dibujado (como phone-symbolic o tv-symbolic) para no cambiar el significado de un ícono existente.
+# key → name in the theme, or (name, context) when the name is new.
+# A freedesktop/Adwaita name when the meaning matches; otherwise the name of the drawn object
+# (like phone-symbolic or tv-symbolic), so an existing name never changes meaning.
 BK = {
     "MagnifyingGlass": "system-search", "XMark": "window-close", "SpeakerWave": "audio-volume-high",
     "Plus": "list-add", "Minus": "list-remove", "Ellipsis": "view-more-horizontal",
@@ -59,7 +59,7 @@ SHELL = {
     "FILE": ("application-x-generic", "mimetypes"), "FILE_TEXT": "x-office-document",
     "FILE_IMAGE": "image-x-generic",
 }
-# Constantes de icons.rs que no se importan, con el motivo.
+# icons.rs constants that are not imported, and why.
 SKIP = {
     "SEARCH": "same name as Symbol::MagnifyingGlass (system-search); barrierkit's drawing wins",
     "PRINTER": "same name as Symbol::Printer (printer); barrierkit's drawing wins",
@@ -67,10 +67,10 @@ SKIP = {
     "MENU_ITEM": "two-color template ({{text}} and {{accent}}) that the menu fills in at runtime",
 }
 
-# Último commit de Adwaita antes del fork: sirve para saber si un nombre ya existía en Adwaita 51.0.
+# Last Adwaita commit before the fork; tells whether a name already existed in Adwaita 51.0.
 ADWAITA_BASE = "75a7cc2"
 
-# contexto actual de cada nombre en el tema
+# current context of every name in the theme
 existing = {}
 for ctx in os.listdir(f"{ROOT}/Malaysia/symbolic"):
     for f in os.listdir(f"{ROOT}/Malaysia/symbolic/{ctx}"):
