@@ -10,7 +10,8 @@ and in this repository's git log up to commit 75a7cc2.
 - Bring the 97 symbols the Malaysia desktop draws in code into the theme under
   freedesktop names: 71 replace Adwaita's drawing, 26 are new, including the
   window-tile-* icons.
-- Generate 15 folders, 26 file types and the Settings and Screenshot app icons.
+- Generate 15 folders, 26 file types and the Screenshot app icon; Settings keeps the
+  icon the desktop installs.
 - Redraw the 22 device icons, plus audio-card, with lifelike rendering after current
   macOS hardware icons: no outlines, light-defined edges, debossed detail and one drop
   shadow.

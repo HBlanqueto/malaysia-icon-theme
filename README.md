@@ -133,11 +133,11 @@ drawing or logo.
 
 ## App icons
 
-Phase 4 redrew the icons of the desktop's own apps, Settings
-(`io.github.hblanqueto.malaysia.settings`) and Screenshot
-(`io.github.hblanqueto.malaysia.screenshot`). They live in `scalable/apps`, which is
-searched before `hicolor`, so they replace the copies the desktop installs in `hicolor`
-whenever the Malaysia theme is active. `tools/color/build.py` generates them too; add a
+Phase 4 redrew the icon of the desktop's Screenshot app
+(`io.github.hblanqueto.malaysia.screenshot`). It lives in `scalable/apps`, which is
+searched before `hicolor`, so it replaces the copy the desktop installs in `hicolor`
+whenever the Malaysia theme is active. Settings (`io.github.hblanqueto.malaysia.settings`)
+keeps the icon the desktop installs in `hicolor`: the silver tile with the detailed gear. `tools/color/build.py` generates them too; add a
 row to `APPS` for a new app.
 
 Each icon has three layers that change with the variant:

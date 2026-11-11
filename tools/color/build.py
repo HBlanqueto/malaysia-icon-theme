@@ -383,19 +383,8 @@ def squircle(half=SQ_HALF, n=SQ_N, steps=180):
     return "M" + "L".join(pts) + "z"
 
 
-def gear(teeth=8, outer=6.3, root=4.7, hole=2.2):
-    import math
-    pts = []
-    for k in range(teeth):
-        a, w = 2 * math.pi * k / teeth - math.pi / 2, math.pi / teeth * 0.55
-        for t, r in ((a - w * 1.25, root), (a - w * .75, outer), (a + w * .75, outer), (a + w * 1.25, root)):
-            pts.append(f"{8 + r * math.cos(t):.2f} {8 + r * math.sin(t):.2f}")
-    return "M" + "L".join(pts) + f"zM8 {8 + hole}a{hole} {hole} 0 1 0 0-{2 * hole}a{hole} {hole} 0 0 0 0 {2 * hole}"
-
-
 # app id → (figure on the 16 px grid, light background gradient top/bottom)
 APPS = {
-    "io.github.hblanqueto.malaysia.settings": (gear(), ("#80858d", "#4f545b")),
     "io.github.hblanqueto.malaysia.screenshot": (
         "M2.5 5.5v-2a1 1 0 0 1 1-1h2M10.5 2.5h2a1 1 0 0 1 1 1v2M13.5 10.5v2a1 1 0 0 1-1 1h-2"
         "M5.5 13.5h-2a1 1 0 0 1-1-1v-2M8 10a2 2 0 1 0 0-4a2 2 0 0 0 0 4", ("#62739a", "#2b3449")),
