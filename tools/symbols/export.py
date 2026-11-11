@@ -94,6 +94,8 @@ def main(check):
                 stale.append(f"{ctx}/{f}")
                 if not check:
                     os.makedirs(os.path.dirname(dest), exist_ok=True)
+                    if os.path.islink(dest):  # Adwaita aliases one name to another; never write through the link
+                        os.remove(dest)
                     open(dest, "w", encoding="utf-8").write(svg)
                     for o in others:
                         os.remove(o)
