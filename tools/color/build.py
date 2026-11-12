@@ -406,11 +406,20 @@ def files(variant, tint=None):
     return out
 
 
+def skia_unsafe(svg_):
+    # Skia's SVG module, which the Dock uses, paints a gradient on <ellipse> black and drops its bounding-box filter.
+    user_space = set(re.findall(r'<filter id="([^"]+)"[^>]*userSpaceOnUse', svg_))
+    return [tag for tag in re.findall(r"<ellipse\b[^>]*>", svg_)
+            if 'fill="url(' in tag or any(f not in user_space for f in re.findall(r'filter="url\(#([^)]+)\)"', tag))]
+
+
 def sync(base, wanted, check, index=None):
     stale = []
     if index:
         wanted = {**wanted, "index.theme": index}
     for rel, content in wanted.items():
+        if skia_unsafe(content):
+            sys.exit(f"{rel}: <ellipse> Skia draws wrong; use a <path> or a userSpaceOnUse filter")
         p = os.path.join(base, rel)
         if not os.path.exists(p) or open(p, encoding="utf-8").read() != content:
             stale.append(os.path.relpath(p, ROOT) if p.startswith(ROOT) else p)
