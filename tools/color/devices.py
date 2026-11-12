@@ -29,7 +29,7 @@ INSET = (
 )
 DEFS = (
     DROP + INSET +
-    '<filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation=".45"/></filter>'
+    '<filter id="soft" filterUnits="userSpaceOnUse" x="-8" y="-8" width="80" height="80"><feGaussianBlur stdDeviation=".45"/></filter>'
     # aluminum
     '<linearGradient id="alu" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#dadbde"/><stop offset=".5" stop-color="#c6c8cb"/><stop offset="1" stop-color="#aeb0b4"/></linearGradient>'
@@ -64,16 +64,18 @@ DEFS = (
     '<linearGradient id="bin-dark" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#6b6e74" stop-opacity=".8"/><stop offset="1" stop-color="#36383d" stop-opacity=".88"/></linearGradient>'
     '<linearGradient id="bin-inside" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#c9ccd2"/><stop offset="1" stop-color="#f4f5f7"/></linearGradient>'
+    '<stop offset="0" stop-color="#8a9099" stop-opacity=".5"/><stop offset=".4" stop-color="#ffffff" stop-opacity=".22"/>'
+    '<stop offset="1" stop-color="#ffffff" stop-opacity=".6"/></linearGradient>'
     '<linearGradient id="bin-inside-dark" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#26282c"/><stop offset="1" stop-color="#55585e"/></linearGradient>'
+    '<stop offset="0" stop-color="#000000" stop-opacity=".4"/><stop offset=".4" stop-color="#8a8e95" stop-opacity=".18"/>'
+    '<stop offset="1" stop-color="#b4b8be" stop-opacity=".42"/></linearGradient>'
     '<linearGradient id="frost" x1="0" y1="0" x2="1" y2="0">'
     '<stop offset=".08" stop-color="#ffffff" stop-opacity="0"/><stop offset=".2" stop-color="#ffffff" stop-opacity=".55"/>'
     '<stop offset=".32" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
     '<linearGradient id="crumple" x1="0" y1="0" x2="1" y2="1">'
     '<stop offset="0" stop-color="#ffffff" stop-opacity=".35"/><stop offset=".55" stop-color="#ffffff" stop-opacity="0"/>'
     '<stop offset="1" stop-color="#000000" stop-opacity=".22"/></linearGradient>'
-    '<filter id="haze" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.7"/></filter>'
+    '<filter id="haze" filterUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><feGaussianBlur stdDeviation="1.7"/></filter>'
     '<radialGradient id="globe" cx=".36" cy=".3" r=".8">'
     '<stop offset="0" stop-color="#8fdcff"/><stop offset=".5" stop-color="#1e8cf0"/><stop offset="1" stop-color="#0b3e9c"/></radialGradient>'
     '<linearGradient id="lip-white" x1="0" y1="0" x2="0" y2="1">'
@@ -469,7 +471,7 @@ def camera_photo():
 def camera_video():
     panel = rr(2, 23, 13, 18, 2)
     return (body(12, 15, 13, 8, 2, "graphite") + body(8, 20, 38, 26, 6, "graphite")
-            + body(44, 23, 15, 20, 3, "graphite") + '<ellipse cx="58" cy="33" rx="2.2" ry="8" fill="url(#lens)"/>'
+            + body(44, 23, 15, 20, 3, "graphite") + '<path d="M55.8 33a2.2 8 0 1 0 4.4 0a2.2 8 0 1 0-4.4 0z" fill="url(#lens)"/>'
             + '<ellipse cx="57.6" cy="30" rx=".8" ry="2.4" fill="#ffffff" fill-opacity=".6"/>'
             + solid(panel, "graphite") + f'<path d="{rr(3.4, 24.4, 10.2, 15.2, 1.2)}" fill="url(#crystal)"/>'
             + reflection(3.4, 24.4, 10.2, 15.2, 1.2) + led(20, 27, "#ff453a")
@@ -639,7 +641,8 @@ def trash(full=False, dark=False):
     """A frosted, translucent bin seen slightly from above, after the macOS Trash."""
     k = "-dark" if dark else ""
     body = "M7 11a25 5 0 0 0 50 0L50.6 55a18.6 4 0 0 1-37.2 0z"
-    return (f'<clipPath id="bin-clip"><path d="{body}"/></clipPath><ellipse cx="32" cy="11" rx="25" ry="5" fill="url(#bin-inside{k})"/>' + (trash_contents() if full else "")
+    # A path, not <ellipse>: Skia's SVG paints a gradient on <ellipse> black (no SkSVGEllipse::onTransformableObjectBoundingBox).
+    return (f'<clipPath id="bin-clip"><path d="{body}"/></clipPath><path d="M7 11a25 5 0 1 0 50 0a25 5 0 1 0-50 0z" fill="url(#bin-inside{k})"/>' + (trash_contents() if full else "")
             + f'<path d="{body}" fill="url(#bin{k})"/><path d="{body}" fill="url(#side)"/><path d="{body}" fill="url(#frost)" opacity="{.35 if dark else 1}"/>'
             + f'<path d="M7 11a25 5 0 0 0 50 0" fill="none" stroke="#ffffff" stroke-opacity="{.4 if dark else .95}" stroke-width="1"/>'
             + ("" if full else f'<ellipse cx="32" cy="11" rx="25" ry="5" fill="none" stroke="#ffffff" stroke-opacity="{.3 if dark else .8}" stroke-width=".8"/>')
