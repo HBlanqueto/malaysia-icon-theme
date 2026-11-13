@@ -101,8 +101,8 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
    instaladas. Las letras de las etiquetas son trazos (`LETTERS`).
 5. **Íconos de app:** los del escritorio se copian tal cual de
    `malaysia/share/icons/hicolor` a `src/apps/`; el tema no los redibuja. Solo
-   `build.py` cambia los degradados `body`, `ring` y `well` para `Malaysia-Dark`
-   (`DARK_APP`), sin tocar el resto.
+   `build.py` les añade el borde de cristal (`glass_edge`) y cambia los degradados
+   `body`, `ring` y `well` para `Malaysia-Dark` (`DARK_APP`), sin tocar el resto.
 6. **Variantes** como temas aparte que heredan de `Malaysia`
    (`Malaysia-Dark`, el tintado de `--tint`). Un tema no cambia solo con el
    modo de color.

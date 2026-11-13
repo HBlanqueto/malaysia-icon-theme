@@ -79,18 +79,23 @@ def colors(appearance, hue, chroma, tint):
     return dict(plate=(oklch(.29, 0, 0), oklch(.19, 0, 0)), opacity=(1, 1), rim=rim, rim_opacity=.4)
 
 
+def rim(color, opacity):
+    """The glass edge of a plate: a light line along its edge that fades from the top left. Returns its defs and its shape."""
+    stops = "".join(f'<stop offset="{at}" stop-color="{color}" stop-opacity="{opacity * k:.3g}"/>'
+                    for at, k in ((0, 1), (.3, .25), (.5, 0), (.75, .12), (1, .7)))
+    return (f'<linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">{stops}</linearGradient>'
+            f'<clipPath id="clip"><path d="{BODY}"/></clipPath>',
+            f'<g clip-path="url(#clip)"><path d="{BODY}" fill="none" stroke="url(#rim)" stroke-width="24"/></g>')
+
+
 def tile(appearance, c, content):
     """The squircle with its plate and rim; `c` comes from colors() and `content` is drawn on top."""
     shadow = .5 if appearance in CLEAR else 1
-    stops = "".join(f'<stop offset="{at}" stop-color="{c["rim"]}" stop-opacity="{c["rim_opacity"] * k:.3g}"/>'
-                    for at, k in ((0, 1), (.3, .25), (.5, 0), (.75, .12), (1, .7)))
+    rim_defs, rim_shape = rim(c["rim"], c["rim_opacity"])
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs>'
-            + vertical("plate", *c["plate"], c["opacity"])
-            + f'<linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">{stops}</linearGradient>'
-            f'<clipPath id="clip"><path d="{BODY}"/></clipPath></defs>'
+            + vertical("plate", *c["plate"], c["opacity"]) + rim_defs + '</defs>'
             f'<path d="{BODY}" fill="#000" fill-opacity="{.1 * shadow:.3g}" transform="translate(0 14)"/>'
             f'<path d="{BODY}" fill="#000" fill-opacity="{.12 * shadow:.3g}" transform="translate(0 6)"/>'
             f'<path d="{BODY}" fill="url(#plate)"/>'
             f'<path d="{BODY}" fill="none" stroke="#000" stroke-opacity="{.12 * shadow:.3g}" stroke-width="3"/>'
-            f'<g clip-path="url(#clip)"><path d="{BODY}" fill="none" stroke="url(#rim)" stroke-width="24"/></g>'
-            f'{content}</svg>\n')
+            f'{rim_shape}{content}</svg>\n')

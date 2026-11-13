@@ -7,7 +7,7 @@
       <stop offset="0" stop-color="#f5f6f8"/>
       <stop offset="1" stop-color="#b6b9c0"/>
     </linearGradient>
-  </defs>
+  <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.4"/><stop offset="0.3" stop-color="#ffffff" stop-opacity="0.1"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.75" stop-color="#ffffff" stop-opacity="0.048"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.28"/></linearGradient><clipPath id="clip"><path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z"/></clipPath></defs>
   <path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="#000" fill-opacity="0.1" transform="translate(0 14)"/>
   <path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="#000" fill-opacity="0.12" transform="translate(0 6)"/>
   <path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="url(#body)"/>
@@ -24,4 +24,5 @@
     <path d="M530.0 442.0 L530.0 340.0 L494.0 340.0 L494.0 442.0 Z M581.6 492.6 L670.0 441.6 L652.0 410.4 L563.6 461.4 Z M563.6 562.6 L652.0 613.6 L670.0 582.4 L581.6 531.4 Z M494.0 582.0 L494.0 684.0 L530.0 684.0 L530.0 582.0 Z M442.4 531.4 L354.0 582.4 L372.0 613.6 L460.4 562.6 Z M460.4 461.4 L372.0 410.4 L354.0 441.6 L442.4 492.6 Z"/>
     <path d="M430 512 a82 82 0 1 0 164 0 a82 82 0 1 0 -164 0 Z M474 512 a38 38 0 1 0 76 0 a38 38 0 1 0 -76 0 Z" fill-rule="evenodd"/>
   </g>
+<g clip-path="url(#clip)"><path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="none" stroke="url(#rim)" stroke-width="24"/></g>
 </svg>

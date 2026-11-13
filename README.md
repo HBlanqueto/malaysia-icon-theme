@@ -142,8 +142,8 @@ The desktop's own apps, Settings (`io.github.hblanqueto.malaysia.settings`) and 
 2. `tools/color/build.py` installs them in `Malaysia/scalable/apps`. That directory is
    searched before `hicolor`, so the theme shows them even where malaysia is not installed.
 3. To update an icon, copy the file again from malaysia and run `tools/color/build.py`.
-4. `tools/color/build.py` also writes each one in `Malaysia-Dark/scalable/apps` with a graphite
-   body (`DARK_APP`); the art stays. The shell looks in `Malaysia-Dark` first when the scheme is
+4. `tools/color/build.py` adds the light glass rim every plate has (`glass_edge`) and also writes
+   each one in `Malaysia-Dark/scalable/apps` with a graphite body (`DARK_APP`); the art stays. The shell looks in `Malaysia-Dark` first when the scheme is
    dark or the icon style is clear, and the live icon style derives the rest from either.
 
 Every other app keeps its own icon. The theme draws no icon for it; it can give that icon a plate

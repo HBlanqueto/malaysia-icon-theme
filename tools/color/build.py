@@ -290,6 +290,12 @@ def dark_app(svg_):
     return svg_
 
 
+def glass_edge(svg_, opacity):
+    """The light rim every plate has, on the desktop's own icon."""
+    defs, shape = appicons.rim("#ffffff", opacity)
+    return svg_.replace("</defs>", defs + "</defs>", 1).replace("</svg>", shape + "\n</svg>", 1)
+
+
 def palette(variant, tint=None):
     if variant == "light":
         return dict(back=("#58a6ee", "#2f7fd6"), front=("#9ad2fb", "#5fb0f2"), glyph="#1f62ad", hi=.65)
@@ -406,10 +412,10 @@ def files(variant, tint=None):
         for name, svg_ in devices.trash_icons(dark=True).items():
             out[f"scalable/places/{name}.svg"] = svg_
         for f in sorted(os.listdir(APP_ART)):
-            out[f"scalable/apps/{f}"] = dark_app(open(os.path.join(APP_ART, f), encoding="utf-8").read())
+            out[f"scalable/apps/{f}"] = glass_edge(dark_app(open(os.path.join(APP_ART, f), encoding="utf-8").read()), .4)
     if variant == "light":
         for f in sorted(os.listdir(APP_ART)):
-            out[f"scalable/apps/{f}"] = open(os.path.join(APP_ART, f), encoding="utf-8").read()
+            out[f"scalable/apps/{f}"] = glass_edge(open(os.path.join(APP_ART, f), encoding="utf-8").read(), .45)
         for name, svg_ in devices.icons(G, label).items():
             out[f"scalable/devices/{name}.svg"] = svg_
         for name, (fig, color, text, style) in MIMETYPES.items():

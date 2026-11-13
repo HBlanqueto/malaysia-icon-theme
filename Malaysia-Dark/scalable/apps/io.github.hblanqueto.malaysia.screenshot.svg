@@ -25,7 +25,7 @@
       <stop offset="0" stop-color="#ffffff"/>
       <stop offset="1" stop-color="#d4d9e2"/>
     </linearGradient>
-  </defs>
+  <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.4"/><stop offset="0.3" stop-color="#ffffff" stop-opacity="0.1"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/><stop offset="0.75" stop-color="#ffffff" stop-opacity="0.048"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.28"/></linearGradient><clipPath id="clip"><path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z"/></clipPath></defs>
   <path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="#000000" fill-opacity="0.1" transform="translate(0 14)"/>
   <path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="#000000" fill-opacity="0.12" transform="translate(0 6)"/>
   <path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="url(#body)"/>
@@ -54,4 +54,5 @@
     </g>
   </g>
   <path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="none" stroke="#000000" stroke-opacity="0.12" stroke-width="3"/>
+<g clip-path="url(#clip)"><path d="M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 924 300 L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z" fill="none" stroke="url(#rim)" stroke-width="24"/></g>
 </svg>
