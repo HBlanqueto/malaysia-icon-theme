@@ -21,7 +21,7 @@ be installed next to this one.
 Malaysia/                the Malaysia theme
 ├── scalable/            full-color SVG: apps, devices, mimetypes, places, status
 └── symbolic/            recolorable SVG: actions, categories, devices, mimetypes, places, status, ui
-Malaysia-Dark/           child theme with the dark folders and trash (generated)
+Malaysia-Dark/           child theme with the dark folders, trash and desktop app icons (generated)
 src/
 ├── malaysia-symbolic/   stroke sources of the desktop symbols
 ├── apps/               app icons copied from the Malaysia desktop
@@ -142,6 +142,9 @@ The desktop's own apps, Settings (`io.github.hblanqueto.malaysia.settings`) and 
 2. `tools/color/build.py` installs them in `Malaysia/scalable/apps`. That directory is
    searched before `hicolor`, so the theme shows them even where malaysia is not installed.
 3. To update an icon, copy the file again from malaysia and run `tools/color/build.py`.
+4. `tools/color/build.py` also writes each one in `Malaysia-Dark/scalable/apps` with a graphite
+   body (`DARK_APP`); the art stays. The shell looks in `Malaysia-Dark` first when the scheme is
+   dark or the icon style is clear, and the live icon style derives the rest from either.
 
 Every other app keeps its own icon. The theme draws no icon for it; it can give that icon a plate
 behind it, in the six appearances of macOS:

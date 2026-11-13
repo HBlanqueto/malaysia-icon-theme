@@ -1,10 +1,17 @@
 [Icon Theme]
 Name=Malaysia-Dark
-Comment=Malaysia with dark folders and trash
+Comment=Malaysia with dark folders, trash and desktop app icons
 Example=folder
 Inherits=Malaysia
 
-Directories=scalable/mimetypes,scalable/places,scalable/status
+Directories=scalable/apps,scalable/mimetypes,scalable/places,scalable/status
+
+[scalable/apps]
+Context=Applications
+Size=128
+MinSize=8
+MaxSize=512
+Type=Scalable
 
 [scalable/mimetypes]
 Context=MimeTypes

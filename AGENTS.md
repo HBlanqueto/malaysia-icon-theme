@@ -54,7 +54,7 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 | `index.theme` | tema `Malaysia` | sí |
 | `Malaysia/symbolic/` | símbolos exportados | solo los que no tienen fuente en `src/malaysia-symbolic/` (heredados de Adwaita) |
 | `Malaysia/scalable/{apps,devices,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
-| `Malaysia-Dark/` | tema hijo con carpetas y papelera oscuras | no: `tools/color/build.py` |
+| `Malaysia-Dark/` | tema hijo con carpetas, papelera e íconos del escritorio con el cuerpo en grafito | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
 | `src/apps/` | íconos de app copiados tal cual del escritorio (`malaysia/share/icons/hicolor`) | solo para volver a copiarlos |
 | `tools/color/appicons.py` | placa de las seis apariencias y borde de luz detrás del ícono de una app | sí |
@@ -100,7 +100,9 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 4. **Íconos a color:** nada de `<text>`, porque depende de las fuentes
    instaladas. Las letras de las etiquetas son trazos (`LETTERS`).
 5. **Íconos de app:** los del escritorio se copian tal cual de
-   `malaysia/share/icons/hicolor` a `src/apps/`; el tema no los redibuja.
+   `malaysia/share/icons/hicolor` a `src/apps/`; el tema no los redibuja. Solo
+   `build.py` cambia los degradados `body`, `ring` y `well` para `Malaysia-Dark`
+   (`DARK_APP`), sin tocar el resto.
 6. **Variantes** como temas aparte que heredan de `Malaysia`
    (`Malaysia-Dark`, el tintado de `--tint`). Un tema no cambia solo con el
    modo de color.

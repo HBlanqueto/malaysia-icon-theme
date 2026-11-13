@@ -14,7 +14,7 @@ Usage:
 """
 import argparse, colorsys, os, re, sys
 
-import devices
+import appicons, devices
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SYM = os.path.join(ROOT, "src", "malaysia-symbolic")
@@ -276,6 +276,20 @@ def shade(hex_, pct):
     return "#" + "".join(f"{ch(v):02x}" for v in (r, g, b))
 
 
+# (top, bottom) lightness of the gradients a desktop icon swaps in Malaysia-Dark: a graphite body, a darker well
+DARK_APP = {"body": (.29, .19), "ring": (.46, .34), "well": (.13, .2)}
+
+
+def dark_app(svg_):
+    """The desktop's own icon with its body in graphite; its art stays."""
+    for id_, (top, bottom) in DARK_APP.items():
+        stops = "".join(f'<stop offset="{at}" stop-color="{appicons.oklch(lightness, 0, 0)}"/>'
+                        for at, lightness in ((0, top), (1, bottom)))
+        svg_ = re.sub(rf'(<linearGradient id="{id_}"[^>]*>).*?(</linearGradient>)',
+                      lambda m: m[1] + stops + m[2], svg_, flags=re.S)
+    return svg_
+
+
 def palette(variant, tint=None):
     if variant == "light":
         return dict(back=("#58a6ee", "#2f7fd6"), front=("#9ad2fb", "#5fb0f2"), glyph="#1f62ad", hi=.65)
@@ -391,6 +405,8 @@ def files(variant, tint=None):
     if variant == "dark":
         for name, svg_ in devices.trash_icons(dark=True).items():
             out[f"scalable/places/{name}.svg"] = svg_
+        for f in sorted(os.listdir(APP_ART)):
+            out[f"scalable/apps/{f}"] = dark_app(open(os.path.join(APP_ART, f), encoding="utf-8").read())
     if variant == "light":
         for f in sorted(os.listdir(APP_ART)):
             out[f"scalable/apps/{f}"] = open(os.path.join(APP_ART, f), encoding="utf-8").read()
@@ -451,8 +467,8 @@ def main():
         return
     stale = sync(os.path.join(ROOT, "Malaysia"), files("light"), a.check)
     stale += sync(os.path.join(ROOT, "Malaysia-Dark"), files("dark"), a.check,
-                  theme_index("Malaysia-Dark", "Malaysia with dark folders and trash", "Malaysia",
-                              VARIANT_DIRS))
+                  theme_index("Malaysia-Dark", "Malaysia with dark folders, trash and desktop app icons",
+                              "Malaysia", APP_DIRS + VARIANT_DIRS))
     if a.check:
         sys.exit("out of date:\n  " + "\n  ".join(stale)) if stale else print("up to date")
     else:
