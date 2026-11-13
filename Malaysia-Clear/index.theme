@@ -1,0 +1,14 @@
+[Icon Theme]
+Name=Malaysia-Clear
+Comment=Malaysia with translucent app icons
+Example=folder
+Inherits=Malaysia
+
+Directories=scalable/apps
+
+[scalable/apps]
+Context=Applications
+Size=128
+MinSize=8
+MaxSize=512
+Type=Scalable

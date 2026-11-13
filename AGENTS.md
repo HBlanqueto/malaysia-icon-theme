@@ -57,7 +57,9 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 | `Malaysia-Dark/` | tema hijo con carpetas, papelera e íconos de app oscuros | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
 | `src/apps/` | íconos de app copiados tal cual del escritorio (`malaysia/share/icons/hicolor`) | solo para volver a copiarlos |
-| `tools/color/appicons.py` | ícono de app: placa con el matiz, figura y borde de luz (`APPS` en `build.py`) | sí |
+| `tools/color/appicons.py` | ícono de app en las seis apariencias: placa, figura y borde de luz (`APPS` en `build.py`) | sí |
+| `tools/color/thirdparty.py` | placa para apps de terceros desde su propio SVG (matiz por lóbulos); salida en un tema del usuario, nunca en el repo | sí |
+| `Malaysia-Clear/`, `Malaysia-Clear-Dark/` | temas hijos con íconos de app translúcidos | no: `tools/color/build.py` |
 | `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
 | `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
 | `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
@@ -67,7 +69,7 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 
 ## Flujo de trabajo
 
-1. `pip install -r tools/requirements.txt` (picosvg y skia-pathops).
+1. `pip install -r tools/requirements.txt` (picosvg, skia-pathops, resvg-py y pillow).
 2. Edita la fuente: un símbolo en `src/malaysia-symbolic/`, un dispositivo en
    `tools/color/devices.py`, o una fila de `FOLDERS` o `MIMETYPES` en
    `tools/color/build.py`.
@@ -76,11 +78,12 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
    ```sh
    python3 tools/symbols/export.py --check
    python3 tools/color/build.py --check
+   python3 -m unittest discover -s tools/color
    meson setup /tmp/mit-build --prefix=/tmp/mit-prefix && meson install -C /tmp/mit-build
    python3 tools/build-icon-map.py
    ```
    Los dos `--check` deben decir «up to date». La instalación debe crear
-   `icon-theme.cache` en `Malaysia/` y `Malaysia-Dark/`.
+   `icon-theme.cache` en `Malaysia/`, `Malaysia-Dark/`, `Malaysia-Clear/` y `Malaysia-Clear-Dark/`.
 5. Sube el SVG generado en el mismo commit que su fuente.
 
 ## Reglas del tema
