@@ -143,6 +143,11 @@ The desktop's own apps, Settings (`io.github.hblanqueto.malaysia.settings`) and 
    searched before `hicolor`, so the theme shows them even where malaysia is not installed.
 3. To update an icon, copy the file again from malaysia and run `tools/color/build.py`.
 
+The GNOME apps in `APPS` (`tools/color/build.py`) get a generated icon in the same squircle:
+a plate in the app's hue with a white figure in `Malaysia`, and a graphite plate with the
+figure in the app's color in `Malaysia-Dark`. A row is `app id → (figure, OKLCH hue, chroma)`;
+chroma 0 gives a graphite plate. The figure is a symbolic source, so a new app needs no drawing.
+
 ## Build and install
 
 ```sh

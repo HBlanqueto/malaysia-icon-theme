@@ -2,8 +2,8 @@
 """Generate the full-color icons: places (folders), file types and devices.
 
 Figures come from the symbolic sources (src/malaysia-symbolic), so a new folder or file type
-needs no drawing of its own: add a row to FOLDERS or MIMETYPES. App icons are the desktop's
-own files, copied unchanged from src/apps.
+needs no drawing of its own: add a row to FOLDERS, MIMETYPES or APPS. The desktop's own app
+icons are copied unchanged from src/apps.
 
 Usage:
   python3 tools/color/build.py                 write Malaysia/ (light) and Malaysia-Dark/ (dark)
@@ -14,7 +14,7 @@ Usage:
 """
 import argparse, colorsys, os, re, sys
 
-import devices
+import appicons, devices
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SYM = os.path.join(ROOT, "src", "malaysia-symbolic")
@@ -95,6 +95,15 @@ FOLDERS = {
     "folder-root": "emblem-system", "folder-log": "lines", "folder-build": "preferences-system", "folder-design": "shapes",
     "folder-drawing": "pencil", "folder-paint": "palette", "folder-language": "network-workgroup",
     "folder-podcast": "mic", "folder-extension": "puzzle", "folder-calculate": "calculator", "folder-tar": "box",
+}
+# app id → (figure, OKLCH hue, OKLCH chroma); chroma 0 gives a graphite plate
+APPS = {
+    "org.gnome.Nautilus": ("folder", 250, .15), "org.gnome.Console": ("terminal", 260, 0),
+    "org.gnome.Epiphany": ("network-workgroup", 215, .12), "org.gnome.Music": ("note", 10, .19),
+    "org.gnome.Geary": ("mail", 258, .15), "org.gnome.Calendar": ("calendar", 45, .17),
+    "org.gnome.Calculator": ("calculator", 260, 0), "org.gnome.Loupe": ("photo", 150, .14),
+    "org.gnome.Totem": ("video-x-generic", 300, .17), "org.gnome.TextEditor": ("pencil", 85, .15),
+    "org.gnome.clocks": ("clock", 25, .17), "org.gnome.Maps": ("mark-location", 150, .15),
 }
 # folder-<color>: plain folders in the macOS tag colors
 FOLDER_COLORS = {
@@ -368,7 +377,7 @@ def document(fig, color, text, style, template):
     return svg(stack + sheet + fold + art + (label(text, 31, 47.5, 4.6, ink) if text else ""), defs)
 
 
-CONTEXTS = {"places": "Places", "mimetypes": "MimeTypes", "status": "Status"}
+CONTEXTS = {"apps": "Applications", "places": "Places", "mimetypes": "MimeTypes", "status": "Status"}
 # scalable/status only holds folder-open, which meson installs as a link to places/folder.svg
 VARIANT_DIRS = ["scalable/mimetypes", "scalable/places", "scalable/status"]
 
@@ -387,6 +396,9 @@ def files(variant, tint=None):
     for name, fig in FOLDERS.items():
         ctx = "mimetypes" if name.startswith("inode-") else "places"
         out[f"scalable/{ctx}/{name}.svg"] = folder(fig, p)
+    if variant in ("light", "dark"):
+        for name, (fig, hue, chroma) in APPS.items():
+            out[f"scalable/apps/{name}.svg"] = appicons.app_icon(G(fig), hue, chroma, variant == "dark")
     if variant == "dark":
         for name, svg_ in devices.trash_icons(dark=True).items():
             out[f"scalable/places/{name}.svg"] = svg_
@@ -450,8 +462,8 @@ def main():
         return
     stale = sync(os.path.join(ROOT, "Malaysia"), files("light"), a.check)
     stale += sync(os.path.join(ROOT, "Malaysia-Dark"), files("dark"), a.check,
-                  theme_index("Malaysia-Dark", "Malaysia with dark folders and trash", "Malaysia",
-                              VARIANT_DIRS))
+                  theme_index("Malaysia-Dark", "Malaysia with dark folders, trash and app icons", "Malaysia",
+                              ["scalable/apps"] + VARIANT_DIRS))
     if a.check:
         sys.exit("out of date:\n  " + "\n  ".join(stale)) if stale else print("up to date")
     else:
