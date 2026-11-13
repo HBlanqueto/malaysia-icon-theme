@@ -54,16 +54,15 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 | `index.theme` | tema `Malaysia` | sí |
 | `Malaysia/symbolic/` | símbolos exportados | solo los que no tienen fuente en `src/malaysia-symbolic/` (heredados de Adwaita) |
 | `Malaysia/scalable/{apps,devices,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
-| `Malaysia-Dark/` | tema hijo con carpetas, papelera e íconos de app oscuros | no: `tools/color/build.py` |
+| `Malaysia-Dark/` | tema hijo con carpetas y papelera oscuras | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
 | `src/apps/` | íconos de app copiados tal cual del escritorio (`malaysia/share/icons/hicolor`) | solo para volver a copiarlos |
-| `tools/color/appicons.py` | ícono de app en las seis apariencias: placa, figura y borde de luz (`APPS` en `build.py`) | sí |
-| `tools/color/thirdparty.py` | placa para apps de terceros desde su propio SVG (matiz por lóbulos); salida en un tema del usuario, nunca en el repo | sí |
-| `Malaysia-Clear/`, `Malaysia-Clear-Dark/` | temas hijos con íconos de app translúcidos | no: `tools/color/build.py` |
+| `tools/color/appicons.py` | placa de las seis apariencias y borde de luz detrás del ícono de una app | sí |
+| `tools/color/thirdparty.py` | placa para el ícono propio de cada app, desde su SVG (matiz por lóbulos); salida en un tema del usuario, nunca en el repo | sí |
 | `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
 | `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
 | `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
-| `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`, `APPS`; dispositivos en `devices.py`); copia `src/apps/` | sí |
+| `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`; dispositivos en `devices.py`); copia `src/apps/` | sí |
 | `docs/` | `symbols.md`, mapa de íconos y propuesta (generados) | no: se regeneran |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
 
@@ -83,7 +82,7 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
    python3 tools/build-icon-map.py
    ```
    Los dos `--check` deben decir «up to date». La instalación debe crear
-   `icon-theme.cache` en `Malaysia/`, `Malaysia-Dark/`, `Malaysia-Clear/` y `Malaysia-Clear-Dark/`.
+   `icon-theme.cache` en `Malaysia/` y `Malaysia-Dark/`.
 5. Sube el SVG generado en el mismo commit que su fuente.
 
 ## Reglas del tema

@@ -158,7 +158,7 @@ def main():
     if a.appearance.startswith("tinted") != bool(a.tint and re.fullmatch(r"#[0-9a-fA-F]{6}", a.tint)):
         sys.exit("tinted appearances need --tint #rrggbb; the others do not take one")
     accent = appicons.accent(a.tint) if a.tint else None
-    drawn = set(build.APPS) | {os.path.splitext(f)[0] for f in os.listdir(build.APP_ART)}
+    drawn = {os.path.splitext(f)[0] for f in os.listdir(build.APP_ART)}
     wanted = {}
     for f in sorted(os.listdir(a.icons)):
         name, ext = os.path.splitext(f)

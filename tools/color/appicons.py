@@ -1,10 +1,10 @@
-"""App icon tile: the squircle of the Settings icon, a plate colored from a hue and a light rim.
+"""The plate behind an app's own icon: the squircle of the Settings icon and a light rim.
 
 Six appearances, measured on the macOS icon grid:
-  light        a plate in the app's hue and a white figure
-  dark         a graphite plate and a figure in the app's color
-  clear        a translucent plate and a white-gray figure; clear-dark is dimmer
-  tinted       a plate in the accent and a near-white figure; tinted-dark has a dark plate and an accent figure
+  light        a plate in the hue of the app's icon
+  dark         a graphite plate
+  clear        a translucent plate; clear-dark is dimmer
+  tinted       a plate in the accent; tinted-dark is a dark shade of it
 """
 import math
 
@@ -12,7 +12,7 @@ BODY = ("M100 724 L100 300 C100 185 170 100 300 100 L724 100 C854 100 924 185 92
         "L924 724 C924 839 854 924 724 924 L300 924 C170 924 100 839 100 724 Z")
 NEUTRAL_CHROMA = .03
 FULL_TINT_CHROMA = .12  # an accent with less chroma gives a proportionally grayer icon; a gray gives a monochrome one
-CLEAR = {"clear": ((.26, .17), ("#ffffff", "#cfd1d6")), "clear-dark": ((.17, .08), ("#f2f2f4", "#b6b8bd"))}
+CLEAR = {"clear": (.26, .17), "clear-dark": (.17, .08)}
 
 
 def srgb(linear):
@@ -55,32 +55,28 @@ def accent(hex_):
     return hue, chroma
 
 
-def vertical(id_, top, bottom, opacity=(1, 1), y1=0, y2=1, extra=""):
-    return (f'<linearGradient id="{id_}" x1="0" y1="{y1}" x2="0" y2="{y2}"{extra}>'
+def vertical(id_, top, bottom, opacity=(1, 1)):
+    return (f'<linearGradient id="{id_}" x1="0" y1="0" x2="0" y2="1">'
             f'<stop offset="0" stop-color="{top}" stop-opacity="{opacity[0]}"/>'
             f'<stop offset="1" stop-color="{bottom}" stop-opacity="{opacity[1]}"/></linearGradient>')
 
 
 def colors(appearance, hue, chroma, tint):
-    """plate and figure gradients, the plate opacity, and the rim color and opacity."""
+    """The plate gradient and opacity, and the rim color and opacity."""
     neutral = chroma < NEUTRAL_CHROMA
     if appearance in CLEAR:
-        opacity, figure = CLEAR[appearance]
-        return dict(plate=("#ffffff", "#ffffff"), opacity=opacity, figure=figure, rim="#ffffff", rim_opacity=.5)
+        return dict(plate=("#ffffff", "#ffffff"), opacity=CLEAR[appearance], rim="#ffffff", rim_opacity=.5)
     if appearance.startswith("tinted"):
         hue, accent = tint[0], min(1, tint[1] / FULL_TINT_CHROMA)
-        plate, figure = (((.52, .096), (.45, .085)), ((.97, .02), (.86, .04))) if appearance == "tinted" \
-            else (((.3, .027), (.22, .014)), ((.78, .15), (.68, .16)))
-        return dict(plate=(oklch(plate[0][0], plate[0][1] * accent, hue), oklch(plate[1][0], plate[1][1] * accent, hue - 7)),
-                    opacity=(1, 1), figure=tuple(oklch(l, c * accent, hue) for l, c in figure),
-                    rim=oklch(.97, .09 * accent, hue), rim_opacity=.4)
+        top, bottom = ((.52, .096), (.45, .085)) if appearance == "tinted" else ((.3, .027), (.22, .014))
+        return dict(plate=(oklch(top[0], top[1] * accent, hue), oklch(bottom[0], bottom[1] * accent, hue - 7)),
+                    opacity=(1, 1), rim=oklch(.97, .09 * accent, hue), rim_opacity=.4)
     rim = "#ffffff" if neutral else oklch(.97, .09, hue)
     if appearance == "light":
         plate = ((oklch(.5, .012, 260), oklch(.34, .012, 260)) if neutral
                  else (oklch(.66, chroma, hue), oklch(.44, chroma * 1.05, hue + 8)))
-        return dict(plate=plate, opacity=(1, 1), figure=("#ffffff", "#e6e9ef"), rim=rim, rim_opacity=.45)
-    figure = ("#eceef2", "#a9acb4") if neutral else (oklch(.82, chroma * .85, hue), oklch(.68, chroma, hue))
-    return dict(plate=(oklch(.29, 0, 0), oklch(.19, 0, 0)), opacity=(1, 1), figure=figure, rim=rim, rim_opacity=.4)
+        return dict(plate=plate, opacity=(1, 1), rim=rim, rim_opacity=.45)
+    return dict(plate=(oklch(.29, 0, 0), oklch(.19, 0, 0)), opacity=(1, 1), rim=rim, rim_opacity=.4)
 
 
 def tile(appearance, c, content):
@@ -98,13 +94,3 @@ def tile(appearance, c, content):
             f'<path d="{BODY}" fill="none" stroke="#000" stroke-opacity="{.12 * shadow:.3g}" stroke-width="3"/>'
             f'<g clip-path="url(#clip)"><path d="{BODY}" fill="none" stroke="url(#rim)" stroke-width="24"/></g>'
             f'{content}</svg>\n')
-
-
-def app_icon(figure, hue, chroma, appearance, tint=None):
-    """`figure` is a stroke on the 16 px grid; hue and chroma are OKLCH; `tint` is (hue, chroma) of the accent."""
-    c = colors(appearance, hue, chroma, tint)
-    stroke = f'fill="none" stroke-linecap="round" stroke-linejoin="round" d="{figure}"'
-    return tile(appearance, c, '<defs>' + vertical("figure", *c["figure"], (1, 1), 2, 14, ' gradientUnits="userSpaceOnUse"')
-                + '</defs><g transform="translate(232 232) scale(35)" stroke-width="1.5">'
-                f'<path stroke="#000" stroke-opacity=".25" transform="translate(0 .5)" {stroke}/>'
-                f'<path stroke="url(#figure)" {stroke}/></g>')

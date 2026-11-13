@@ -2,23 +2,19 @@
 """Generate the full-color icons: places (folders), file types and devices.
 
 Figures come from the symbolic sources (src/malaysia-symbolic), so a new folder or file type
-needs no drawing of its own: add a row to FOLDERS, MIMETYPES or APPS. The desktop's own app
-icons are copied unchanged from src/apps.
+needs no drawing of its own: add a row to FOLDERS or MIMETYPES. App icons are the desktop's
+own files, copied unchanged from src/apps.
 
 Usage:
-  python3 tools/color/build.py                 write Malaysia/ (light), Malaysia-Dark/ (dark) and
-                                               Malaysia-Clear/, Malaysia-Clear-Dark/ (app icons only)
+  python3 tools/color/build.py                 write Malaysia/ (light) and Malaysia-Dark/ (dark)
   python3 tools/color/build.py --check         fail if a generated file is out of date
   python3 tools/color/build.py --tint '#e8a33d' --out ~/.local/share/icons/Malaysia-Tinted
                                                write a theme tinted with that accent
-                                               (inherits Malaysia; folders and app icons)
-  python3 tools/color/build.py --tint '#e8a33d' --dark --out ~/.local/share/icons/Malaysia-Tinted-Dark
-                                               the same with the dark tinted appearance
-                                               (inherits Malaysia-Dark); a gray accent gives monochrome icons
+                                               (inherits Malaysia; folders only)
 """
 import argparse, colorsys, os, re, sys
 
-import appicons, devices
+import devices
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SYM = os.path.join(ROOT, "src", "malaysia-symbolic")
@@ -99,15 +95,6 @@ FOLDERS = {
     "folder-root": "emblem-system", "folder-log": "lines", "folder-build": "preferences-system", "folder-design": "shapes",
     "folder-drawing": "pencil", "folder-paint": "palette", "folder-language": "network-workgroup",
     "folder-podcast": "mic", "folder-extension": "puzzle", "folder-calculate": "calculator", "folder-tar": "box",
-}
-# app id → (figure, OKLCH hue, OKLCH chroma); chroma 0 gives a graphite plate
-APPS = {
-    "org.gnome.Nautilus": ("folder", 250, .15), "org.gnome.Console": ("terminal", 260, 0),
-    "org.gnome.Epiphany": ("network-workgroup", 215, .12), "org.gnome.Music": ("note", 10, .19),
-    "org.gnome.Geary": ("mail", 258, .15), "org.gnome.Calendar": ("calendar", 45, .17),
-    "org.gnome.Calculator": ("calculator", 260, 0), "org.gnome.Loupe": ("photo", 150, .14),
-    "org.gnome.Totem": ("video-x-generic", 300, .17), "org.gnome.TextEditor": ("pencil", 85, .15),
-    "org.gnome.clocks": ("clock", 25, .17), "org.gnome.Maps": ("mark-location", 150, .15),
 }
 # folder-<color>: plain folders in the macOS tag colors
 FOLDER_COLORS = {
@@ -384,7 +371,7 @@ def document(fig, color, text, style, template):
 CONTEXTS = {"apps": "Applications", "places": "Places", "mimetypes": "MimeTypes", "status": "Status"}
 # scalable/status only holds folder-open, which meson installs as a link to places/folder.svg
 APP_DIRS = ["scalable/apps"]
-VARIANT_DIRS = APP_DIRS + ["scalable/mimetypes", "scalable/places", "scalable/status"]
+VARIANT_DIRS = ["scalable/mimetypes", "scalable/places", "scalable/status"]
 
 
 def theme_index(name, comment, inherits, dirs):
@@ -396,13 +383,8 @@ def theme_index(name, comment, inherits, dirs):
 
 
 def files(variant, tint=None):
-    """variant: light, dark, clear, clear-dark, tinted or tinted-dark; tint is a #rrggbb accent."""
-    accent = appicons.accent(tint) if tint else None
-    out = {f"scalable/apps/{name}.svg": appicons.app_icon(G(fig), hue, chroma, variant, accent)
-           for name, (fig, hue, chroma) in APPS.items()}
-    if variant.startswith("clear"):
-        return out
     p = palette(variant, tint)
+    out = {}
     for name, fig in FOLDERS.items():
         ctx = "mimetypes" if name.startswith("inode-") else "places"
         out[f"scalable/{ctx}/{name}.svg"] = folder(fig, p)
@@ -452,16 +434,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--tint")
-    ap.add_argument("--dark", action="store_true")
     ap.add_argument("--out")
     a = ap.parse_args()
     if a.tint:
         if not (a.out and re.fullmatch(r"#[0-9a-fA-F]{6}", a.tint)):
             sys.exit("--tint needs a #rrggbb color and --out")
         out = os.path.expanduser(a.out)
-        sync(out, files("tinted-dark" if a.dark else "tinted", a.tint.lower()), False,
-             theme_index(os.path.basename(out.rstrip("/")), f"Malaysia folders and app icons tinted {a.tint}",
-                         "Malaysia-Dark" if a.dark else "Malaysia", VARIANT_DIRS))
+        sync(out, files("tinted", a.tint.lower()), False,
+             theme_index(os.path.basename(out.rstrip("/")), f"Malaysia folders tinted {a.tint}", "Malaysia",
+                         VARIANT_DIRS))
         os.makedirs(os.path.join(out, "scalable", "status"), exist_ok=True)
         link = os.path.join(out, "scalable", "status", "folder-open.svg")
         if not os.path.lexists(link):
@@ -470,11 +451,8 @@ def main():
         return
     stale = sync(os.path.join(ROOT, "Malaysia"), files("light"), a.check)
     stale += sync(os.path.join(ROOT, "Malaysia-Dark"), files("dark"), a.check,
-                  theme_index("Malaysia-Dark", "Malaysia with dark folders, trash and app icons", "Malaysia",
+                  theme_index("Malaysia-Dark", "Malaysia with dark folders and trash", "Malaysia",
                               VARIANT_DIRS))
-    for name, parent, variant in (("Malaysia-Clear", "Malaysia", "clear"), ("Malaysia-Clear-Dark", "Malaysia-Dark", "clear-dark")):
-        stale += sync(os.path.join(ROOT, name), files(variant), a.check,
-                      theme_index(name, f"{parent} with translucent app icons", parent, APP_DIRS))
     if a.check:
         sys.exit("out of date:\n  " + "\n  ".join(stale)) if stale else print("up to date")
     else:

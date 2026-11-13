@@ -21,8 +21,7 @@ be installed next to this one.
 Malaysia/                the Malaysia theme
 ├── scalable/            full-color SVG: apps, devices, mimetypes, places, status
 └── symbolic/            recolorable SVG: actions, categories, devices, mimetypes, places, status, ui
-Malaysia-Dark/           child theme with the dark folders, trash and app icons (generated)
-Malaysia-Clear/          child theme with translucent app icons (generated); Malaysia-Clear-Dark/ likewise
+Malaysia-Dark/           child theme with the dark folders and trash (generated)
 src/
 ├── malaysia-symbolic/   stroke sources of the desktop symbols
 ├── apps/               app icons copied from the Malaysia desktop
@@ -144,39 +143,38 @@ The desktop's own apps, Settings (`io.github.hblanqueto.malaysia.settings`) and 
    searched before `hicolor`, so the theme shows them even where malaysia is not installed.
 3. To update an icon, copy the file again from malaysia and run `tools/color/build.py`.
 
-The GNOME apps in `APPS` (`tools/color/build.py`) get a generated icon in the same squircle.
-A row is `app id → (figure, OKLCH hue, chroma)`; chroma 0 gives a graphite plate. The figure
-is a symbolic source, so a new app needs no drawing. One row yields every appearance:
+Every other app keeps its own icon. The theme draws no icon for it; it can give that icon a plate
+behind it, in the six appearances of macOS:
 
-| Appearance | Theme | Plate | Figure |
+| Appearance | Parent theme | Plate | The app's icon |
 |---|---|---|---|
-| Default | `Malaysia` | the app's hue | white |
-| Dark | `Malaysia-Dark` | graphite | the app's color |
-| Clear, clear dark | `Malaysia-Clear`, `Malaysia-Clear-Dark` | translucent white | white-gray |
-| Tinted, tinted dark | `build.py --tint '#rrggbb' [--dark] --out DIR` | the accent, or a dark shade of it | near white, or the accent |
-
-A gray `--tint` gives monochrome icons. A theme is static, so the accent is chosen when the
-tinted theme is written; the desktop writes it again when the accent changes. The blur behind
-the clear plate is the compositor's job: the theme only gives the opacity.
-
-Apps the theme does not draw get a plate colored from their own SVG:
+| Default | `Malaysia` | the hue of the icon | unchanged |
+| Dark | `Malaysia-Dark` | graphite | unchanged |
+| Clear, clear dark | `Malaysia`, `Malaysia-Dark` | translucent white | in grays |
+| Tinted, tinted dark | `Malaysia`, `Malaysia-Dark` | the accent, or a dark shade of it | in tones of the accent |
 
 ```sh
 pip install -r tools/requirements.txt
 python3 tools/color/thirdparty.py /usr/share/icons/hicolor/scalable/apps --appearance dark \
     --out ~/.local/share/icons/Malaysia-Apps-Dark
+python3 tools/color/thirdparty.py /usr/share/icons/hicolor/scalable/apps --appearance tinted \
+    --tint '#e8a33d' --out ~/.local/share/icons/Malaysia-Apps-Tinted
 ```
 
 1. The icon is drawn at 128 px and every opaque pixel goes to OKLCH.
-2. Hues with chroma form lobes. A bright logo (mean lightness 0.6 or more) takes the hue of its
-   darkest lobe with at least 15 % of the chroma; a dark logo takes the lightest. A gray logo
+2. Hues with chroma form lobes. A bright icon (mean lightness 0.6 or more) takes the hue of its
+   darkest lobe with at least 15 % of the chroma; a dark icon takes the lightest. A gray icon
    gets a gray plate.
-3. The logo is scaled to 76 % of the body, centered on what it draws, and cast a soft shadow.
-4. The clear and tinted appearances recolor the logo's `#rgb` and `#rrggbb` colors; other color
+3. The icon is scaled to 76 % of the body, centered on what it draws, and cast a soft shadow.
+4. The clear and tinted appearances recolor the icon's `#rgb` and `#rrggbb` colors; other color
    syntaxes, PNG icons and embedded rasters are not recolored.
 5. An icon that Skia would draw wrong, or that draws nothing, is skipped with a message.
 
-The output inherits `Malaysia` or `Malaysia-Dark`, and does not copy the apps' art into this repo.
+A gray `--tint` gives monochrome icons. A theme is static, so the accent is chosen when the
+tinted theme is written; the desktop writes it again when the accent changes. The blur behind
+the clear plate is the compositor's job: the theme only gives the opacity.
+
+The output inherits `Malaysia` or `Malaysia-Dark` and does not copy the apps' art into this repo.
 
 ## Build and install
 
@@ -185,8 +183,8 @@ meson setup _build
 meson install -C _build
 ```
 
-This installs `Malaysia`, `Malaysia-Dark`, `Malaysia-Clear` and `Malaysia-Clear-Dark` to
-`$prefix/share/icons/` and refreshes their icon caches.
+This installs `Malaysia` and `Malaysia-Dark` to `$prefix/share/icons/` and refreshes their
+icon caches.
 To use it in the Malaysia desktop, set `MALAYSIA_ICON_THEME=Malaysia` for the launcher
 and choose `Malaysia` as the GTK icon theme.
 
@@ -198,8 +196,8 @@ and choose `Malaysia` as the GTK icon theme.
 2. `python3 tools/color/build.py --check`
 3. `python3 -m unittest discover -s tools/color`, the plate rule for third-party icons.
 4. `python3 tools/build-icon-map.py`, then `docs/icon-map.html` must be unchanged.
-5. `meson install` to a temporary prefix; the four themes must get an icon cache, and
-   `Malaysia` and `Malaysia-Dark` the `folder-open` link.
+5. `meson install` to a temporary prefix; both themes must get an icon cache and the
+   `folder-open` link.
 
 Run the same steps locally before pushing.
 

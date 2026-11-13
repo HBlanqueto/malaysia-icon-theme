@@ -39,13 +39,11 @@ jobs:
           python3 tools/build-icon-map.py
           git diff --exit-code -- docs/icon-map.html
 
-      - name: Install the themes
+      - name: Install both themes
         run: |
           meson setup _build --prefix="$RUNNER_TEMP/prefix"
           meson install -C _build
-          for theme in Malaysia Malaysia-Dark Malaysia-Clear Malaysia-Clear-Dark; do
-            test -s "$RUNNER_TEMP/prefix/share/icons/$theme/icon-theme.cache"
-          done
           for theme in Malaysia Malaysia-Dark; do
+            test -s "$RUNNER_TEMP/prefix/share/icons/$theme/icon-theme.cache"
             test -L "$RUNNER_TEMP/prefix/share/icons/$theme/scalable/status/folder-open.svg"
           done

@@ -33,18 +33,6 @@ install_subdir(
   install_tag : 'runtime',
 )
 
-# Malaysia-Clear and Malaysia-Clear-Dark: translucent app icons over Malaysia and Malaysia-Dark
-clear_dir = get_option('datadir') / 'icons' / 'Malaysia-Clear'
-clear_dark_dir = get_option('datadir') / 'icons' / 'Malaysia-Clear-Dark'
-foreach variant : [['Malaysia-Clear', clear_dir], ['Malaysia-Clear-Dark', clear_dark_dir]]
-  install_subdir(
-    variant[0],
-    install_dir: variant[1],
-    strip_directory : true,
-    install_tag : 'runtime',
-  )
-endforeach
-
 foreach variant : [['Malaysia', theme_dir], ['Malaysia-Dark', dark_dir]]
   if host_machine.system() == 'windows'
     install_data(
@@ -68,7 +56,7 @@ gtk_update_icon_cache = find_program(
   'gtk-update-icon-cache',
   required : true,
 )
-foreach dir : [theme_dir, dark_dir, clear_dir, clear_dark_dir]
+foreach dir : [theme_dir, dark_dir]
   meson.add_install_script(
     gtk_update_icon_cache,
     '-qtf',
