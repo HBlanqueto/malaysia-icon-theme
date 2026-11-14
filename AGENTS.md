@@ -63,7 +63,7 @@ Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
 | `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
 | `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
 | `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`; dispositivos en `devices.py`); copia `src/apps/` | sí |
-| `docs/` | `symbols.md`, mapa de íconos y propuesta (generados) | no: se regeneran |
+| `docs/` | `symbols.md` y mapa de íconos (generados) | no: se regeneran |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
 
 ## Flujo de trabajo
