@@ -19,7 +19,7 @@ EDGE_WIDTH = 16
 LIGHT_REACH, LIGHT_SHARPNESS = 92, 3
 LIGHT_SIDE = .6  # degrees of reach per grid unit down the side
 OUTLINE_ENDS, OUTLINE_FROM, OUTLINE_TO = .28, 12, 84
-WEDGE = 2
+WEDGE = 3
 
 
 def srgb(linear):
