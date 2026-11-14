@@ -277,7 +277,7 @@ def shade(hex_, pct):
 
 
 # (top, bottom) lightness of the gradients a desktop icon swaps in Malaysia-Dark: a graphite body, a darker well
-DARK_APP = {"body": (.29, .19), "ring": (.46, .34), "well": (.13, .2)}
+DARK_APP = {"body": (.239, .173), "ring": (.46, .34), "well": (.13, .2)}
 
 
 def dark_app(svg_):
@@ -290,9 +290,9 @@ def dark_app(svg_):
     return svg_
 
 
-def glass_edge(svg_, opacity):
-    """The light rim every plate has, on the desktop's own icon."""
-    defs, shape = appicons.rim("#ffffff", opacity)
+def glass_edge(svg_, appearance):
+    """The edge every plate has, on the desktop's own icon."""
+    defs, shape = appicons.edge(appicons.colors(appearance, 0, 0, None)["light"])
     return svg_.replace("</defs>", defs + "</defs>", 1).replace("</svg>", shape + "\n</svg>", 1)
 
 
@@ -419,12 +419,12 @@ def files(variant, tint=None):
         for name, svg_ in devices.trash_icons(dark=True).items():
             out[f"scalable/places/{name}.svg"] = svg_
         for f in sorted(os.listdir(APP_ART)):
-            out[f"scalable/apps/{f}"] = glass_edge(dark_app(open(os.path.join(APP_ART, f), encoding="utf-8").read()), .4)
+            out[f"scalable/apps/{f}"] = glass_edge(dark_app(open(os.path.join(APP_ART, f), encoding="utf-8").read()), "dark")
     if variant == "light":
         icons = [*out, "scalable/status/folder-open.svg"]
         out["folder-palette.json"] = json.dumps(dict(icons=icons, **FOLDER_PALETTE), indent=1) + "\n"
         for f in sorted(os.listdir(APP_ART)):
-            out[f"scalable/apps/{f}"] = glass_edge(open(os.path.join(APP_ART, f), encoding="utf-8").read(), .45)
+            out[f"scalable/apps/{f}"] = glass_edge(open(os.path.join(APP_ART, f), encoding="utf-8").read(), "light")
         for name, svg_ in devices.icons(G, label).items():
             out[f"scalable/devices/{name}.svg"] = svg_
         for name, (fig, color, text, style) in MIMETYPES.items():

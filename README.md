@@ -144,8 +144,9 @@ The desktop's own apps, Settings (`io.github.hblanqueto.malaysia.settings`) and 
 2. `tools/color/build.py` installs them in `Malaysia/scalable/apps`. That directory is
    searched before `hicolor`, so the theme shows them even where malaysia is not installed.
 3. To update an icon, copy the file again from malaysia and run `tools/color/build.py`.
-4. `tools/color/build.py` adds the light glass rim every plate has (`glass_edge`) and also writes
-   each one in `Malaysia-Dark/scalable/apps` with a graphite body (`DARK_APP`); the art stays. The shell looks in `Malaysia-Dark` first when the scheme is
+4. `tools/color/build.py` adds the edge every plate has (`glass_edge`): a white light along the
+   top and the bottom that turns each corner and ends in a point down the side. It also writes
+   each one in `Malaysia-Dark/scalable/apps` with a near black body (`DARK_APP`); the art stays. The shell looks in `Malaysia-Dark` first when the scheme is
    dark or the icon style is clear, and the live icon style derives the rest from either.
 
 Every other app keeps its own icon. The theme draws no icon for it; it can give that icon a plate
@@ -154,9 +155,12 @@ behind it, in the six appearances of macOS:
 | Appearance | Parent theme | Plate | The app's icon |
 |---|---|---|---|
 | Default | `Malaysia` | the hue of the icon | unchanged |
-| Dark | `Malaysia-Dark` | graphite | unchanged |
-| Clear, clear dark | `Malaysia`, `Malaysia-Dark` | translucent white | in grays |
-| Tinted, tinted dark | `Malaysia`, `Malaysia-Dark` | the accent, or a dark shade of it | in tones of the accent |
+| Dark | `Malaysia-Dark` | near black | unchanged |
+| Clear, clear dark | `Malaysia`, `Malaysia-Dark` | translucent white, or translucent black | in grays |
+| Tinted, tinted dark | `Malaysia`, `Malaysia-Dark` | the accent, or translucent black | in tones of the accent |
+
+Default and dark plates wear a white light on the top and the bottom edge. Clear and tinted
+plates also wear a closed outline, lighter on the top and the bottom, with the light inside it.
 
 ```sh
 pip install -r tools/requirements.txt
