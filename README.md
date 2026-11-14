@@ -104,6 +104,8 @@ Variants are separate themes, because an icon theme cannot change with the color
 - `Malaysia-Dark` (installed next to it, `Inherits=Malaysia`) has only the dark folders and
   trash.
 - A tinted theme is generated on demand with `--tint` from the user's accent color.
+- `Malaysia/folder-palette.json` holds the folder icons and the colors of `FOLDER_PALETTE`;
+  the desktop reads it to tint the installed folders with the same numbers as `--tint`.
 
 
 ## Devices

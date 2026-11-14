@@ -12,7 +12,7 @@ Usage:
                                                write a theme tinted with that accent
                                                (inherits Malaysia; folders only)
 """
-import argparse, colorsys, os, re, sys
+import argparse, colorsys, json, os, re, sys
 
 import appicons, devices
 
@@ -296,17 +296,24 @@ def glass_edge(svg_, opacity):
     return svg_.replace("</defs>", defs + "</defs>", 1).replace("</svg>", shape + "\n</svg>", 1)
 
 
+# Written to Malaysia/folder-palette.json with the folder icons: the desktop tints them with the same numbers.
+# tinted: [HLS lightness, share of the tint's saturation], with the tint's hue.
+FOLDER_PALETTE = {
+    "light": dict(back=["#58a6ee", "#2f7fd6"], front=["#9ad2fb", "#5fb0f2"], glyph="#1f62ad", hi=.65),
+    "dark": dict(back=["#2d6fbf", "#1c4f8e"], front=["#5b9fe3", "#3a7ecb"], glyph="#123b6c", hi=.35),
+    "tinted": dict(back=[[.46, .75], [.34, .75]], front=[[.66, .85], [.52, .85]], glyph=[.22, .8], hi=.35),
+}
+
+
 def palette(variant, tint=None):
-    if variant == "light":
-        return dict(back=("#58a6ee", "#2f7fd6"), front=("#9ad2fb", "#5fb0f2"), glyph="#1f62ad", hi=.65)
-    if variant == "dark":
-        return dict(back=("#2d6fbf", "#1c4f8e"), front=("#5b9fe3", "#3a7ecb"), glyph="#123b6c", hi=.35)
-    # tinted: the dark variant's lightness with the accent's hue
-    h, l, s = colorsys.rgb_to_hls(*(int(tint[i:i + 2], 16) / 255 for i in (1, 3, 5)))
-    def hls(l2, s2):
-        return "#" + "".join(f"{round(v * 255):02x}" for v in colorsys.hls_to_rgb(h, l2, min(1, s2)))
-    return dict(back=(hls(.46, s * .75), hls(.34, s * .75)), front=(hls(.66, s * .85), hls(.52, s * .85)),
-                glyph=hls(.22, s * .8), hi=.35)
+    p = FOLDER_PALETTE[variant]
+    if variant != "tinted":
+        return p
+    h, _, s = colorsys.rgb_to_hls(*(int(tint[i:i + 2], 16) / 255 for i in (1, 3, 5)))
+
+    def hls(spec):
+        return "#" + "".join(f"{round(v * 255):02x}" for v in colorsys.hls_to_rgb(h, spec[0], min(1, s * spec[1])))
+    return dict(back=[hls(x) for x in p["back"]], front=[hls(x) for x in p["front"]], glyph=hls(p["glyph"]), hi=p["hi"])
 
 
 def svg(body, defs=""):
@@ -414,6 +421,8 @@ def files(variant, tint=None):
         for f in sorted(os.listdir(APP_ART)):
             out[f"scalable/apps/{f}"] = glass_edge(dark_app(open(os.path.join(APP_ART, f), encoding="utf-8").read()), .4)
     if variant == "light":
+        icons = [*out, "scalable/status/folder-open.svg"]
+        out["folder-palette.json"] = json.dumps(dict(icons=icons, **FOLDER_PALETTE), indent=1) + "\n"
         for f in sorted(os.listdir(APP_ART)):
             out[f"scalable/apps/{f}"] = glass_edge(open(os.path.join(APP_ART, f), encoding="utf-8").read(), .45)
         for name, svg_ in devices.icons(G, label).items():

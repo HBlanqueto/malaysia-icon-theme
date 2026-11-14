@@ -1,0 +1,107 @@
+{
+ "icons": [
+  "scalable/places/folder.svg",
+  "scalable/mimetypes/inode-directory.svg",
+  "scalable/places/folder-drag-accept.svg",
+  "scalable/places/folder-documents.svg",
+  "scalable/places/folder-download.svg",
+  "scalable/places/folder-music.svg",
+  "scalable/places/folder-pictures.svg",
+  "scalable/places/folder-images.svg",
+  "scalable/places/folder-videos.svg",
+  "scalable/places/folder-projects.svg",
+  "scalable/places/folder-publicshare.svg",
+  "scalable/places/folder-public.svg",
+  "scalable/places/folder-remote.svg",
+  "scalable/places/folder-templates.svg",
+  "scalable/places/user-desktop.svg",
+  "scalable/places/user-home.svg",
+  "scalable/places/user-bookmarks.svg",
+  "scalable/places/folder-bookmark.svg",
+  "scalable/places/folder-cloud.svg",
+  "scalable/places/folder-code.svg",
+  "scalable/places/folder-development.svg",
+  "scalable/places/folder-database.svg",
+  "scalable/places/folder-locked.svg",
+  "scalable/places/folder-encrypted.svg",
+  "scalable/places/folder-unlocked.svg",
+  "scalable/places/folder-decrypted.svg",
+  "scalable/places/folder-git.svg",
+  "scalable/places/folder-mail.svg",
+  "scalable/places/folder-notes.svg",
+  "scalable/places/folder-important.svg",
+  "scalable/places/folder-book.svg",
+  "scalable/places/folder-library.svg",
+  "scalable/places/folder-games.svg",
+  "scalable/places/folder-print.svg",
+  "scalable/places/folder-presentation.svg",
+  "scalable/places/folder-table.svg",
+  "scalable/places/folder-chart.svg",
+  "scalable/places/folder-script.svg",
+  "scalable/places/folder-temp.svg",
+  "scalable/places/folder-trash.svg",
+  "scalable/places/folder-root.svg",
+  "scalable/places/folder-log.svg",
+  "scalable/places/folder-build.svg",
+  "scalable/places/folder-design.svg",
+  "scalable/places/folder-drawing.svg",
+  "scalable/places/folder-paint.svg",
+  "scalable/places/folder-language.svg",
+  "scalable/places/folder-podcast.svg",
+  "scalable/places/folder-extension.svg",
+  "scalable/places/folder-calculate.svg",
+  "scalable/places/folder-tar.svg",
+  "scalable/status/folder-open.svg"
+ ],
+ "light": {
+  "back": [
+   "#58a6ee",
+   "#2f7fd6"
+  ],
+  "front": [
+   "#9ad2fb",
+   "#5fb0f2"
+  ],
+  "glyph": "#1f62ad",
+  "hi": 0.65
+ },
+ "dark": {
+  "back": [
+   "#2d6fbf",
+   "#1c4f8e"
+  ],
+  "front": [
+   "#5b9fe3",
+   "#3a7ecb"
+  ],
+  "glyph": "#123b6c",
+  "hi": 0.35
+ },
+ "tinted": {
+  "back": [
+   [
+    0.46,
+    0.75
+   ],
+   [
+    0.34,
+    0.75
+   ]
+  ],
+  "front": [
+   [
+    0.66,
+    0.85
+   ],
+   [
+    0.52,
+    0.85
+   ]
+  ],
+  "glyph": [
+   0.22,
+   0.8
+  ],
+  "hi": 0.35
+ }
+}
