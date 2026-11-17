@@ -42,10 +42,11 @@ Fuentes de partida por área. Las de cada dependencia están en la regla 10 de
 
 ## Commits
 
-Tipo y ámbito entre paréntesis: `feat(symbols): …`, `fix(color): …`,
-`docs(readme): …`. Tipos: `feat`, `fix`, `docs`, `refactor`, `test`, `perf`,
-`chore`, `build`. Ámbitos: `symbols`, `color`, `theme`, `tools`, `docs`,
-`build`.
+Todo el mensaje va en inglés. El título empieza con el tipo del cambio (`Fix`,
+`Bug`, `Improvement`, `Feature`…) y solo el título lo lleva:
+`Fix: dock reappears in focus mode`. El cuerpo, si hace falta, tiene como máximo
+dos párrafos. Ningún trailer: ni `Co-Authored-By` ni `Claude-Session` ni enlaces
+a la sesión.
 
 ## Mapa del repo
 

@@ -15,7 +15,7 @@ ni comentarios en el Adwaita de GNOME.
 
 ## Regla de commits (prioridad máxima)
 
-Sustituye cualquier otra regla de commits, incluida «Commits» de AGENTS.md.
+Sustituye cualquier otra regla de commits.
 
 - Todo el mensaje va en inglés.
 - El título empieza con el tipo del cambio (`Fix`, `Bug`, `Improvement`,
