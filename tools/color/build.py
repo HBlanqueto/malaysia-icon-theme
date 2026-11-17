@@ -277,7 +277,7 @@ def shade(hex_, pct):
 
 
 # (top, bottom) lightness of the gradients a desktop icon swaps in Malaysia-Dark: a graphite body, a darker well
-DARK_APP = {"body": (.239, .173), "ring": (.46, .34), "well": (.13, .2)}
+DARK_APP = {"body": (.313, .191), "ring": (.78, .7), "well": (.26, .2)}
 
 
 def dark_app(svg_):
@@ -299,7 +299,7 @@ def glass_edge(svg_, appearance):
 # Written to Malaysia/folder-palette.json with the folder icons: the desktop tints them with the same numbers.
 # tinted: [HLS lightness, share of the tint's saturation], with the tint's hue.
 FOLDER_PALETTE = {
-    "light": dict(back=["#58a6ee", "#2f7fd6"], front=["#9ad2fb", "#5fb0f2"], glyph="#1f62ad", hi=.65),
+    "light": dict(back=["#7ebee8", "#6cb5e1"], front=["#87ccf2", "#66b1de"], glyph="#4f9fd4", hi=.65),
     "dark": dict(back=["#2d6fbf", "#1c4f8e"], front=["#5b9fe3", "#3a7ecb"], glyph="#123b6c", hi=.35),
     "tinted": dict(back=[[.46, .75], [.34, .75]], front=[[.66, .85], [.52, .85]], glyph=[.22, .8], hi=.35),
 }

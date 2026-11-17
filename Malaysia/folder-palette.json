@@ -55,14 +55,14 @@
  ],
  "light": {
   "back": [
-   "#58a6ee",
-   "#2f7fd6"
+   "#7ebee8",
+   "#6cb5e1"
   ],
   "front": [
-   "#9ad2fb",
-   "#5fb0f2"
+   "#87ccf2",
+   "#66b1de"
   ],
-  "glyph": "#1f62ad",
+  "glyph": "#4f9fd4",
   "hi": 0.65
  },
  "dark": {

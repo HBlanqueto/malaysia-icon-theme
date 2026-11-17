@@ -147,7 +147,7 @@ The desktop's own apps, Settings (`io.github.hblanqueto.malaysia.settings`) and 
 3. To update an icon, copy the file again from malaysia and run `tools/color/build.py`.
 4. `tools/color/build.py` adds the edge every plate has (`glass_edge`): a white light along the
    top and the bottom that turns each corner and ends in a point down the side. It also writes
-   each one in `Malaysia-Dark/scalable/apps` with a near black body (`DARK_APP`); the art stays. The shell looks in `Malaysia-Dark` first when the scheme is
+   each one in `Malaysia-Dark/scalable/apps` with the dark grey body of the macOS 27 icons (`DARK_APP`); the art stays. The shell looks in `Malaysia-Dark` first when the scheme is
    dark or the icon style is clear, and the live icon style derives the rest from either.
 
 Every other app keeps its own icon. The theme draws no icon for it; it can give that icon a plate
