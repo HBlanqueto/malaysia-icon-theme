@@ -334,11 +334,11 @@ def grad(id_, a, b, x2=0):
             f'<stop offset="0" stop-color="{a}"/><stop offset="1" stop-color="{b}"/></linearGradient>')
 
 
-def emboss(d, x, y, k, color, alpha):
+def emboss(d, x, y, k, color, alpha, lit):
     common = f'fill="none" stroke-width="{1.9 / k:.3g}" stroke-linecap="round" stroke-linejoin="round" d="{d}"'
     return (f'<g transform="translate({x} {y}) scale({k})">'
-            f'<path stroke="#ffffff" stroke-opacity=".45" transform="translate(0 {.7 / k:.3g})" {common}/>'
-            f'<path stroke="{color}" stroke-opacity="{alpha}" {common}/></g>')
+            + (f'<path stroke="#ffffff" stroke-opacity=".45" transform="translate(0 {.7 / k:.3g})" {common}/>' if lit else '')
+            + f'<path stroke="{color}" stroke-opacity="{alpha}" {common}/></g>')
 
 
 FOLD = ('<linearGradient id="edge" x1="0" y1="0" x2="0" y2="1"><stop offset=".8" stop-color="#000000" stop-opacity="0"/>'
@@ -356,7 +356,7 @@ def folder(fig, p):
     d = "M5 23a4 4 0 0 1 4-4h46a4 4 0 0 1 4 4v25a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"
     front = (f'<path fill="url(#front)" d="{d}"/><path fill="url(#edge)" d="{d}"/>'
              f'<path d="M8.6 19.6h46.8" stroke="#ffffff" stroke-opacity="{p["hi"]}" stroke-width=".9" stroke-linecap="round"/>')
-    return svg(back + front + (emboss(G(fig), 18, 21.5, 1.75, p["glyph"], .9) if fig else ""), defs)
+    return svg(back + front + (emboss(G(fig), 18, 21.5, 1.75, p["glyph"], .9, fig != "people") if fig else ""), defs)
 
 
 PAGE = "M14 4h23l13 13v41a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"
