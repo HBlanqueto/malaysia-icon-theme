@@ -82,9 +82,10 @@ Folders and file types follow macOS Finder: no outlines, one drop shadow (the sa
 - The extension letters are stroked paths (`LETTERS`), not `<text>`, so they look the same
   without any font installed. Symbols come from `src/malaysia-symbolic` or `EXTRA`.
 - `user-trash` and `user-trash-full` are a frosted bin after the macOS Trash, with a smoky
-  version in `Malaysia-Dark`. The empty bin is translucent. Paper fills the full bin, so its
-  wall is an almost opaque grey, and crumpled sheets show only in the mouth (`crumple()`: an
-  irregular outline with light and shadow facets and creases, seeded so every build is identical).
+  version in `Malaysia-Dark`. The empty bin is translucent. Crumpled sheets fill the full bin
+  and show blurred through the semi-transparent wall (`trash_inside()`), and more of them stick
+  out of the mouth (`crumple()`: an irregular outline with light and shadow facets and creases,
+  seeded so every build is identical).
 - `user-trash`, `user-trash-full`, `network-server` and `network-workgroup` are objects,
   and so are the status icons `avatar-default`, `image-missing` and `image-loading`:
   `places()` and `status()` in `tools/color/devices.py` draw them.

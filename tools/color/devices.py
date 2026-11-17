@@ -69,6 +69,11 @@ DEFS = (
     '<stop offset="1" stop-color="#dadedd"/></linearGradient>'
     '<linearGradient id="bin-full-dark" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#5a5a5a"/><stop offset="1" stop-color="#505050"/></linearGradient>'
+    '<linearGradient id="bin-wall" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#7f8080" stop-opacity=".62"/><stop offset=".5" stop-color="#9c9d9d" stop-opacity=".52"/>'
+    '<stop offset="1" stop-color="#d4d7d6" stop-opacity=".5"/></linearGradient>'
+    '<linearGradient id="bin-wall-dark" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#363636" stop-opacity=".8"/><stop offset="1" stop-color="#303030" stop-opacity=".84"/></linearGradient>'
     '<linearGradient id="bin-edge" x1="0" y1="0" x2="1" y2="0">'
     '<stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".12" stop-color="#ffffff" stop-opacity="0"/>'
     '<stop offset=".88" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#ffffff" stop-opacity=".22"/></linearGradient>'
@@ -619,23 +624,23 @@ def crumple(cx, cy, rx, ry, seed, prints=()):
             f'<path d="{d}" fill="none" stroke="#8a8f98" stroke-opacity=".4" stroke-width=".35" stroke-linejoin="round"/>')
 
 
-SCRAPS = (  # x, y, rx, ry, angle, color: paper filling the bin, seen as faint shadows through the frosted wall
-    (15, 20, 4, 2.4, 20, "#ffffff"), (23, 22, 3, 2, -30, "#8f9296"), (31, 20, 4.4, 2.6, 10, "#ffffff"),
-    (40, 21, 3, 2.2, 40, "#8f9296"), (48, 20, 3.4, 2, -15, "#8f9296"), (18, 28, 2.6, 1.8, 60, "#8f9296"),
-    (27, 29, 4.6, 2.8, -20, "#ffffff"), (37, 28, 3, 2, 15, "#8f9296"), (46, 29, 3.4, 2.2, -40, "#ffffff"),
-    (16, 36, 3.2, 2.2, 0, "#8f9296"), (24, 37, 3, 2, 35, "#ffffff"), (33, 36, 4, 2.4, -10, "#8f9296"),
-    (43, 37, 3.4, 2.2, 25, "#ffffff"), (50, 35, 2, 1.6, 0, "#8f9296"), (19, 44, 4, 2.6, -25, "#ffffff"),
-    (28, 45, 3, 2, 15, "#8f9296"), (37, 45, 4.2, 2.4, 5, "#8f9296"), (46, 44, 2.8, 2, -30, "#8f9296"),
-    (22, 51, 3.6, 2.2, 10, "#8f9296"), (31, 52, 4.4, 2.4, -5, "#ffffff"), (41, 52, 3.4, 2.2, 20, "#8f9296"),
-    (27, 56, 3, 1.8, 0, "#8f9296"), (37, 57, 3, 1.8, 0, "#ffffff"),
-)
+PAPER = ("#f2f3f5", "#f2f3f5", "#dfe1e5", "#f2f3f5", ("#dbe9ff", "#7fa8f0"), "#f2f3f5", "#e6e7ea",
+         ("#ffe3d1", "#f0a070"), "#f2f3f5", "#dfe1e5", ("#e3f3dc", "#8fcf86"), "#f2f3f5")
+
+
+def trash_inside():
+    """Crumpled sheets filling the bin, seen blurred through the frosted wall."""
+    sheets = ""
+    for row, y in enumerate(range(20, 62, 8)):
+        for col, x in enumerate(range(13 + row % 2 * 5, 56, 10)):
+            seed = 10 + row * 6 + col
+            color = PAPER[seed % len(PAPER)]
+            sheets += crumple(x, y, 6.6, 5.4, seed, color if isinstance(color, tuple) else (color,))
+    return f'<g clip-path="url(#bin-clip)"><g filter="url(#haze)">{sheets}</g></g>'
 
 
 def trash_contents():
-    scraps = "".join(f'<ellipse cx="{x}" cy="{y}" rx="{rx}" ry="{ry}" transform="rotate({a} {x} {y})" fill="{c}"/>'
-                     for x, y, rx, ry, a, c in SCRAPS)
-    return (f'<g clip-path="url(#bin-clip)"><g filter="url(#haze)" opacity=".22">{scraps}</g></g>'
-            + '<g transform="translate(0 13) scale(1 .72) translate(0 -13)">'
+    return ('<g transform="translate(0 13) scale(1 .72) translate(0 -13)">'
             + crumple(15, 9.4, 8.6, 7, 1, ("#b9bcc1", "#8d9096", "#e4e6e9"))
             + crumple(48.6, 9.2, 8.4, 7, 2, ("#9cc8ff", "#4a8ff0", "#2f6fd0"))
             + crumple(24.4, 10, 6.4, 5.6, 6, ("#f4d23c", "#2b2b2b", "#f8e27a"))
@@ -650,7 +655,8 @@ def trash(full=False, dark=False):
     body = rim + "L51.51 55.5Q51 60 46.5 60H17.5Q13 60 12.49 55.5z"
     mouth = "M11.2 8H52.8A3.7 3.7 0 0 1 52.8 15.4H11.2A3.7 3.7 0 0 1 11.2 8z"
     return (f'<clipPath id="bin-clip"><path d="{body}"/></clipPath><path d="{mouth}" fill="url(#bin-inside{k})"/>' + (trash_contents() if full else "")
-            + f'<path d="{body}" fill="url(#bin{"-full" if full else ""}{k})"/>' + ("" if dark else f'<path d="{body}" fill="url(#bin-edge)"/>')
+            + (f'<path d="{body}" fill="url(#bin-full{k})"/>' + trash_inside() + f'<path d="{body}" fill="url(#bin-wall{k})"/>'
+               if full else f'<path d="{body}" fill="url(#bin{k})"/>') + ("" if dark else f'<path d="{body}" fill="url(#bin-edge)"/>')
             + f'<path d="{rim}" fill="none" stroke="#ffffff" stroke-opacity="{.4 if dark else .95}" stroke-width="1"/>'
             + ("" if full else f'<path d="{mouth}" fill="none" stroke="#ffffff" stroke-opacity="{.3 if dark else .8}" stroke-width=".8"/>')
             + '<path d="M12.6 56.5Q13.2 60 17.5 60H46.5Q50.8 60 51.4 56.5" fill="none" stroke="#000000" stroke-opacity=".1" stroke-width="1"/>')
