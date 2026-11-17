@@ -305,7 +305,7 @@ def glass_edge(svg_, appearance):
 # Written to Malaysia/folder-palette.json with the folder icons: the desktop tints them with the same numbers.
 # tinted: [HLS lightness, share of the tint's saturation], with the tint's hue.
 FOLDER_PALETTE = {
-    "light": dict(back=["#7ebee8", "#6cb5e1"], front=["#87ccf2", "#66b1de"], glyph="#4f9fd4", hi=.65),
+    "light": dict(back=["#7ebee8", "#6cb5e1"], front=["#87ccf2", "#66b1de"], glyph="#5596bc", hi=.65),
     "dark": dict(back=["#2d6fbf", "#1c4f8e"], front=["#5b9fe3", "#3a7ecb"], glyph="#123b6c", hi=.35),
     "tinted": dict(back=[[.46, .75], [.34, .75]], front=[[.66, .85], [.52, .85]], glyph=[.22, .8], hi=.35),
 }
