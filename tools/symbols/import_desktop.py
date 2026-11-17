@@ -65,6 +65,8 @@ SKIP = {
     "PRINTER": "same name as Symbol::Printer (printer); barrierkit's drawing wins",
     "KEYBOARD": "same name as Symbol::Keyboard (input-keyboard); barrierkit's drawing wins",
     "MENU_ITEM": "two-color template ({{text}} and {{accent}}) that the menu fills in at runtime",
+    "CapsuleOnRectangle": "a picture of a Settings choice (window controls shape), not an icon apps ask for",
+    "CapsuleOnRectangleFill": "a picture of a Settings choice (window controls shape), not an icon apps ask for",
 }
 
 # Last Adwaita commit before the fork; tells whether a name already existed in Adwaita 51.0.
@@ -89,17 +91,18 @@ def target(entry):
 def bk_symbols(path):
     src = open(path, encoding="utf-8").read()
     body = src[src.index("fn path(self)"):]
+    filled = set(re.findall(r"Symbol::(\w+)", re.search(r"fill = if matches!\(\s*symbol,([^)]*)\)", src).group(1)))
     for m in re.finditer(r"Self::(\w+)(?:\s*\|\s*Self::(\w+))?\s*=>\s*\{?\s*\"([^\"]+)\"", body):
         k1, k2, d = m.groups()
         for k in filter(None, (k1, k2)):
-            fill = INK if k.endswith("Fill") else "none"
+            fill = f'{INK}" fill-rule="evenodd' if k in filled else "none"
             yield k, (f'<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">'
                       f'<path d="{d}" fill="{fill}" stroke="{INK}" stroke-width="1.4" '
                       f'stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
 
 def shell_icons(path):
-    for m in re.finditer(r'pub const (\w+): &str = "(.*)";', open(path, encoding="utf-8").read()):
+    for m in re.finditer(r'pub(?:\(crate\))? const (\w+): &str = "(.*)";', open(path, encoding="utf-8").read()):
         svg = m.group(2).encode().decode("unicode_escape").replace("currentColor", INK)
         yield m.group(1), svg
 
