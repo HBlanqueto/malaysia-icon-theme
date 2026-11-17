@@ -630,23 +630,25 @@ def trash_contents():
                      for x, y, rx, ry, a, c in SCRAPS)
     curl = ('<path d="M47.6 6c3.4-1.4 6.8.4 6.8 3.4 0 2.4-2 3.8-4 3.4-1.8-.4-2.4-2.4-1.2-3.4" fill="#f4f5f7" '
             'stroke="#a9aeb6" stroke-width=".5"/><path d="M50 7.8c1.6-.6 3 .2 3 1.6" fill="none" stroke="#c9ccd2" stroke-width=".6"/>')
-    return (f'<g clip-path="url(#bin-clip)"><g filter="url(#haze)" opacity=".95">{scraps}</g></g>'
+    return (f'<g clip-path="url(#bin-clip)"><g filter="url(#haze)" opacity=".45">{scraps}</g></g>'
+            + '<g transform="translate(32 15) scale(.78) translate(-32 -15)">'
             + crumple(17, 9.4, 10, 7.4, 1) + crumple(46.4, 9, 9.4, 7.4, 2)
             + crumple(27.4, 9.6, 8.4, 6.8, 3, ("#e9f6ff", "#43c0ff", "#2b9bef", "#6fd08c", "#3fb35f"))
             + crumple(38.4, 8.6, 8, 7.2, 4, ("#fff1e6", "#ff8a3d", "#e2532f", "#3c63c9", "#2d3b5c"))
-            + crumple(32, 13, 7.4, 4.2, 5) + curl)
+            + crumple(32, 13, 7.4, 4.2, 5) + curl + '</g>')
 
 
 def trash(full=False, dark=False):
-    """A frosted, translucent bin seen slightly from above, after the macOS Trash."""
+    """A frosted, translucent bin with a rounded mouth seen slightly from above, after the macOS Trash."""
     k = "-dark" if dark else ""
-    body = "M7 11a25 5 0 0 0 50 0L50.6 55a18.6 4 0 0 1-37.2 0z"
-    # A path, not <ellipse>: Skia's SVG paints a gradient on <ellipse> black (no SkSVGEllipse::onTransformableObjectBoundingBox).
-    return (f'<clipPath id="bin-clip"><path d="{body}"/></clipPath><path d="M7 11a25 5 0 1 0 50 0a25 5 0 1 0-50 0z" fill="url(#bin-inside{k})"/>' + (trash_contents() if full else "")
+    rim = "M7.5 11.7A3.7 3.7 0 0 0 11.2 15.4H52.8A3.7 3.7 0 0 0 56.5 11.7"
+    body = rim + "L51.51 55.5Q51 60 46.5 60H17.5Q13 60 12.49 55.5z"
+    mouth = "M11.2 8H52.8A3.7 3.7 0 0 1 52.8 15.4H11.2A3.7 3.7 0 0 1 11.2 8z"
+    return (f'<clipPath id="bin-clip"><path d="{body}"/></clipPath><path d="{mouth}" fill="url(#bin-inside{k})"/>' + (trash_contents() if full else "")
             + f'<path d="{body}" fill="url(#bin{k})"/><path d="{body}" fill="url(#side)"/><path d="{body}" fill="url(#frost)" opacity="{.35 if dark else 1}"/>'
-            + f'<path d="M7 11a25 5 0 0 0 50 0" fill="none" stroke="#ffffff" stroke-opacity="{.4 if dark else .95}" stroke-width="1"/>'
-            + ("" if full else f'<ellipse cx="32" cy="11" rx="25" ry="5" fill="none" stroke="#ffffff" stroke-opacity="{.3 if dark else .8}" stroke-width=".8"/>')
-            + '<path d="M13.4 55a18.6 4 0 0 0 37.2 0" fill="none" stroke="#000000" stroke-opacity=".1" stroke-width="1"/>')
+            + f'<path d="{rim}" fill="none" stroke="#ffffff" stroke-opacity="{.4 if dark else .95}" stroke-width="1"/>'
+            + ("" if full else f'<path d="{mouth}" fill="none" stroke="#ffffff" stroke-opacity="{.3 if dark else .8}" stroke-width=".8"/>')
+            + '<path d="M12.6 56.5Q13.2 60 17.5 60H46.5Q50.8 60 51.4 56.5" fill="none" stroke="#000000" stroke-opacity=".1" stroke-width="1"/>')
 
 
 def trash_icons(dark=False):
