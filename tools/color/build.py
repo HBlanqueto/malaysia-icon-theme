@@ -35,6 +35,12 @@ def glyph(name):
 
 # Strokes on the 16 px grid that are not theme symbols yet.
 EXTRA = {
+    "house": "M2.5 8 8 3.2 13.5 8M4.2 6.6v6.9h7.6V6.6M6.7 13.5v-3.3h2.6v3.3",
+    "desktop": "M2.5 3.5h11a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1zM4.5 10.2h7",
+    "film": "M2.5 3h11v10h-11zM5.2 3v10M10.8 3v10M2.5 6.3h2.7M2.5 9.7h2.7M10.8 6.3h2.7M10.8 9.7h2.7",
+    "arrow-down-circle": "M8 14.2a6.2 6.2 0 1 0 0-12.4a6.2 6.2 0 0 0 0 12.4M8 4.8v6.2M5.4 8.6 8 11.2l2.6-2.6",
+    "people": "M3.8 4.6a1 1 0 1 0 0 2a1 1 0 0 0 0-2M8 3.6a1 1 0 1 0 0 2a1 1 0 0 0 0-2M12.2 4.6a1 1 0 1 0 0 2a1 1 0 0 0 0-2"
+              "M2.2 13.4l1.6-5.2 1.6 5.2M6.4 13.4 8 7.2l1.6 6.2M10.6 13.4l1.6-5.2 1.6 5.2",
     "note": "M6 12.5V4l7-1.5v8.5M6 12.5a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0M13 11a1.8 1.8 0 1 1-3.6 0a1.8 1.8 0 0 1 3.6 0",
     "lines": "M4.5 4.5h7M4.5 7h7M4.5 9.5h7M4.5 12h4",
     "box": "M2.5 5 8 2.5 13.5 5v6L8 13.5 2.5 11zM2.5 5 8 7.5 13.5 5M8 7.5v6",
@@ -81,11 +87,11 @@ INK = "#8b9098"
 # name → figure (None = plain folder)
 FOLDERS = {
     "folder": None, "inode-directory": None, "folder-drag-accept": "open",
-    "folder-documents": "text-x-generic", "folder-download": "arrow-down", "folder-music": "note",
-    "folder-pictures": "photo", "folder-images": "photo", "folder-videos": "video-x-generic",
-    "folder-projects": "text-x-script", "folder-publicshare": "avatar-default", "folder-public": "avatar-default",
-    "folder-remote": "network-workgroup", "folder-templates": "edit-copy", "user-desktop": "video-display",
-    "user-home": "go-home", "user-bookmarks": "user-bookmarks", "folder-bookmark": "user-bookmarks",
+    "folder-documents": "text-x-generic", "folder-download": "arrow-down-circle", "folder-music": "note",
+    "folder-pictures": "photo", "folder-images": "photo", "folder-videos": "film",
+    "folder-projects": "text-x-script", "folder-publicshare": "people", "folder-public": "people",
+    "folder-remote": "network-workgroup", "folder-templates": "edit-copy", "user-desktop": "desktop",
+    "user-home": "house", "user-bookmarks": "user-bookmarks", "folder-bookmark": "user-bookmarks",
     "folder-cloud": "cloud", "folder-code": "code", "folder-development": "code", "folder-database": "database",
     "folder-locked": "system-lock-screen", "folder-encrypted": "system-lock-screen",
     "folder-unlocked": "lock-open", "folder-decrypted": "lock-open", "folder-git": "branch", "folder-mail": "mail",
@@ -327,9 +333,9 @@ def grad(id_, a, b, x2=0):
 
 
 def emboss(d, x, y, k, color, alpha):
-    common = f'fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="{d}"'
+    common = f'fill="none" stroke-width="{1.9 / k:.3g}" stroke-linecap="round" stroke-linejoin="round" d="{d}"'
     return (f'<g transform="translate({x} {y}) scale({k})">'
-            f'<path stroke="#ffffff" stroke-opacity=".45" transform="translate(0 .5)" {common}/>'
+            f'<path stroke="#ffffff" stroke-opacity=".45" transform="translate(0 {.7 / k:.3g})" {common}/>'
             f'<path stroke="{color}" stroke-opacity="{alpha}" {common}/></g>')
 
 
@@ -348,7 +354,7 @@ def folder(fig, p):
     d = "M5 23a4 4 0 0 1 4-4h46a4 4 0 0 1 4 4v25a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"
     front = (f'<path fill="url(#front)" d="{d}"/><path fill="url(#edge)" d="{d}"/>'
              f'<path d="M8.6 19.6h46.8" stroke="#ffffff" stroke-opacity="{p["hi"]}" stroke-width=".9" stroke-linecap="round"/>')
-    return svg(back + front + (emboss(G(fig), 22, 25.5, 1.25, p["glyph"], .75) if fig else ""), defs)
+    return svg(back + front + (emboss(G(fig), 18, 21.5, 1.75, p["glyph"], .9) if fig else ""), defs)
 
 
 PAGE = "M14 4h23l13 13v41a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"
