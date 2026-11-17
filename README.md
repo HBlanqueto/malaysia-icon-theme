@@ -27,7 +27,7 @@ src/
 ├── figures/             stroke figures of the folders, file types and devices
 ├── apps/               app icons copied from the Malaysia desktop
 └── symbolic/            Adwaita's symbolic sheets (core.svg)
-docs/                    symbols.md and the icon map
+docs/                    the icon map
 tools/                   importers and generators
 .github/workflows/       CI
 ```
@@ -56,22 +56,20 @@ names MacTahoe does not have keep Malaysia's sources.
 2. `tools/symbols/export.py` turns the remaining sources in `src/malaysia-symbolic`, drawn
    with strokes on a 16 px grid, into filled outlines in `Malaysia/symbolic`. GTK forces
    `fill` on every `path`, `rect` and `circle` of a symbolic icon and ignores `stroke`.
-3. `tools/symbols/export_desktop.py <malaysia> <barrierkit>` writes the theme's drawing of
-   each desktop symbol into the code: the `Symbol` enum in barrierkit
-   (`crates/bk/src/symbol.rs`), the menu bar icons in malaysia-shell (`src/menubar/icons.rs`)
-   and the Wi-Fi signal bands, so the desktop and GTK and Qt apps look the same.
-   `docs/symbols.md` lists every desktop symbol with its name in the theme.
 
 ```sh
 pip install -r tools/requirements.txt
 python3 tools/symbols/import_mactahoe.py <MacTahoe-icon-theme>      # MacTahoe → Malaysia/symbolic
 python3 tools/symbols/export.py                                     # src/malaysia-symbolic → Malaysia/symbolic
 python3 tools/symbols/export.py --check                             # fails if an export is out of date
-python3 tools/symbols/export_desktop.py <malaysia> <barrierkit>     # Malaysia/symbolic → desktop code
 ```
 
 Do not edit an exported file or a copied MacTahoe icon. Edit a source in
-`src/malaysia-symbolic/` and run `export.py`, then `export_desktop.py` if the desktop uses it.
+`src/malaysia-symbolic/` and run `export.py`.
+
+The desktop does not use these symbols. Its own symbols follow macOS and live in its code:
+the `Symbol` enum in barrierkit (`crates/bk/src/symbol.rs`), the menu bar icons in
+malaysia-shell (`src/menubar/icons.rs`) and the Wi-Fi signal bands.
 
 ## Folders and file types
 

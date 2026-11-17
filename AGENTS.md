@@ -63,9 +63,9 @@ a la sesión.
 | `tools/color/thirdparty.py` | placa para el ícono propio de cada app, desde su SVG (matiz por lóbulos); salida en un tema del usuario, nunca en el repo | sí |
 | `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
 | `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
-| `tools/symbols/` | importador de MacTahoe, exportador y exportador al código del escritorio | sí |
+| `tools/symbols/` | importador de MacTahoe y exportador | sí |
 | `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`; dispositivos en `devices.py`); copia `src/apps/` | sí |
-| `docs/` | `symbols.md` y mapa de íconos (generados) | no: se regeneran |
+| `docs/` | mapa de íconos (generado) | no: se regenera |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
 
 ## Flujo de trabajo
@@ -114,11 +114,10 @@ a la sesión.
    modo de color.
 7. **No vuelvas a añadir** `16x16/`, `symbolic/legacy` ni `symbolic/emotes`:
    se resuelven por la herencia de Adwaita.
-8. **Repos hermanos:** el escritorio dibuja lo que dibuja el tema. Tras
-   cambiar un símbolo que usa el escritorio (`docs/symbols.md`), corre
-   `tools/symbols/export_desktop.py <malaysia> <barrierkit>`, que reescribe
-   `Symbol::path` en barrierkit, `menubar/icons.rs` y las bandas del Wi-Fi en
-   malaysia, y súbelos con sus reglas.
+8. **Repos hermanos:** el escritorio no usa los símbolos del tema. Los suyos
+   (`Symbol::path` en barrierkit, `menubar/icons.rs` y las bandas del Wi-Fi en
+   malaysia) siguen a macOS, por decisión del usuario, y se editan allí; no
+   copies dibujos de MacTahoe al escritorio.
 
 ## Regla de entorno
 
