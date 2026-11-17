@@ -60,18 +60,24 @@ DEFS = (
     '<stop offset="0" stop-color="#3fa95c"/><stop offset=".5" stop-color="#23803f"/><stop offset="1" stop-color="#15582b"/></linearGradient>'
     # frosted plastic bin
     '<linearGradient id="bin" x1="0" y1="0" x2="0" y2="1">'
-    '<stop offset="0" stop-color="#ffffff" stop-opacity=".66"/><stop offset="1" stop-color="#e2e4e8" stop-opacity=".8"/></linearGradient>'
+    '<stop offset="0" stop-color="#868686" stop-opacity=".62"/><stop offset=".5" stop-color="#9c9c9c" stop-opacity=".68"/>'
+    '<stop offset="1" stop-color="#dedede" stop-opacity=".85"/></linearGradient>'
     '<linearGradient id="bin-dark" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#6b6e74" stop-opacity=".8"/><stop offset="1" stop-color="#36383d" stop-opacity=".88"/></linearGradient>'
+    '<linearGradient id="bin-full" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#a3a4a4"/><stop offset=".4" stop-color="#adaeae"/><stop offset=".7" stop-color="#c9cbcb"/>'
+    '<stop offset="1" stop-color="#dadedd"/></linearGradient>'
+    '<linearGradient id="bin-full-dark" x1="0" y1="0" x2="0" y2="1">'
+    '<stop offset="0" stop-color="#5a5a5a"/><stop offset="1" stop-color="#505050"/></linearGradient>'
+    '<linearGradient id="bin-edge" x1="0" y1="0" x2="1" y2="0">'
+    '<stop offset="0" stop-color="#ffffff" stop-opacity=".22"/><stop offset=".12" stop-color="#ffffff" stop-opacity="0"/>'
+    '<stop offset=".88" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#ffffff" stop-opacity=".22"/></linearGradient>'
     '<linearGradient id="bin-inside" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#8a9099" stop-opacity=".5"/><stop offset=".4" stop-color="#ffffff" stop-opacity=".22"/>'
     '<stop offset="1" stop-color="#ffffff" stop-opacity=".6"/></linearGradient>'
     '<linearGradient id="bin-inside-dark" x1="0" y1="0" x2="0" y2="1">'
     '<stop offset="0" stop-color="#000000" stop-opacity=".4"/><stop offset=".4" stop-color="#8a8e95" stop-opacity=".18"/>'
     '<stop offset="1" stop-color="#b4b8be" stop-opacity=".42"/></linearGradient>'
-    '<linearGradient id="frost" x1="0" y1="0" x2="1" y2="0">'
-    '<stop offset=".08" stop-color="#ffffff" stop-opacity="0"/><stop offset=".2" stop-color="#ffffff" stop-opacity=".55"/>'
-    '<stop offset=".32" stop-color="#ffffff" stop-opacity="0"/></linearGradient>'
     '<linearGradient id="crumple" x1="0" y1="0" x2="1" y2="1">'
     '<stop offset="0" stop-color="#ffffff" stop-opacity=".35"/><stop offset=".55" stop-color="#ffffff" stop-opacity="0"/>'
     '<stop offset="1" stop-color="#000000" stop-opacity=".22"/></linearGradient>'
@@ -613,29 +619,28 @@ def crumple(cx, cy, rx, ry, seed, prints=()):
             f'<path d="{d}" fill="none" stroke="#8a8f98" stroke-opacity=".4" stroke-width=".35" stroke-linejoin="round"/>')
 
 
-SCRAPS = (  # x, y, rx, ry, angle, color: the bin's contents, seen blurred through the frosted wall
-    (15, 20, 4, 2.4, 20, "#ffffff"), (23, 22, 3, 2, -30, "#4fb4ff"), (31, 20, 4.4, 2.6, 10, "#ffffff"),
-    (40, 21, 3, 2.2, 40, "#ff8a3d"), (48, 20, 3.4, 2, -15, "#e8eaee"), (18, 28, 2.6, 1.8, 60, "#5fcf7f"),
-    (27, 29, 4.6, 2.8, -20, "#ffffff"), (37, 28, 3, 2, 15, "#c9ccd2"), (46, 29, 3.4, 2.2, -40, "#ffffff"),
-    (16, 36, 3.2, 2.2, 0, "#ffd34d"), (24, 37, 3, 2, 35, "#ffffff"), (33, 36, 4, 2.4, -10, "#7f9dff"),
-    (43, 37, 3.4, 2.2, 25, "#ffffff"), (50, 35, 2, 1.6, 0, "#ff6b5b"), (19, 44, 4, 2.6, -25, "#ffffff"),
-    (28, 45, 3, 2, 15, "#ff8a3d"), (37, 45, 4.2, 2.4, 5, "#e8eaee"), (46, 44, 2.8, 2, -30, "#5fcf7f"),
-    (22, 51, 3.6, 2.2, 10, "#ffe27a"), (31, 52, 4.4, 2.4, -5, "#ffffff"), (41, 52, 3.4, 2.2, 20, "#c9ccd2"),
-    (27, 56, 3, 1.8, 0, "#4fb4ff"), (37, 57, 3, 1.8, 0, "#ffffff"),
+SCRAPS = (  # x, y, rx, ry, angle, color: paper filling the bin, seen as faint shadows through the frosted wall
+    (15, 20, 4, 2.4, 20, "#ffffff"), (23, 22, 3, 2, -30, "#8f9296"), (31, 20, 4.4, 2.6, 10, "#ffffff"),
+    (40, 21, 3, 2.2, 40, "#8f9296"), (48, 20, 3.4, 2, -15, "#8f9296"), (18, 28, 2.6, 1.8, 60, "#8f9296"),
+    (27, 29, 4.6, 2.8, -20, "#ffffff"), (37, 28, 3, 2, 15, "#8f9296"), (46, 29, 3.4, 2.2, -40, "#ffffff"),
+    (16, 36, 3.2, 2.2, 0, "#8f9296"), (24, 37, 3, 2, 35, "#ffffff"), (33, 36, 4, 2.4, -10, "#8f9296"),
+    (43, 37, 3.4, 2.2, 25, "#ffffff"), (50, 35, 2, 1.6, 0, "#8f9296"), (19, 44, 4, 2.6, -25, "#ffffff"),
+    (28, 45, 3, 2, 15, "#8f9296"), (37, 45, 4.2, 2.4, 5, "#8f9296"), (46, 44, 2.8, 2, -30, "#8f9296"),
+    (22, 51, 3.6, 2.2, 10, "#8f9296"), (31, 52, 4.4, 2.4, -5, "#ffffff"), (41, 52, 3.4, 2.2, 20, "#8f9296"),
+    (27, 56, 3, 1.8, 0, "#8f9296"), (37, 57, 3, 1.8, 0, "#ffffff"),
 )
 
 
 def trash_contents():
     scraps = "".join(f'<ellipse cx="{x}" cy="{y}" rx="{rx}" ry="{ry}" transform="rotate({a} {x} {y})" fill="{c}"/>'
                      for x, y, rx, ry, a, c in SCRAPS)
-    curl = ('<path d="M47.6 6c3.4-1.4 6.8.4 6.8 3.4 0 2.4-2 3.8-4 3.4-1.8-.4-2.4-2.4-1.2-3.4" fill="#f4f5f7" '
-            'stroke="#a9aeb6" stroke-width=".5"/><path d="M50 7.8c1.6-.6 3 .2 3 1.6" fill="none" stroke="#c9ccd2" stroke-width=".6"/>')
-    return (f'<g clip-path="url(#bin-clip)"><g filter="url(#haze)" opacity=".45">{scraps}</g></g>'
-            + '<g transform="translate(32 15) scale(.78) translate(-32 -15)">'
-            + crumple(17, 9.4, 10, 7.4, 1) + crumple(46.4, 9, 9.4, 7.4, 2)
-            + crumple(27.4, 9.6, 8.4, 6.8, 3, ("#e9f6ff", "#43c0ff", "#2b9bef", "#6fd08c", "#3fb35f"))
-            + crumple(38.4, 8.6, 8, 7.2, 4, ("#fff1e6", "#ff8a3d", "#e2532f", "#3c63c9", "#2d3b5c"))
-            + crumple(32, 13, 7.4, 4.2, 5) + curl + '</g>')
+    return (f'<g clip-path="url(#bin-clip)"><g filter="url(#haze)" opacity=".22">{scraps}</g></g>'
+            + '<g transform="translate(0 13) scale(1 .72) translate(0 -13)">'
+            + crumple(15, 9.4, 8.6, 7, 1, ("#b9bcc1", "#8d9096", "#e4e6e9"))
+            + crumple(48.6, 9.2, 8.4, 7, 2, ("#9cc8ff", "#4a8ff0", "#2f6fd0"))
+            + crumple(24.4, 10, 6.4, 5.6, 6, ("#f4d23c", "#2b2b2b", "#f8e27a"))
+            + crumple(36, 9, 9.4, 7.2, 3, ("#ff9ec4", "#ff6fa0", "#ff9a3c", "#9be36b", "#4ea8ff"))
+            + crumple(32, 13, 7.4, 4.2, 5) + '</g>')
 
 
 def trash(full=False, dark=False):
@@ -645,7 +650,7 @@ def trash(full=False, dark=False):
     body = rim + "L51.51 55.5Q51 60 46.5 60H17.5Q13 60 12.49 55.5z"
     mouth = "M11.2 8H52.8A3.7 3.7 0 0 1 52.8 15.4H11.2A3.7 3.7 0 0 1 11.2 8z"
     return (f'<clipPath id="bin-clip"><path d="{body}"/></clipPath><path d="{mouth}" fill="url(#bin-inside{k})"/>' + (trash_contents() if full else "")
-            + f'<path d="{body}" fill="url(#bin{k})"/><path d="{body}" fill="url(#side)"/><path d="{body}" fill="url(#frost)" opacity="{.35 if dark else 1}"/>'
+            + f'<path d="{body}" fill="url(#bin{"-full" if full else ""}{k})"/>' + ("" if dark else f'<path d="{body}" fill="url(#bin-edge)"/>')
             + f'<path d="{rim}" fill="none" stroke="#ffffff" stroke-opacity="{.4 if dark else .95}" stroke-width="1"/>'
             + ("" if full else f'<path d="{mouth}" fill="none" stroke="#ffffff" stroke-opacity="{.3 if dark else .8}" stroke-width=".8"/>')
             + '<path d="M12.6 56.5Q13.2 60 17.5 60H46.5Q50.8 60 51.4 56.5" fill="none" stroke="#000000" stroke-opacity=".1" stroke-width="1"/>')
