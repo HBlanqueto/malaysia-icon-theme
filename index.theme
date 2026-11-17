@@ -21,7 +21,7 @@ PanelDefault=32
 PanelSizes=16,22,32,48,64,72,96,128
 
 # Directory list
-Directories=scalable/apps,scalable/devices,scalable/mimetypes,scalable/places,scalable/status,symbolic/actions,symbolic/apps,symbolic/categories,symbolic/devices,symbolic/mimetypes,symbolic/places,symbolic/status,symbolic/ui
+Directories=scalable/apps,scalable/devices,scalable/mimetypes,scalable/places,scalable/status,symbolic/actions,symbolic/apps,symbolic/categories,symbolic/devices,symbolic/emblems,symbolic/mimetypes,symbolic/places,symbolic/status,symbolic/ui
 
 [scalable/apps]
 Context=Applications
@@ -81,6 +81,13 @@ Type=Scalable
 
 [symbolic/devices]
 Context=Devices
+Size=16
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[symbolic/emblems]
+Context=Emblems
 Size=16
 MinSize=8
 MaxSize=512

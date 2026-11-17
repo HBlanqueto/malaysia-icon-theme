@@ -16,3 +16,8 @@ above.
 
 The symbol sources in src/malaysia-symbolic, the app icons in src/apps, and the icons made from them, come from
 the Malaysia desktop and barrierkit, which are under the MIT License (see COPYING_MIT).
+
+The symbolic icons in Malaysia/symbolic that come from MacTahoe-icon-theme
+(https://github.com/vinceliuice/MacTahoe-icon-theme), by vinceliuice, are under the
+GNU General Public License v3 (see COPYING_GPL3). They are every symbolic icon that has no
+source in src/malaysia-symbolic and is not one of the five Adwaita symbols in src/symbolic.

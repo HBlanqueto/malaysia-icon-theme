@@ -10,6 +10,7 @@ pkg.generate(
 licenses_dir = get_option('datadir') / 'licenses' / 'malaysia-icon-theme'
 install_data('COPYING', install_dir : licenses_dir, install_tag : 'runtime')
 install_data('COPYING_CCBYSA3', install_dir : licenses_dir, install_tag : 'runtime')
+install_data('COPYING_GPL3', install_dir : licenses_dir, install_tag : 'runtime')
 install_data('COPYING_LGPL', install_dir : licenses_dir, install_tag : 'runtime')
 install_data('COPYING_MIT', install_dir : licenses_dir, install_tag : 'runtime')
 

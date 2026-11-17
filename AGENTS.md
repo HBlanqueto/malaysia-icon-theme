@@ -53,16 +53,17 @@ a la sesión.
 | Ruta | Qué es | ¿Se edita a mano? |
 |---|---|---|
 | `index.theme` | tema `Malaysia` | sí |
-| `Malaysia/symbolic/` | símbolos exportados | solo los que no tienen fuente en `src/malaysia-symbolic/` (heredados de Adwaita) |
+| `Malaysia/symbolic/` | símbolos: copias de MacTahoe y exportados de `src/malaysia-symbolic/` | no: `tools/symbols/import_mactahoe.py` y `tools/symbols/export.py` |
 | `Malaysia/scalable/{apps,devices,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
 | `Malaysia-Dark/` | tema hijo con carpetas, papelera e íconos del escritorio con el cuerpo en grafito | no: `tools/color/build.py` |
-| `src/malaysia-symbolic/<contexto>/` | fuentes de los símbolos, con trazo | sí |
+| `src/malaysia-symbolic/<contexto>/` | fuentes con trazo de los símbolos que MacTahoe no tiene y de la batería | sí |
+| `src/figures/<contexto>/` | figuras con trazo de carpetas, tipos de archivo y dispositivos cuyo nombre ya dibuja MacTahoe | sí |
 | `src/apps/` | íconos de app copiados tal cual del escritorio (`malaysia/share/icons/hicolor`) | solo para volver a copiarlos |
 | `tools/color/appicons.py` | placa de las seis apariencias y borde de luz detrás del ícono de una app | sí |
 | `tools/color/thirdparty.py` | placa para el ícono propio de cada app, desde su SVG (matiz por lóbulos); salida en un tema del usuario, nunca en el repo | sí |
 | `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
 | `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
-| `tools/symbols/` | importador desde el código del escritorio y exportador | sí |
+| `tools/symbols/` | importador de MacTahoe, exportador y exportador al código del escritorio | sí |
 | `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`; dispositivos en `devices.py`); copia `src/apps/` | sí |
 | `docs/` | `symbols.md` y mapa de íconos (generados) | no: se regeneran |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
@@ -70,7 +71,7 @@ a la sesión.
 ## Flujo de trabajo
 
 1. `pip install -r tools/requirements.txt` (picosvg, skia-pathops, resvg-py y pillow).
-2. Edita la fuente: un símbolo en `src/malaysia-symbolic/`, un dispositivo en
+2. Edita la fuente: un símbolo propio en `src/malaysia-symbolic/`, un dispositivo en
    `tools/color/devices.py`, o una fila de `FOLDERS` o `MIMETYPES` en
    `tools/color/build.py`.
 3. Genera: `python3 tools/symbols/export.py` y `python3 tools/color/build.py`.
@@ -92,10 +93,14 @@ a la sesión.
    un nombre que Adwaita ya use). Si no coincide, el nombre del objeto dibujado
    (`bed-symbolic`, `bolt-symbolic`); nunca cambies el significado de un nombre
    existente.
-2. **Símbolos exportados:** solo `<path>` con `fill="#2e3436"` y, si hace falta,
-   `opacity`. Sin `stroke`: GTK fuerza `fill` en `path`, `rect` y `circle` e
-   ignora el trazo. Para mantener un color usa `class="warning|error|success"`.
-3. **Fuentes de símbolos:** rejilla de 16, trazo de
+2. **Símbolos:** los de MacTahoe se copian tal cual con
+   `tools/symbols/import_mactahoe.py <MacTahoe>`; no se editan. La familia
+   `battery-*` es nuestra (la batería de iOS 27 en la caja de la de MacTahoe).
+   Los exportados de fuentes propias llevan solo `<path>` con `fill="#2e3436"` y,
+   si hace falta, `opacity`. Sin `stroke`: GTK fuerza `fill` en `path`, `rect` y
+   `circle` e ignora el trazo. Para mantener un color usa
+   `class="warning|error|success"`.
+3. **Fuentes propias de símbolos:** rejilla de 16, trazo de
    `components.symbol.stroke` de barrierkit (hoy 1.4), extremos y uniones
    redondos.
 4. **Íconos a color:** nada de `<text>`, porque depende de las fuentes
@@ -109,10 +114,11 @@ a la sesión.
    modo de color.
 7. **No vuelvas a añadir** `16x16/`, `symbolic/legacy` ni `symbolic/emotes`:
    se resuelven por la herencia de Adwaita.
-8. **Repos hermanos:** si cambias el nombre de un símbolo que viene del
-   escritorio, regenera `docs/symbols.md` con
-   `tools/symbols/import_desktop.py <malaysia> <barrierkit>` y avisa: barrierkit
-   (`Symbol::icon_name`) y malaysia deben usar el mismo nombre.
+8. **Repos hermanos:** el escritorio dibuja lo que dibuja el tema. Tras
+   cambiar un símbolo que usa el escritorio (`docs/symbols.md`), corre
+   `tools/symbols/export_desktop.py <malaysia> <barrierkit>`, que reescribe
+   `Symbol::path` en barrierkit, `menubar/icons.rs` y las bandas del Wi-Fi en
+   malaysia, y súbelos con sus reglas.
 
 ## Regla de entorno
 
@@ -125,8 +131,10 @@ propio `AGENTS.md`.
 
 El arte heredado de Adwaita es LGPL v3 o CC BY-SA 3.0 (`COPYING`); conserva el
 crédito a GNOME en `README.md` y `AUTHORS`. Si copias arte o código de un
-tercero, añade su licencia y crédito en el mismo commit. No copies íconos de
-Apple: macOS es referencia de dirección visual, nada más.
+tercero, añade su licencia y crédito en el mismo commit. Los símbolos vienen de
+MacTahoe-icon-theme (GPL-3, `COPYING_GPL3`), por decisión del usuario; conserva
+su crédito en `README.md`, `AUTHORS` y `COPYING`. No copies arte extraído de
+macOS: el resto de macOS es referencia de dirección visual, nada más.
 
 ## Documentación (solo inglés)
 
@@ -177,8 +185,8 @@ Se cumplen al pie de la letra. Ganan el diff más corto y la respuesta más cort
 ### Así se aplica en malaysia-icon-theme
 
 ```text
-✗ editar Malaysia/symbolic/actions/go-next-symbolic.svg a mano
-✓ editar src/malaysia-symbolic/actions/go-next-symbolic.svg y correr tools/symbols/export.py
+✗ editar Malaysia/symbolic/actions/window-tile-left-symbolic.svg a mano
+✓ editar src/malaysia-symbolic/actions/window-tile-left-symbolic.svg y correr tools/symbols/export.py
 ```
 
 ```python

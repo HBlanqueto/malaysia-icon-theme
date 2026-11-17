@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate the full-color icons: places (folders), file types and devices.
 
-Figures come from the symbolic sources (src/malaysia-symbolic), so a new folder or file type
+Figures come from the stroke sources (src/figures, then src/malaysia-symbolic), so a new folder or file type
 needs no drawing of its own: add a row to FOLDERS or MIMETYPES. App icons are the desktop's
 own files, copied unchanged from src/apps.
 
@@ -17,20 +17,20 @@ import argparse, colorsys, json, os, re, sys
 import appicons, devices
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SYM = os.path.join(ROOT, "src", "malaysia-symbolic")
+SYM = [os.path.join(ROOT, "src", d) for d in ("figures", "malaysia-symbolic")]
 APP_ART = os.path.join(ROOT, "src", "apps")  # app icons drawn by the desktop, installed as they are
 
 
 def glyph(name):
     """`d` of a symbolic source that has a single path."""
-    for ctx in os.listdir(SYM):
-        p = os.path.join(SYM, ctx, f"{name}-symbolic.svg")
+    for base, ctx in ((base, ctx) for base in SYM for ctx in os.listdir(base)):
+        p = os.path.join(base, ctx, f"{name}-symbolic.svg")
         if os.path.exists(p):
             ds = re.findall(r' d="([^"]+)"', open(p, encoding="utf-8").read())
             if len(ds) != 1:
                 sys.exit(f"{name}-symbolic has {len(ds)} paths; add a single stroke to EXTRA instead")
             return ds[0]
-    sys.exit(f"src/malaysia-symbolic/*/{name}-symbolic.svg does not exist")
+    sys.exit(f"src/figures/*/{name}-symbolic.svg does not exist")
 
 
 # Strokes on the 16 px grid that are not theme symbols yet.

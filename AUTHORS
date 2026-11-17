@@ -6,8 +6,16 @@ app icons)
 ----------------------------------------------------------------------------------------
 HBlanqueto
 
-The symbols in src/malaysia-symbolic come from the Malaysia desktop
-(github.com/HBlanqueto/malaysia) and its toolkit (github.com/HBlanqueto/barrierkit).
+The symbols in src/malaysia-symbolic and the figures in src/figures come from the Malaysia
+desktop (github.com/HBlanqueto/malaysia) and its toolkit (github.com/HBlanqueto/barrierkit).
+
+MacTahoe
+========
+
+Symbolic icons in Malaysia/symbolic, from MacTahoe-icon-theme
+(github.com/vinceliuice/MacTahoe-icon-theme)
+-------------------------------------------------------------
+vinceliuice
 
 Adwaita
 =======
