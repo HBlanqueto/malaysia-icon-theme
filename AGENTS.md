@@ -55,7 +55,7 @@ a la sesión.
 | `index.theme` | tema `Malaysia` | sí |
 | `Malaysia/symbolic/` | símbolos: copias de MacTahoe y exportados de `src/malaysia-symbolic/` | no: `tools/symbols/import_mactahoe.py` y `tools/symbols/export.py` |
 | `Malaysia/scalable/{apps,devices,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
-| `Malaysia-Dark/` | tema hijo con carpetas, papelera e íconos del escritorio con el cuerpo en grafito | no: `tools/color/build.py` |
+| `Malaysia-Dark/` | tema hijo con carpetas y papelera en grafito | no: `tools/color/build.py` |
 | `src/malaysia-symbolic/<contexto>/` | fuentes con trazo de los símbolos que MacTahoe no tiene y de la batería | sí |
 | `src/figures/<contexto>/` | figuras con trazo de carpetas, tipos de archivo y dispositivos cuyo nombre ya dibuja MacTahoe | sí |
 | `src/apps/` | íconos de app copiados tal cual del escritorio (`malaysia/share/icons/hicolor`) | solo para volver a copiarlos |
@@ -64,7 +64,7 @@ a la sesión.
 | `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
 | `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
 | `tools/symbols/` | importador de MacTahoe y exportador | sí |
-| `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`; dispositivos en `devices.py`); copia `src/apps/` | sí |
+| `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`; dispositivos en `devices.py`); copia `src/apps/` tal cual | sí |
 | `docs/` | mapa de íconos (generado) | no: se regenera |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
 
@@ -106,9 +106,10 @@ a la sesión.
 4. **Íconos a color:** nada de `<text>`, porque depende de las fuentes
    instaladas. Las letras de las etiquetas son trazos (`LETTERS`).
 5. **Íconos de app:** los del escritorio se copian tal cual de
-   `malaysia/share/icons/hicolor` a `src/apps/`; el tema no los redibuja. Solo
-   `build.py` les añade el borde de cristal (`glass_edge`) y cambia los degradados
-   `body`, `ring` y `well` para `Malaysia-Dark` (`DARK_APP`), sin tocar el resto.
+   `malaysia/share/icons/hicolor` a `src/apps/`; el tema no los redibuja. Son solo
+   el logo, sin placa: la placa de las seis apariencias la dibuja el shell (el kit,
+   `Image::app_icon`) y, en temas estáticos, `tools/color/thirdparty.py`. Un ícono con
+   su propio cuerpo no se tiñe ni se oscurece: no le pongas cuerpo, borde ni sombra.
 6. **Variantes** como temas aparte que heredan de `Malaysia`
    (`Malaysia-Dark`, el tintado de `--tint`). Un tema no cambia solo con el
    modo de color.

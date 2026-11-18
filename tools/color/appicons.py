@@ -1,4 +1,4 @@
-"""The plate behind an app's own icon: the squircle of the Settings icon and a light rim.
+"""The plate behind an app's own icon: a squircle and a light rim.
 
 Six appearances, measured on the macOS icon grid:
   light        a plate in the hue of the app's icon

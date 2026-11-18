@@ -21,7 +21,7 @@ be installed next to this one.
 Malaysia/                the Malaysia theme
 ├── scalable/            full-color SVG: apps, devices, mimetypes, places, status
 └── symbolic/            recolorable SVG: actions, apps, categories, devices, emblems, mimetypes, places, status, ui
-Malaysia-Dark/           child theme with the dark folders, trash and desktop app icons (generated)
+Malaysia-Dark/           child theme with the dark folders and trash (generated)
 src/
 ├── malaysia-symbolic/   stroke sources of the symbols MacTahoe does not have, and of the battery
 ├── figures/             stroke figures of the folders, file types and devices
@@ -143,20 +143,17 @@ drawing or logo.
 ## App icons
 
 The desktop's own apps, Settings (`io.github.hblanqueto.malaysia.settings`) and Screenshot
-(`io.github.hblanqueto.malaysia.screenshot`), keep the icons the desktop draws.
+(`io.github.hblanqueto.malaysia.screenshot`), keep the logos the desktop draws: the logo alone,
+with no plate. The shell puts every app icon on its plate, in the user's appearance.
 
 1. `src/apps/` holds an unchanged copy of each file in malaysia's
    `share/icons/hicolor/scalable/apps`.
 2. `tools/color/build.py` installs them in `Malaysia/scalable/apps`. That directory is
    searched before `hicolor`, so the theme shows them even where malaysia is not installed.
 3. To update an icon, copy the file again from malaysia and run `tools/color/build.py`.
-4. `tools/color/build.py` adds the edge every plate has (`glass_edge`): a white light along the
-   top and the bottom that turns each corner and ends in a point down the side. It also writes
-   each one in `Malaysia-Dark/scalable/apps` with the dark grey body of the macOS 27 icons (`DARK_APP`); the art stays. The shell looks in `Malaysia-Dark` first when the scheme is
-   dark or the icon style is clear, and the live icon style derives the rest from either.
 
-Every other app keeps its own icon. The theme draws no icon for it; it can give that icon a plate
-behind it, in the six appearances of macOS:
+Every app keeps its own logo. The theme draws no plate for it; it can write one behind each icon of
+a directory, desktop apps included, in the six appearances of macOS:
 
 | Appearance | Parent theme | Plate | The app's icon |
 |---|---|---|---|

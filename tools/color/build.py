@@ -14,7 +14,7 @@ Usage:
 """
 import argparse, colorsys, json, os, re, sys
 
-import appicons, devices
+import devices
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SYM = [os.path.join(ROOT, "src", d) for d in ("figures", "malaysia-symbolic")]
@@ -284,26 +284,6 @@ def shade(hex_, pct):
     return "#" + "".join(f"{ch(v):02x}" for v in (r, g, b))
 
 
-# (top, bottom) lightness of the gradients a desktop icon swaps in Malaysia-Dark: a graphite body, a darker well
-DARK_APP = {"body": (.313, .191), "ring": (.78, .7), "well": (.26, .2)}
-
-
-def dark_app(svg_):
-    """The desktop's own icon with its body in graphite; its art stays."""
-    for id_, (top, bottom) in DARK_APP.items():
-        stops = "".join(f'<stop offset="{at}" stop-color="{appicons.oklch(lightness, 0, 0)}"/>'
-                        for at, lightness in ((0, top), (1, bottom)))
-        svg_ = re.sub(rf'(<linearGradient id="{id_}"[^>]*>).*?(</linearGradient>)',
-                      lambda m: m[1] + stops + m[2], svg_, flags=re.S)
-    return svg_
-
-
-def glass_edge(svg_, appearance):
-    """The edge every plate has, on the desktop's own icon."""
-    defs, shape = appicons.edge(appicons.colors(appearance, 0, 0, None)["light"])
-    return svg_.replace("</defs>", defs + "</defs>", 1).replace("</svg>", shape + "\n</svg>", 1)
-
-
 # Written to Malaysia/folder-palette.json with the folder icons: the desktop tints them with the same numbers.
 # tinted: [HLS lightness, share of the tint's saturation], with the tint's hue.
 FOLDER_PALETTE = {
@@ -426,13 +406,11 @@ def files(variant, tint=None):
     if variant == "dark":
         for name, svg_ in devices.trash_icons(dark=True).items():
             out[f"scalable/places/{name}.svg"] = svg_
-        for f in sorted(os.listdir(APP_ART)):
-            out[f"scalable/apps/{f}"] = glass_edge(dark_app(open(os.path.join(APP_ART, f), encoding="utf-8").read()), "dark")
     if variant == "light":
         icons = [*out, "scalable/status/folder-open.svg"]
         out["folder-palette.json"] = json.dumps(dict(icons=icons, **FOLDER_PALETTE), indent=1) + "\n"
         for f in sorted(os.listdir(APP_ART)):
-            out[f"scalable/apps/{f}"] = glass_edge(open(os.path.join(APP_ART, f), encoding="utf-8").read(), "light")
+            out[f"scalable/apps/{f}"] = open(os.path.join(APP_ART, f), encoding="utf-8").read()
         for name, svg_ in devices.icons(G, label).items():
             out[f"scalable/devices/{name}.svg"] = svg_
         for name, (fig, color, text, style) in MIMETYPES.items():
@@ -490,8 +468,7 @@ def main():
         return
     stale = sync(os.path.join(ROOT, "Malaysia"), files("light"), a.check)
     stale += sync(os.path.join(ROOT, "Malaysia-Dark"), files("dark"), a.check,
-                  theme_index("Malaysia-Dark", "Malaysia with dark folders, trash and desktop app icons",
-                              "Malaysia", APP_DIRS + VARIANT_DIRS))
+                  theme_index("Malaysia-Dark", "Malaysia with dark folders and trash", "Malaysia", VARIANT_DIRS))
     if a.check:
         sys.exit("out of date:\n  " + "\n  ".join(stale)) if stale else print("up to date")
     else:
