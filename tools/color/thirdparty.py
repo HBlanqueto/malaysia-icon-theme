@@ -25,6 +25,7 @@ BRIGHT_LOGO = .6
 LOGO_SIDE = .76 * 824  # of the 824 px body
 # logo is bright → (plate top, plate bottom, chroma factor, chroma cap) of a dark plate; otherwise a light one
 PLATES = {True: (.29, .2, .5, .11), False: (.92, .84, .3, .06)}
+SILVER = (.7, .52)  # the plate of a bright logo without a hue
 HEX = re.compile(r'(?<!url\()(?<!href=")#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})\b')
 ROOT = re.compile(r"<svg\b([^>]*)>", re.S)
 APPEARANCES = ("light", "dark", "clear", "clear-dark", "tinted", "tinted-dark")
@@ -78,6 +79,8 @@ def plate_lobe(colors):
 
 
 def logo_plate(lobe, bright):
+    if bright and not lobe:
+        return tuple(appicons.oklch(lightness, 0, 0) for lightness in SILVER)
     top, bottom, factor, cap = PLATES[bright]
     hue, chroma = (lobe.hue, min(lobe.chroma * factor, cap)) if lobe else (0, 0)
     return appicons.oklch(top, chroma, hue), appicons.oklch(bottom, chroma * .85, hue)

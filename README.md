@@ -175,8 +175,8 @@ python3 tools/color/thirdparty.py /usr/share/icons/hicolor/scalable/apps --appea
 
 1. The icon is drawn at 128 px and every opaque pixel goes to OKLCH.
 2. Hues with chroma form lobes. A bright icon (mean lightness 0.6 or more) takes the hue of its
-   darkest lobe with at least 15 % of the chroma; a dark icon takes the lightest. A gray icon
-   gets a gray plate.
+   darkest lobe with at least 15 % of the chroma; a dark icon takes the lightest. A bright gray icon
+   gets a silver plate.
 3. The icon is scaled to 76 % of the body, centered on what it draws, and cast a soft shadow.
 4. The clear and tinted appearances recolor the icon's `#rgb` and `#rrggbb` colors; other color
    syntaxes, PNG icons and embedded rasters are not recolored.
