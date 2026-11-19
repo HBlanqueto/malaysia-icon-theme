@@ -25,6 +25,9 @@ jobs:
           sudo apt-get install -y --no-install-recommends libgtk-3-bin ninja-build
           pip install meson -r tools/requirements.txt
 
+      - name: Battery percentages are generated
+        run: python3 tools/symbols/battery_percent.py --check
+
       - name: Symbols are exported
         run: python3 tools/symbols/export.py --check
 

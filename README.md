@@ -47,7 +47,9 @@ The symbolic icons are MacTahoe's
 ([MacTahoe-icon-theme](https://github.com/vinceliuice/MacTahoe-icon-theme), GPL-3), copied
 unchanged, so every name MacTahoe draws looks exactly as it does there. The battery family
 (`battery-*`) stays Malaysia's own, the iOS 27 battery, in MacTahoe's battery box. The
-names MacTahoe does not have keep Malaysia's sources.
+names MacTahoe does not have keep Malaysia's sources. `battery-percent-1-symbolic` to
+`battery-percent-100-symbolic` draw the same battery with the number knocked out of it, as on
+macOS 27; their digits are Inter's semibold digits.
 
 1. `tools/symbols/import_mactahoe.py <MacTahoe>` copies MacTahoe's symbolic icons and its
    aliases into `Malaysia/symbolic`, and removes every source in `src/malaysia-symbolic`
@@ -60,6 +62,7 @@ names MacTahoe does not have keep Malaysia's sources.
 ```sh
 pip install -r tools/requirements.txt
 python3 tools/symbols/import_mactahoe.py <MacTahoe-icon-theme>      # MacTahoe → Malaysia/symbolic
+python3 tools/symbols/battery_percent.py                            # battery-percent-1…100 sources
 python3 tools/symbols/export.py                                     # src/malaysia-symbolic → Malaysia/symbolic
 python3 tools/symbols/export.py --check                             # fails if an export is out of date
 ```
@@ -232,4 +235,5 @@ Same as Adwaita: GNU LGPL v3 or Creative Commons Attribution-Share Alike 3.0 (se
 The sources in `src/malaysia-symbolic` and `src/figures` and the app icons in `src/apps`
 also come under the MIT License of malaysia and barrierkit (`COPYING_MIT`). The symbolic
 icons copied from MacTahoe-icon-theme, by vinceliuice, are under the GNU GPL v3
-(`COPYING_GPL3`).
+(`COPYING_GPL3`). The digits of `battery-percent-*` come from Inter, by The Inter Project
+Authors, under the SIL Open Font License 1.1 (`COPYING_OFL`).

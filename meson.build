@@ -13,6 +13,7 @@ install_data('COPYING_CCBYSA3', install_dir : licenses_dir, install_tag : 'runti
 install_data('COPYING_GPL3', install_dir : licenses_dir, install_tag : 'runtime')
 install_data('COPYING_LGPL', install_dir : licenses_dir, install_tag : 'runtime')
 install_data('COPYING_MIT', install_dir : licenses_dir, install_tag : 'runtime')
+install_data('COPYING_OFL', install_dir : licenses_dir, install_tag : 'runtime')
 
 theme_dir = get_option('datadir') / 'icons' / 'Malaysia'
 install_data('index.theme', install_dir : theme_dir, install_tag : 'runtime')

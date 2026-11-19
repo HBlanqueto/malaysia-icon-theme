@@ -56,14 +56,14 @@ a la sesión.
 | `Malaysia/symbolic/` | símbolos: copias de MacTahoe y exportados de `src/malaysia-symbolic/` | no: `tools/symbols/import_mactahoe.py` y `tools/symbols/export.py` |
 | `Malaysia/scalable/{apps,devices,places,mimetypes}/` | íconos a color generados | no: `tools/color/build.py` |
 | `Malaysia-Dark/` | tema hijo con carpetas y papelera en grafito | no: `tools/color/build.py` |
-| `src/malaysia-symbolic/<contexto>/` | fuentes con trazo de los símbolos que MacTahoe no tiene y de la batería | sí |
+| `src/malaysia-symbolic/<contexto>/` | fuentes con trazo de los símbolos que MacTahoe no tiene y de la batería; `status/battery-percent-*` salen de `tools/symbols/battery_percent.py` | sí, salvo `battery-percent-*` |
 | `src/figures/<contexto>/` | figuras con trazo de carpetas, tipos de archivo y dispositivos cuyo nombre ya dibuja MacTahoe | sí |
 | `src/apps/` | íconos de app copiados tal cual del escritorio (`malaysia/share/icons/hicolor`) | solo para volver a copiarlos |
 | `tools/color/appicons.py` | placa de las seis apariencias y borde de luz detrás del ícono de una app | sí |
 | `tools/color/thirdparty.py` | placa para el ícono propio de cada app, desde su SVG (matiz por lóbulos); salida en un tema del usuario, nunca en el repo | sí |
 | `tools/color/devices.py` | dispositivos, papelera, red e íconos de estado: materiales comunes y una función por objeto (`DEVICES`, `places()`, `status()`) | sí |
 | `src/symbolic/` | fuente de Adwaita de los 5 símbolos de marca que no se redibujan | solo para borrar |
-| `tools/symbols/` | importador de MacTahoe y exportador | sí |
+| `tools/symbols/` | importador de MacTahoe, exportador y generador de `battery-percent-*` | sí |
 | `tools/color/build.py` | carpetas, tipos de archivo y dispositivos (`FOLDERS`, `FOLDER_COLORS`, `MIMETYPES`, `CODE`; dispositivos en `devices.py`); copia `src/apps/` tal cual | sí |
 | `docs/` | mapa de íconos (generado) | no: se regenera |
 | `.github/workflows/check.yml` | CI: los mismos pasos de «Flujo de trabajo» en cada push a `master` | sí |
@@ -74,16 +74,18 @@ a la sesión.
 2. Edita la fuente: un símbolo propio en `src/malaysia-symbolic/`, un dispositivo en
    `tools/color/devices.py`, o una fila de `FOLDERS` o `MIMETYPES` en
    `tools/color/build.py`.
-3. Genera: `python3 tools/symbols/export.py` y `python3 tools/color/build.py`.
+3. Genera: `python3 tools/symbols/battery_percent.py`, `python3 tools/symbols/export.py` y
+   `python3 tools/color/build.py`.
 4. Comprueba antes de cada push, en este orden:
    ```sh
+   python3 tools/symbols/battery_percent.py --check
    python3 tools/symbols/export.py --check
    python3 tools/color/build.py --check
    python3 -m unittest discover -s tools/color
    meson setup /tmp/mit-build --prefix=/tmp/mit-prefix && meson install -C /tmp/mit-build
    python3 tools/build-icon-map.py
    ```
-   Los dos `--check` deben decir «up to date». La instalación debe crear
+   Los `--check` deben decir «up to date». La instalación debe crear
    `icon-theme.cache` en `Malaysia/` y `Malaysia-Dark/`.
 5. Sube el SVG generado en el mismo commit que su fuente.
 
@@ -132,7 +134,8 @@ propio `AGENTS.md`.
 El arte heredado de Adwaita es LGPL v3 o CC BY-SA 3.0 (`COPYING`); conserva el
 crédito a GNOME en `README.md` y `AUTHORS`. Si copias arte o código de un
 tercero, añade su licencia y crédito en el mismo commit. Los símbolos vienen de
-MacTahoe-icon-theme (GPL-3, `COPYING_GPL3`), por decisión del usuario; conserva
+MacTahoe-icon-theme (GPL-3, `COPYING_GPL3`), por decisión del usuario; los dígitos de
+`battery-percent-*` son de Inter (SIL OFL 1.1, `COPYING_OFL`). Conserva
 su crédito en `README.md`, `AUTHORS` y `COPYING`. No copies arte extraído de
 macOS: el resto de macOS es referencia de dirección visual, nada más.
 

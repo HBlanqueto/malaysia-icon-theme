@@ -21,3 +21,7 @@ The symbolic icons in Malaysia/symbolic that come from MacTahoe-icon-theme
 (https://github.com/vinceliuice/MacTahoe-icon-theme), by vinceliuice, are under the
 GNU General Public License v3 (see COPYING_GPL3). They are every symbolic icon that has no
 source in src/malaysia-symbolic and is not one of the five Adwaita symbols in src/symbolic.
+
+The digits in the battery-percent-* icons are the semibold digits 0 to 9 of Inter 5.0.8
+(https://github.com/rsms/inter), by The Inter Project Authors, under the SIL Open Font License 1.1
+(see COPYING_OFL).
