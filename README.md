@@ -15,6 +15,12 @@ An icon that is not in `Malaysia/` is looked up in Adwaita (and, through Adwaita
 AdwaitaLegacy) and then in hicolor. The `adwaita-icon-theme` package therefore has to
 be installed next to this one.
 
+## Scope
+
+This theme holds icons that apps, the shell and the desktop look up by name, the freedesktop way: applications, places and folders, MIME types, devices, and the `-symbolic` actions and status.
+
+It does not hold the interface glyphs that barrierkit draws inside its own controls. Those are `Symbol` paths in `crates/bk/src/symbol.rs` of [barrierkit](https://github.com/HBlanqueto/barrierkit), fitted to macOS 27 at 16 pt (its ADR 0081). A glyph moves here only when this theme lacks its freedesktop name.
+
 ## Layout
 
 ```
@@ -228,7 +234,19 @@ fill of every path and rectangle. Do not leave a path or rectangle without a fil
 stroke on the assumption that it is invisible. To keep part of an icon in color, set
 `class` on the shape or group to `warning`, `error` or `success`.
 
+## Contributing
+
+Every drawing is original to this project, or credited to a third party whose license is in the repository.
+
+1. Draw it yourself, or copy it from a work whose license allows it, and add that license and credit in the same commit.
+2. Add no file from Apple: no SF Symbols, no contents of `CoreGlyphs` or `CoreTypes`, no app or document icon, and no PDF, PNG, SVG or ICNS taken from macOS, Xcode or the SF Symbols app.
+3. Do not trace or convert an Apple drawing. Measure it with public APIs (size, ink box, stroke weight) and use the numbers as the target of your own shapes.
+4. Do not copy Apple's table of names. Use the freedesktop name, or the name of the drawn object.
+5. Run the steps in "Checks" before you push.
+
 ## License
+
+The repository copies no file from Apple.
 
 Same as Adwaita: GNU LGPL v3 or Creative Commons Attribution-Share Alike 3.0 (see
 `COPYING`). The artwork inherited from Adwaita is by the GNOME Project (see `AUTHORS`).
